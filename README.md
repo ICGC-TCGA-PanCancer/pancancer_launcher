@@ -46,3 +46,65 @@ If there is a specific version of the container you wish to pull, you can add th
     docker pull pancancer/pancancer_launcher:1.0.0
 
 To see further details about the container (such as the available versions/tags), see the [relevant dockerhub page](https://registry.hub.docker.com/u/pancancer/pancancer_launcher/).
+
+#### Setting up your pem keys.
+
+The pancancer_launcher can start up new VMs on AWS. To do this, it needs access to the pem key that you want to use for this purpose. Please make sure that you have copied your pem key to the host machine, and placed it in `~/.ssh`.
+
+## Starting the container
+
+The easiest way to start up the pancancer_launcher container is to use a helper script. You can get the helper script like this:
+
+    wget https://raw.githubusercontent.com/ICGC-TCGA-PanCancer/architecture-setup/feature/dockerize-launcher/start_launcher_container.sh
+    
+The script takes two arguments:
+ - The path to the pem key that you want to use for new worker VMs
+ - The version/tag of the container you wish to start.
+
+Executing the script can look like this:
+
+    bash start_launcher_container.sh ~/.ssh/my_key.pem latest
+
+This should start up your container.
+
+## Setting up the container
+
+Once the container has started up, you will need to set up a few things that could not be set up from the outside.
+
+The first thing you must is to copy your pem keys to the proper location within your container. The startup script maps a directory on your host to `/opt/from_host` inside the container. Copy your keys like this:
+
+    cp /opt/from_host/ssh/*.pem ~/.ssh/
+    
+You are now ready to run Bindle to create a new VM!
+
+### Running Bindle
+
+Bindle is a toolset that can create new VMs, and install workflows and all of their necessary dependencies onto the VMs.
+
+If you wish to run Bindle, the first thing you will need to do is edit your Bindle configuration file. For AWS, this file is located at `~/.bindle/aws.cfg`.
+
+**TODO: SAMPLE BINDLE CONFIG HERE WITH EXPLANATIONS**
+
+Then, run bindle like this:
+
+    cd ~/architecture-setup/Bindle
+    perl bin/launch-cluster.pl --config aws --custom-params singlenode1
+    
+Bindle will now begin the process of provisioning and setting up new VMs.
+
+### Running youxia
+
+Youxia is an application that can start up new VMs based on existing snapshots. It is also capable of taking advantage of Amazon Spot Pricing for the instances that it creates, and can also be used to tear down VMs, when necessary.
+
+**TODO: More info needed about using youxia in this context, further testing required.**
+
+## Saving your work
+
+If you have made some configuration changes within your docker container, you may find it useful to save those changes for your next session, when you exit the container. To do this, you can use docker's `commit` function:
+
+    docker commit pancancer_launcher pancancer/pancancer_launcher:local-1.0.0
+    
+The next time you run the startup script, you can reconnect to your saved image like this:
+
+    bash start_launcher_container.sh ~/.ssh/my_key.pem local-1.0.0
+ 
