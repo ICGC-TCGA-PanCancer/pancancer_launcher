@@ -8,7 +8,13 @@ RUN apt-get install -y software-properties-common && \
     add-apt-repository --yes ppa:rquillo/ansible && \
     add-apt-repository --yes ppa:ansible/ansible && \
     apt-get update
-RUN apt-get install -y python-apt mcrypt git ansible vim curl build-essential libxslt1-dev libxml2-dev zlib1g-dev
+RUN apt-get install -y python-apt mcrypt git ansible vim curl build-essential libxslt1-dev libxml2-dev zlib1g-dev unzip wget
+
+# setup packer, will be used for provisioning creating snapshots/AMIs
+WORKDIR /home/ubuntu/
+RUN wget https://dl.bintray.com/mitchellh/packer/packer_0.7.5_linux_amd64.zip
+RUN mkdir packer && mkdir packer-files && unzip packer_0.7.5_linux_amd64.zip -d packer
+RUN ln -s  ~/packer/packer /usr/local/bin/packer
 
 # Create ubuntu user and group, make the account passwordless
 RUN groupadd ubuntu && \
@@ -39,5 +45,6 @@ WORKDIR /home/ubuntu/architecture-setup/youxia/youxia-setup
 RUN ansible-playbook -i inventory site.yml
 WORKDIR /home/ubuntu/architecture-setup/youxia/ansible_sensu
 RUN ansible-playbook -i inventory site.yml
-WORKDIR /home/ubuntu/architecture-setup
+WORKDIR /home/ubuntu/architecture-setup/
+
 
