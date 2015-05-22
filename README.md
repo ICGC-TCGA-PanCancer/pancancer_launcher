@@ -79,7 +79,7 @@ You are now ready to run Bindle to create a new VM!
 
 ### Running Bindle
 
-Bindle is a toolset that can create new VMs, and install workflows and all of their necessary dependencies onto the VMs.
+Bindle is a toolset that can create new VMs, and install workflows and all of their necessary dependencies onto the VMs. You can learn more about Bindle [here](https://github.com/CloudBindle/Bindle#about-bindle).
 
 If you wish to run Bindle, the first thing you will need to do is edit your Bindle configuration file. For AWS, this file is located at `~/.bindle/aws.cfg`.
 
@@ -94,7 +94,7 @@ Bindle will now begin the process of provisioning and setting up new VMs.
 
 ### Running youxia
 
-Youxia is an application that can start up new VMs based on existing snapshots. It is also capable of taking advantage of Amazon Spot Pricing for the instances that it creates, and can also be used to tear down VMs, when necessary.
+Youxia is an application that can start up new VMs based on existing snapshots. It is also capable of taking advantage of Amazon Spot Pricing for the instances that it creates, and can also be used to tear down VMs, when necessary. You can learn more about youxia [here](https://github.com/CloudBindle/youxia#youxia).
 
 **TODO: More info needed about using youxia in this context, further testing required.**
 
