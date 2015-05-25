@@ -47,9 +47,9 @@ If there is a specific version of the container you wish to pull, you can add th
 
 To see further details about the container (such as the available versions/tags), see the [relevant dockerhub page](https://registry.hub.docker.com/u/pancancer/pancancer_launcher/).
 
-#### Setting up your pem keys.
+#### Setting up your SSH pem keys.
 
-The pancancer_launcher can start up new VMs on AWS. To do this, it needs access to the pem key that you want to use for this purpose. Please make sure that you have copied your pem key to the host machine, and placed it in `~/.ssh`.
+The pancancer_launcher can start up new VMs on AWS. To do this, it needs access to the SSH pem key that you want to use for this purpose. Please make sure that you have copied your pem key to the host machine, and placed it in `~/.ssh`.
 
 ## Starting the container
 
@@ -69,11 +69,7 @@ This should start up your container.
 
 ## Setting up the container
 
-Once the container has started up, you will need to set up a few things that could not be set up from the outside.
-
-The first thing you must is to copy your pem keys to the proper location within your container. The startup script maps a directory on your host to `/opt/from_host` inside the container. Copy your keys like this:
-
-    cp /opt/from_host/ssh/*.pem ~/.ssh/
+Once the container has started, you should have a fully functional launcher host that is capable of running Bindle to create new worker nodes.
     
 You are now ready to run Bindle to create a new VM!
 
@@ -83,7 +79,57 @@ Bindle is a toolset that can create new VMs, and install workflows and all of th
 
 If you wish to run Bindle, the first thing you will need to do is edit your Bindle configuration file. For AWS, this file is located at `~/.bindle/aws.cfg`.
 
-**TODO: SAMPLE BINDLE CONFIG HERE WITH EXPLANATIONS**
+A sample bindle config file for AWS looks like this:
+
+    [defaults]
+    platform = aws
+    aws_key = AKIAJ3QVTSRM3C4AXNVQ
+    aws_secret_key = DIz2Kq/NIRMs4+KmzHdSAO/RKElfijWL4gXAS8Tq
+    aws_instance_type = 'm1.xlarge' 
+    aws_region = 'us-east-1'
+    aws_zone = nil 
+    aws_image = 'ami-a73264ce'
+    aws_ssh_username = ubuntu
+    aws_ssh_key_name = sshorser-2 
+    aws_ssh_pem_file = '/home/ubuntu/.ssh/sshorser-2.pem'
+    aws_ebs_vols = "aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 100 },{'DeviceName' => '/dev/sdb', 'NoDevice' => '' }]"
+    # For any single node cluster or a cluster in bionimbus environment, please leave this empty(Ex. '')
+    # Else for a multi-node cluster, please specify the devices you want to use to setup gluster
+    # To find out the list of devices you can use, execute “df | grep /dev/” on an instance currently running on the same platform.
+    # (Ex. '--whitelist b,f' if you want to use sdb/xvdb and sdf/xvdf). 
+    # Note, if your env. doesn't have devices, use the gluster_directory_path param
+    gluster_device_whitelist=''
+    # For any single node cluster or a cluster in bionimbus environment, please leave this empty(Ex. '')
+    # Else for a multi-node cluster, please specify the directory if you are not using devices to set up gluster
+    # (Ex. '--directorypath /mnt/volumes/gluster1')
+    gluster_directory_path=''
+    box = dummy
+    box_url = 'https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box'
+    host_inventory_file_path=ansible_host_inventory.ini
+    ansible_playbook = ../container-host-bag/install.yml
+    seqware_provider=artifactory
+    seqware_version='1.1.0'
+    # used by test framework; ignore it if you are launching clusters through bindle
+    number_of_clusters = 1
+    number_of_single_node_clusters = 1
+    bwa_workflow_version = 2.6.3
+    # Do you want to install a docker container that already contains seqware and all of its dependencies?
+    seqware_in_container=true
+    # The names of the workflows
+    workflow_name=HelloWorld,Sanger,BWA,DEWrapper
+    # The specific bundle names of the workflows
+    workflows=Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1,Workflow_Bundle_SangerPancancerCgpCnIndelSnvStr_1.0.6_SeqWare_1.1.0,Workflow_Bundle_DEWrapperWorkflow_1.0.2_SeqWare_1.1.0,Workflow_Bundle_BWA_2.6.3_SeqWare_1.1.0-alpha.5
+    # Do you want to install the workflows on the worker nodes? 
+    install_workflow=true
+    # Do you want to run HelloWorld as a test workflow once the worker node is set up?
+    test_workflow=true
+    # you can make new ones or change information in these blocks and use these blocks to launch a cluster
+    [cluster1]
+    number_of_nodes = 2
+    target_directory = target-aws-1
+    [singlenode1]
+    number_of_nodes=1
+    target_directory=target-aws-5
 
 Then, run bindle like this:
 
