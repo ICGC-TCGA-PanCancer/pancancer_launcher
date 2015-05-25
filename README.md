@@ -90,8 +90,9 @@ A sample bindle config file for AWS looks like this:
     aws_zone = nil 
     aws_image = 'ami-a73264ce'
     aws_ssh_username = ubuntu
-    aws_ssh_key_name = sshorser-2 
-    aws_ssh_pem_file = '/home/ubuntu/.ssh/sshorser-2.pem'
+    aws_ssh_key_name = MyKey 
+    aws_ssh_pem_file = '/home/ubuntu/.ssh/MyKey.pem'
+    # For 100GB of storage, on a single volume:
     aws_ebs_vols = "aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 100 },{'DeviceName' => '/dev/sdb', 'NoDevice' => '' }]"
     # For any single node cluster or a cluster in bionimbus environment, please leave this empty(Ex. '')
     # Else for a multi-node cluster, please specify the devices you want to use to setup gluster
