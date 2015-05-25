@@ -8,19 +8,17 @@ RUN apt-get install -y software-properties-common && \
     add-apt-repository --yes ppa:rquillo/ansible && \
     add-apt-repository --yes ppa:ansible/ansible && \
     apt-get update
-RUN apt-get install -y python-apt mcrypt git ansible vim curl build-essential libxslt1-dev libxml2-dev zlib1g-dev unzip wget
-
-# setup packer, will be used for provisioning creating snapshots/AMIs
-WORKDIR /home/ubuntu/
-RUN wget https://dl.bintray.com/mitchellh/packer/packer_0.7.5_linux_amd64.zip
-RUN mkdir packer && mkdir packer-files && unzip packer_0.7.5_linux_amd64.zip -d packer
-RUN ln -s  ~/packer/packer /usr/local/bin/packer
+RUN apt-get install -y python-apt mcrypt git ansible vim curl build-essential libxslt1-dev libxml2-dev zlib1g-dev unzip wget make libipc-system-simple-perl libgetopt-euclid-perl libjson-perl libwww-perl libdata-dumper-simple-perl libtemplate-perl
 
 # Create ubuntu user and group, make the account passwordless
 RUN groupadd ubuntu && \
     useradd ubuntu -m -g ubuntu && \
     usermod -a -G sudo,ubuntu ubuntu && \
     passwd -d ubuntu
+
+# setup packer, will be used for provisioning creating snapshots/AMIs
+# RUN wget https://dl.bintray.com/mitchellh/packer/packer_0.7.5_linux_amd64.zip
+# RUN mkdir /usr/local/bin/packer && mkdir packer-files && unzip packer_0.7.5_linux_amd64.zip -d /usr/local/bin/packer
 
 USER ubuntu
 ENV HOME /home/ubuntu
@@ -41,10 +39,10 @@ RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
     git submodule init && git submodule update --remote
 WORKDIR /home/ubuntu/architecture-setup
 RUN ansible-playbook -i inventory site.yml
-WORKDIR /home/ubuntu/architecture-setup/youxia/youxia-setup
-RUN ansible-playbook -i inventory site.yml
-WORKDIR /home/ubuntu/architecture-setup/youxia/ansible_sensu
-RUN ansible-playbook -i inventory site.yml
+#WORKDIR /home/ubuntu/architecture-setup/youxia/youxia-setup
+#RUN ansible-playbook -i inventory site.yml
+#WORKDIR /home/ubuntu/architecture-setup/youxia/ansible_sensu
+#RUN ansible-playbook -i inventory site.yml
 WORKDIR /home/ubuntu/architecture-setup/
 
 
