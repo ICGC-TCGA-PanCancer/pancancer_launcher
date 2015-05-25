@@ -31,7 +31,6 @@ RUN mkdir ~/.ssh && touch ~/.ssh/gnostest.pem && \
 
 # So we can get Ansible output as it happens (rather than waiting for the execution to complete).
 ENV PYTHONUNBUFFERED 1
-
 # Get code and run playbooks to build the container
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
     cd architecture-setup && \
@@ -45,4 +44,6 @@ RUN ansible-playbook -i inventory site.yml
 #RUN ansible-playbook -i inventory site.yml
 WORKDIR /home/ubuntu/architecture-setup/
 
+# The entry point of the container is start_services_in_container.sh, which will start up any necessary services, and also copy SSH pem keys and config files from the host. 
+CMD ["/bin/bash","/home/ubuntu/start_services_in_container.sh"]
 
