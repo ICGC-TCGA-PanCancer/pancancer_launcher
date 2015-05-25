@@ -83,8 +83,8 @@ A sample bindle config file for AWS looks like this:
 
     [defaults]
     platform = aws
-    aws_key = AKIAJ3QVTSRM3C4AXNVQ
-    aws_secret_key = DIz2Kq/NIRMs4+KmzHdSAO/RKElfijWL4gXAS8Tq
+    aws_key = <Your AWS Key>
+    aws_secret_key = <Your AWS Secret Key>
     aws_instance_type = 'm1.xlarge' 
     aws_region = 'us-east-1'
     aws_zone = nil 
