@@ -107,7 +107,7 @@ A sample bindle config file for AWS looks like this:
     aws_ebs_vols = "aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 100 },{'DeviceName' => '/dev/sdb', 'NoDevice' => '' }]"
     # For any single node cluster or a cluster in bionimbus environment, please leave this empty(Ex. '')
     # Else for a multi-node cluster, please specify the devices you want to use to setup gluster
-    # To find out the list of devices you can use, execute “df | grep /dev/” on an instance currently running on the same platform.
+    # To find out the list of devices you can use, execute "df | grep /dev/" on an instance currently running on the same platform.
     # (Ex. '--whitelist b,f' if you want to use sdb/xvdb and sdf/xvdf). 
     # Note, if your env. doesn't have devices, use the gluster_directory_path param
     gluster_device_whitelist=''
