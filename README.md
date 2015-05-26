@@ -28,7 +28,9 @@ Once you have docker installed, you will want to give your user access to the "d
 
 This will save you the trouble of having to "sudo" every docker command.
 
-**You will need to log out of your host machine/VM and then log back in for this change above to take effect.  Do that now.**
+**You will need to log out of your host machine/VM and then log back in for this change above to take effect.**
+
+**DO THIS NOW.**
 
 To see if your docker installation is working correctly, you can run the "hello world" container:
 
