@@ -145,6 +145,8 @@ A sample bindle config file for AWS looks like this:
     number_of_nodes=1
     target_directory=target-aws-5
 
+### Editing your Bindle configuration file
+
 You will need to edit this file before you run Bindle. The most important edits are setting the correct values for `aws_key`, `aws_secret_key`, `aws_ssh_key_name`, and `aws_ssh_pem_file` (which should reference the SSH pem file you copied into this container from your host).
 
 You may also need to edit `aws_ebs_vols` and `lvm_device_whitelist`, depending on what AMI you are using. This sample config file uses an AMI that is launched as an m1.xlarge. It has 4 volumes so there are 4 block device mappings to ephemeral drives. If your AMI and instance type have a different number of volumes, you may need to adjust these values.
