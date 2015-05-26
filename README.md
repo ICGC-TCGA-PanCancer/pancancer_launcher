@@ -75,7 +75,7 @@ This should start up your container.
 
 ## Setting up the container
 
-Once the container has started, you should have a fully functional launcher host that is capable of running Bindle to create new worker nodes.
+Once the container has started, you should have a fully functional launcher host that is capable of running Bindle to create new worker nodes, snapshot these nodes in environments that support this, run the decider client to generate workflow parameterization files (INIs) per donor, etc. 
     
 You are now ready to run Bindle to create a new VM!
 
