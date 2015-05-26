@@ -1,5 +1,4 @@
-# pancancer-launcher
-Contains the Dockerfile to build the pancancer/pancancer_launcher container
+# PanCancer Launcher
 
 ## Introduction
 
