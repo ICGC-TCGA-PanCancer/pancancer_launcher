@@ -135,6 +135,8 @@ A sample bindle config file for AWS looks like this:
     install_workflow=true
     # Do you want to run HelloWorld as a test workflow once the worker node is set up?
     test_workflow=true
+    single_node_lvm=true
+    lvm_device_whitelist="/dev/xvdb,/dev/xvdc,/dev/xvdd,/dev/xvde"
     # you can make new ones or change information in these blocks and use these blocks to launch a cluster
     [cluster1]
     number_of_nodes = 2
@@ -143,7 +145,11 @@ A sample bindle config file for AWS looks like this:
     number_of_nodes=1
     target_directory=target-aws-5
 
-Then, run bindle like this:
+You will need to edit this file before you run Bindle. The most important edits are setting the correct values for `aws_key`, `aws_secret_key`, `aws_ssh_key_name`, and `aws_ssh_pem_file` (which should reference the SSH pem file you copied into this container from your host).
+
+You may also need to edit `aws_ebs_vols` and `lvm_device_whitelist`, depending on what AMI you are using. This sample config file uses an AMI that is launched as an m1.xlarge. It has 4 volumes so there are 4 block device mappings to ephemeral drives. If your AMI and instance type have a different number of volumes, you may need to adjust these values.
+
+Once you have completed configuring Bindle, you can run bindle like this:
 
     cd ~/architecture-setup/Bindle
     perl bin/launch-cluster.pl --config aws --custom-params singlenode1
