@@ -57,7 +57,7 @@ To see further details about the container (such as the available versions/tags)
 
 The pancancer_launcher can start up new VMs on AWS. To do this, it needs access to the SSH pem key that you want to use for this purpose. Please make sure that you have copied your pem key to the host machine, and placed it in `~ubuntu/.ssh`.  This is usually the SSH pem key you used to log in to the launcher host machine.  Make sure you `chmod 600 ~ubuntu/.ssh/<your_key_name>.pem` for security reasons.
 
-## Starting the container
+## Starting the Launcher
 
 The easiest way to start up the pancancer_launcher container is to use a helper script. You can get the helper script like this:
 
@@ -73,11 +73,16 @@ Executing the script can look like this:
 
 This should start up your container.
 
-## Setting up the container
+## Using the Launcher
 
-Once the container has started, you should have a fully functional launcher host that is capable of running Bindle to create new worker nodes, snapshot these nodes in environments that support this, run the decider client to generate workflow parameterization files (INIs) per donor, etc. 
+Once the container has started, you should have a fully functional launcher host that is capable of running Bindle to create new worker nodes, snapshot these nodes in environments that support this, run the decider client to generate workflow parameterization files (INIs) per donor, etc. We will cover the following processes in this guide below and link to more detailed guides as appropriate:
+
+* start the launcher Docker container and login
+* from the container, launch a new worker host on a cloud (AWS in our example here) which is capable of running the PanCancer workflows
+* get a test job from the central decider
+* run that test job of a workflow on the new worker host
     
-You are now ready to run Bindle to create a new VM!
+You are now ready to run Bindle to create a new VM as a first step.
 
 ### Running Bindle
 
