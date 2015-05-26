@@ -34,6 +34,11 @@ To see if your docker installation is working correctly, you can run the "hello 
 
     docker run hello-world
 
+You should see the following if everything is working OK:
+
+    Hello from Docker.
+    This message shows that your installation appears to be working correctly.
+
 *(If you have had any problems getting docker installed, you may wish to consult the [detailed installation guide](https://docs.docker.com/installation/))*
 
 #### Installing the pancancer_launcher container
