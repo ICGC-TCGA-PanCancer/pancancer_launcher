@@ -43,7 +43,7 @@ You should see the following if everything is working OK:
 
 #### Installing the pancancer_launcher container
 
-Once you have docker installed, pull the docker image:
+Once you have docker installed, pull the docker [image](https://registry.hub.docker.com/u/pancancer/pancancer_launcher/):
 
     docker pull pancancer/pancancer_launcher
 
