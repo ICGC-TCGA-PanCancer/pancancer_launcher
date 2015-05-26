@@ -26,7 +26,9 @@ Once you have docker installed, you will want to give your user access to the "d
 
     sudo usermod -aG docker ubuntu
 
-This will save you the trouble of having to "sudo" every docker command. You will need to log out and then log back in for this change to take effect.
+This will save you the trouble of having to "sudo" every docker command.
+
+**You will need to log out and then log back in for this change to take effect.  Do that now.**
 
 To see if your docker installation is working correctly, you can run the "hello world" container:
 
