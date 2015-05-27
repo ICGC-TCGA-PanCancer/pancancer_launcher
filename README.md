@@ -176,7 +176,7 @@ You can configure which workflows you want to install on a worker. The `workflow
 Once you have completed configuring Bindle, you can run bindle like this:
 
     cd ~/architecture-setup/Bindle
-    perl bin/launch-cluster.pl --config aws --custom-params singlenode1
+    perl bin/launch_cluster.pl --config aws --custom-params singlenode1
     
 Bindle will now begin the process of provisioning and setting up new VMs.
 
