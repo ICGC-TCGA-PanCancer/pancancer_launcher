@@ -186,6 +186,13 @@ Youxia is an application that can start up new VMs based on existing snapshots. 
 
 **TODO: More info needed about using youxia in this context, further testing required.**
 
+## Running a workflow
+Workflows are run by calling docker and executing the workflow using a seqware container. To run the HelloWorld workflow, the command looks like this:
+
+    docker run --rm -h master -t -v /var/run/docker.sock:/var/run/docker.sock -v /datastore:/datastore -v /workflows/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1:/workflow  -i seqware/seqware_whitestar_pancancer seqware bundle launch --dir /workflow --no-metadata
+
+TODO: More detail, other workflow examples...
+
 ## Saving your work
 
 If you have made some configuration changes within your docker container, you may find it useful to save those changes for your next session, when you exit the container. To do this, you can use docker's `commit` function:
