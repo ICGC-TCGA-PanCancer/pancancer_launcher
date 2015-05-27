@@ -76,9 +76,9 @@ The script takes two arguments:
 Executing the script can look like this:
 
     bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem latest
-
-NOTE FOR SOLOMON: need to update sample for aws.cfg in pancancer-bag playbook and also set up folder for config, add notes about how to configure different workflows. Better: Don't worry about copying in a config from host (for now), container shoould already container the configs that are ready to go. Need to get mappings for Workflow -> instance type (for example, BWA needs m1.xlarge). Also need list of up-to-date version strings for workflows. Need newer AMI ID. Delete all gluster stuff from config. What does bwa_version_string do, can it be removed? Also, BWA should be 2.6.1. Change name of "cluster1" to "multinode".
-
+<!--
+NOTE FOR SOLOMON: need to update sample for aws.cfg in pancancer-bag playbook and also set up folder for config, add notes about how to configure different workflows (Done: openstack.cfg not being copied for some reason). Better: Don't worry about copying in a config from host (for now), container should already container the configs that are ready to go (Done). Need to get mappings for Workflow -> instance type (for example, BWA needs m1.xlarge) (Done - need more details?). Also need list of up-to-date version strings for workflows (TODO!). Need newer AMI ID (Done). Delete all gluster stuff from config (Done). What does bwa_version_string do, can it be removed? (TODO!) Also, BWA should be 2.6.1. Change name of "cluster1" to "multinode" (Done). Also, clusters may not work so maybe remove that from the config.
+-->
 This should start up your container.
 
 | Docker Tip: |
