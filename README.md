@@ -22,6 +22,8 @@ When you instance has finished starting up, log in to it and install docker. A d
 
     wget -qO- https://get.docker.com/ | sh
 
+<!-- if future versions of docker are ever incompatible with our dockerfile, we may need to change the installation process to specify a specifc version of docker. Can probably figure it out by reading through their install script -->
+
 Once you have docker installed, you will want to give your user access to the "docker" group:
 
     sudo usermod -aG docker ubuntu
