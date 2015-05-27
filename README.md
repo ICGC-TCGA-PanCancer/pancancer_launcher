@@ -159,6 +159,13 @@ If you execute this command, you should see the output of the HelloWorld workflo
 
 The key to this is mapping the HelloWorld bundle directory (`/workflows/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1`) to a specific directory within the container (`/workflow`), and then telling Docker to run the `seqware` command with the parameters `bundle launch --dir /workflow --no-metadata`. The `--dir /workflow` parameter tells seqware that the workflow to execute is in the `/workflow` directory, which was mapped to `/workflows/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1` on the host.
 
+To change which workflow that you are executing, change the mapping of the container's `/workflow` directory in the command above, like this:
+    
+    docker run...
+      ...
+      -v /workflows/Workflow_Bundle_BWA_2.6.3_SeqWare_1.1.0-alpha.5:/workflow \
+      ...
+
 TODO: More detail, other workflow examples...
 
 ### Using INI files from the Central Decider Client
