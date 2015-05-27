@@ -75,6 +75,12 @@ Executing the script can look like this:
 
 This should start up your container.
 
+*Docker Tip:* If you type "exit" when inside a container, it will shut down all processes, and you may lose your work. if you wish to leave the running container's shell, but you don't want to terminate everything, you can *detach* from the container by typing <kbd>Ctrl</kbd><kbd>P</kbd> <kbd>Ctrl</kbd><kbd>Q</kbd>. This will return you to your host machine's shell, but leave all of the processes in the container still running. To return to you your container, you can use the docker attach command:
+
+    docker attach pancancer_launcher
+
+Docker also allows you to [pause](https://docs.docker.com/reference/commandline/cli/#pause) and [unpause](https://docs.docker.com/reference/commandline/cli/#unpause) running containers.
+
 ## Using the Launcher
 
 Once the container has started, you should have a fully functional launcher host that is capable of running Bindle to create new worker nodes, snapshot these nodes in environments that support this, run the decider client to generate workflow parameterization files (INIs) per donor, etc. We will cover the following processes in this guide below and link to more detailed guides as appropriate:
