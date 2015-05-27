@@ -75,6 +75,8 @@ Executing the script can look like this:
 
     bash start_launcher_container.sh ~/.ssh/my_key.pem latest
 
+NOTE FOR SOLOMON: need to update sample for aws.cfg in pancancer-bag playbook and also set up folder for config, add notes about how to configure different workflows 
+
 This should start up your container.
 
 | Docker Tip: |
