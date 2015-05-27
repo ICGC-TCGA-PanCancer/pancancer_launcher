@@ -16,7 +16,7 @@ If you are unfamiliar with docker, you might want to read about it [here](https:
 
 #### Installing Docker
 
-Start up a new VM in AWS. You will want to use an Ubuntu 14.04 AMI, and give yourself at least 50 GB for storage space (docker images can take up a bit of space). An m3.large instance type should do just fine.
+Start up a new VM in AWS. This guide uses configuration that assumes you will be working in the AWS North Virginia region. You will want to use an Ubuntu 14.04 AMI, and give yourself at least 50 GB for storage space (docker images can take up a bit of space). An m3.large instance type should do just fine.
 
 When you instance has finished starting up, log in to it and install docker. A detailed installation guide can be found [here](https://docs.docker.com/installation/), although installing docker is quite simple, you can simply run this commad:
 
@@ -59,7 +59,7 @@ To see further details about the container (such as the available versions/tags)
 
 #### Setting up your SSH pem keys.
 
-The pancancer_launcher can start up new VMs on AWS. To do this, it needs access to the SSH pem key that you want to use for this purpose. Please make sure that you have copied your pem key to the host machine, and placed it in `~ubuntu/.ssh/my_key.pem`.  This is usually the SSH pem key you used to log in to the launcher host machine.  Make sure you `chmod 600 ~ubuntu/.ssh/my_key.pem` for security reasons.
+The pancancer_launcher can start up new VMs on AWS. To do this, it needs access to the SSH pem key that you want to use for this purpose. Please make sure that you have copied your pem key to the host machine, and placed it in `~ubuntu/.ssh/my_key.pem`.  This is usually the SSH pem key you used to log in to the launcher host machine.  Make sure you `chmod 600 ~ubuntu/.ssh/<the name of your key>.pem` for security reasons.
 
 ## Starting the Launcher
 
@@ -113,8 +113,8 @@ A sample bindle config file for AWS looks like this:
     aws_zone = nil 
     aws_image = 'ami-a73264ce'
     aws_ssh_username = ubuntu
-    aws_ssh_key_name = MyKey 
-    aws_ssh_pem_file = '/home/ubuntu/.ssh/MyKey.pem'
+    aws_ssh_key_name = <the name of your key>
+    aws_ssh_pem_file = '/home/ubuntu/.ssh/<the name of your key>.pem'
     # For 100GB of storage, on a single volume:
     aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{ 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdc','VirtualName' => 'ephemeral1'},{'DeviceName' => '/dev/sdd', 'VirtualName'=>'ephemeral2'},{'DeviceName' => '/dev/sde', 'VirtualName' => 'ephemeral3'}]"
     # For any single node cluster or a cluster in bionimbus environment, please leave this empty(Ex. '')
