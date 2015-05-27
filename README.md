@@ -119,6 +119,8 @@ Some workflows run best with specific instance types. Here is a table with the b
 | Sanger   | r3.8xlarge    |
 | DKFZ/EMBL| r3.8xlarge    |
 
+<!-- TODO: Instance Type and Volumes can probably be combined in to one section -->
+
 
 #### Volumes
 You may also need to edit `aws_ebs_vols` and `lvm_device_whitelist`, depending on what AMI you are using. This sample config file uses an AMI that is launched as an m1.xlarge. It has 4 volumes so there are 4 block device mappings to ephemeral drives. If your AMI and instance type have a different number of volumes, you may need to adjust these values.
