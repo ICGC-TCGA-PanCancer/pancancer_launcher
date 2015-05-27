@@ -112,12 +112,13 @@ The most important edits are setting the correct values for `aws_key`, `aws_secr
 
 #### Instance type
 Some workflows run best with specific instance types. Here is a table with the best pairings, for AWS:
+
 | Workflow | Instance Type |
-----------------------------
+|----------|---------------|
 | BWA      | m1.xlarge     |
-| Sanger   | ???           |
-| DKFZ/EMBL| ???           |
-----------------------------
+| Sanger   | r3.8xlarge    |
+| DKFZ/EMBL| r3.8xlarge    |
+
 
 #### Volumes
 You may also need to edit `aws_ebs_vols` and `lvm_device_whitelist`, depending on what AMI you are using. This sample config file uses an AMI that is launched as an m1.xlarge. It has 4 volumes so there are 4 block device mappings to ephemeral drives. If your AMI and instance type have a different number of volumes, you may need to adjust these values.
