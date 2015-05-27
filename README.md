@@ -73,7 +73,7 @@ The script takes two arguments:
 
 Executing the script can look like this:
 
-    bash start_launcher_container.sh ~/.ssh/my_key.pem latest
+    bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem latest
 
 NOTE FOR SOLOMON: need to update sample for aws.cfg in pancancer-bag playbook and also set up folder for config, add notes about how to configure different workflows. Better: Don't worry about copying in a config from host (for now), container shoould already container the configs that are ready to go. Need to get mappings for Workflow -> instance type (for example, BWA needs m1.xlarge). Also need list of up-to-date version strings for workflows. Need newer AMI ID. Delete all gluster stuff from config. What does bwa_version_string do, can it be removed? Also, BWA should be 2.6.1. Change name of "cluster1" to "multinode".
 
