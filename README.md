@@ -152,7 +152,7 @@ Workflows are run by calling docker and executing the workflow using a seqware c
     docker run --rm -h master -t -v /var/run/docker.sock:/var/run/docker.sock \
       -v /datastore:/datastore \
       -v /workflows/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1:/workflow \
-      -i seqware/seqware_whitestar_pancancer \
+      -i seqware/seqware_whitestar_pancancer:1.1.1 \
       seqware bundle launch --dir /workflow --no-metadata
 
 If you execute this command, you should see the output of the HelloWorld workflow.
