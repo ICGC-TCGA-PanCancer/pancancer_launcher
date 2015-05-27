@@ -75,7 +75,7 @@ Executing the script can look like this:
 
     bash start_launcher_container.sh ~/.ssh/my_key.pem latest
 
-NOTE FOR SOLOMON: need to update sample for aws.cfg in pancancer-bag playbook and also set up folder for config, add notes about how to configure different workflows 
+NOTE FOR SOLOMON: need to update sample for aws.cfg in pancancer-bag playbook and also set up folder for config, add notes about how to configure different workflows. Better: Don't worry about copying in a config from host (for now), container shoould already container the configs that are ready to go.
 
 This should start up your container.
 
