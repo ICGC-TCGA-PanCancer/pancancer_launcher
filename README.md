@@ -158,10 +158,7 @@ A sample bindle config file for AWS looks like this:
     target_directory=target-aws-5
 
 ### Editing your Bindle configuration file
-You will need to edit this file before you run Bindle. The `workflows` configuration value contains a list of actual workflow bundle names. `workflow_name` is a list of the simple names of the workflows. The example above illustrates installing *all* of the workflows, but you do not have to do this if you only intend to run one workflow. For example, to only run the BWA workflow, you can edit your configuration to look like this:
-
-    workflow_name=BWA
-    workflows=Workflow_Bundle_BWA_2.6.3_SeqWare_1.1.0-alpha.5
+You will need to edit this file before you run Bindle. The most important parts you will edit are related to Keys, Volumes, and Workflows.
 
 #### Keys
 The most important edits are setting the correct values for `aws_key`, `aws_secret_key`, `aws_ssh_key_name`, and `aws_ssh_pem_file` (which should reference the SSH pem file you copied into this container from your host).
@@ -170,7 +167,10 @@ The most important edits are setting the correct values for `aws_key`, `aws_secr
 You may also need to edit `aws_ebs_vols` and `lvm_device_whitelist`, depending on what AMI you are using. This sample config file uses an AMI that is launched as an m1.xlarge. It has 4 volumes so there are 4 block device mappings to ephemeral drives. If your AMI and instance type have a different number of volumes, you may need to adjust these values.
 
 #### Workflows
-You can configure which workflows you want to install on a worker.
+You can configure which workflows you want to install on a worker. The `workflows` configuration value contains a list of actual workflow bundle names. `workflow_name` is a list of the simple names of the workflows. The example above illustrates installing *all* of the workflows, but you do not have to do this if you only intend to run one workflow. For example, to only run the BWA workflow, you can edit your configuration to look like this:
+
+    workflow_name=BWA
+    workflows=Workflow_Bundle_BWA_2.6.3_SeqWare_1.1.0-alpha.5
 
 
 Once you have completed configuring Bindle, you can run bindle like this:
