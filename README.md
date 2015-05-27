@@ -71,6 +71,8 @@ The script takes two arguments:
  - The path to the pem key that you want to use for new worker VMs
  - The version/tag of the container you wish to start.
 
+<!-- There is a third argument, for ENVironment (AWS, OpenStack, local workstation, ...) and it is used to help the script determine the public IP address of the launcher node, but this won't be used until architecture 3. Also, that code is not yet fully tested. -->
+
 Executing the script can look like this:
 
     bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem latest
@@ -96,72 +98,26 @@ Once the container has started, you should have a fully functional launcher host
     
 You are now ready to run Bindle to create a new VM as a first step.
 
-### Running Bindle
+## Running Bindle
 
 Bindle is a toolset that can create new VMs, and install workflows and all of their necessary dependencies onto the VMs. You can learn more about Bindle [here](https://github.com/CloudBindle/Bindle#about-bindle).
 
 If you wish to run Bindle, the first thing you will need to do is edit your Bindle configuration file. For AWS, this file is located at `~/.bindle/aws.cfg`.
-
-A sample bindle config file for AWS looks like this:
-
-    [defaults]
-    platform = aws
-    aws_key = <Your AWS Key>
-    aws_secret_key = <Your AWS Secret Key>
-    aws_instance_type = 'm1.xlarge' 
-    aws_region = 'us-east-1'
-    aws_zone = nil 
-    aws_image = 'ami-a73264ce'
-    aws_ssh_username = ubuntu
-    aws_ssh_key_name = <the name of your key>
-    aws_ssh_pem_file = '/home/ubuntu/.ssh/<the name of your key>.pem'
-    # For 100GB of storage, on a single volume:
-    aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{ 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdc','VirtualName' => 'ephemeral1'},{'DeviceName' => '/dev/sdd', 'VirtualName'=>'ephemeral2'},{'DeviceName' => '/dev/sde', 'VirtualName' => 'ephemeral3'}]"
-    # For any single node cluster or a cluster in bionimbus environment, please leave this empty(Ex. '')
-    # Else for a multi-node cluster, please specify the devices you want to use to setup gluster
-    # To find out the list of devices you can use, execute "df | grep /dev/" on an instance currently running on the same platform.
-    # (Ex. '--whitelist b,f' if you want to use sdb/xvdb and sdf/xvdf). 
-    # Note, if your env. doesn't have devices, use the gluster_directory_path param
-    gluster_device_whitelist=''
-    # For any single node cluster or a cluster in bionimbus environment, please leave this empty(Ex. '')
-    # Else for a multi-node cluster, please specify the directory if you are not using devices to set up gluster
-    # (Ex. '--directorypath /mnt/volumes/gluster1')
-    gluster_directory_path=''
-    box = dummy
-    box_url = 'https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box'
-    host_inventory_file_path=ansible_host_inventory.ini
-    ansible_playbook = ../container-host-bag/install.yml
-    seqware_provider=artifactory
-    seqware_version='1.1.0'
-    # used by test framework; ignore it if you are launching clusters through bindle
-    number_of_clusters = 1
-    number_of_single_node_clusters = 1
-    bwa_workflow_version = 2.6.3
-    # Do you want to install a docker container that already contains seqware and all of its dependencies?
-    seqware_in_container=true
-    # The names of the workflows
-    workflow_name=HelloWorld,Sanger,BWA,DEWrapper
-    # The specific bundle names of the workflows
-    workflows=Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1,Workflow_Bundle_SangerPancancerCgpCnIndelSnvStr_1.0.6_SeqWare_1.1.0,Workflow_Bundle_DEWrapperWorkflow_1.0.2_SeqWare_1.1.0,Workflow_Bundle_BWA_2.6.3_SeqWare_1.1.0-alpha.5
-    # Do you want to install the workflows on the worker nodes? 
-    install_workflow=true
-    # Do you want to run HelloWorld as a test workflow once the worker node is set up?
-    test_workflow=true
-    single_node_lvm=true
-    lvm_device_whitelist="/dev/xvdb,/dev/xvdc,/dev/xvdd,/dev/xvde"
-    # you can make new ones or change information in these blocks and use these blocks to launch a cluster
-    [cluster1]
-    number_of_nodes = 2
-    target_directory = target-aws-1
-    [singlenode1]
-    number_of_nodes=1
-    target_directory=target-aws-5
 
 ### Editing your Bindle configuration file
 You will need to edit this file before you run Bindle. The most important parts you will edit are related to Keys, Volumes, and Workflows.
 
 #### Keys
 The most important edits are setting the correct values for `aws_key`, `aws_secret_key`, `aws_ssh_key_name`, and `aws_ssh_pem_file` (which should reference the SSH pem file you copied into this container from your host).
+
+#### Instance type
+Some workflows run best with specific instance types. Here is a table with the best pairings, for AWS:
+| Workflow | Instance Type |
+----------------------------
+| BWA      | m1.xlarge     |
+| Sanger   | ???           |
+| DKFZ/EMBL| ???           |
+----------------------------
 
 #### Volumes
 You may also need to edit `aws_ebs_vols` and `lvm_device_whitelist`, depending on what AMI you are using. This sample config file uses an AMI that is launched as an m1.xlarge. It has 4 volumes so there are 4 block device mappings to ephemeral drives. If your AMI and instance type have a different number of volumes, you may need to adjust these values.
@@ -172,6 +128,7 @@ You can configure which workflows you want to install on a worker. The `workflow
     workflow_name=BWA
     workflows=Workflow_Bundle_BWA_2.6.3_SeqWare_1.1.0-alpha.5
 
+### Provisioning worker nodes with Bindle
 
 Once you have completed configuring Bindle, you can run bindle like this:
 
@@ -179,20 +136,20 @@ Once you have completed configuring Bindle, you can run bindle like this:
     perl bin/launch_cluster.pl --config aws --custom-params singlenode1
     
 Bindle will now begin the process of provisioning and setting up new VMs.
-
-### Running youxia
+<!--
+## Running youxia
 
 Youxia is an application that can start up new VMs based on existing snapshots. It is also capable of taking advantage of Amazon Spot Pricing for the instances that it creates, and can also be used to tear down VMs, when necessary. You can learn more about youxia [here](https://github.com/CloudBindle/youxia#youxia).
 
 **TODO: More info needed about using youxia in this context, further testing required.**
-
+-->
 ## Running a workflow
 Workflows are run by calling docker and executing the workflow using a seqware container. To run the HelloWorld workflow, the command looks like this:
 
     docker run --rm -h master -t -v /var/run/docker.sock:/var/run/docker.sock -v /datastore:/datastore -v /workflows/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1:/workflow  -i seqware/seqware_whitestar_pancancer seqware bundle launch --dir /workflow --no-metadata
 
 TODO: More detail, other workflow examples...
-
+<!--
 ## Saving your work
 
 If you have made some configuration changes within your docker container, you may find it useful to save those changes for your next session, when you exit the container. To do this, you can use docker's `commit` function:
@@ -202,4 +159,4 @@ If you have made some configuration changes within your docker container, you ma
 The next time you run the startup script, you can reconnect to your saved image like this:
 
     bash start_launcher_container.sh ~/.ssh/my_key.pem local-1.0.0
- 
+-->
