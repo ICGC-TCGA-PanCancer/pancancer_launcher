@@ -116,7 +116,7 @@ A sample bindle config file for AWS looks like this:
     aws_ssh_key_name = MyKey 
     aws_ssh_pem_file = '/home/ubuntu/.ssh/MyKey.pem'
     # For 100GB of storage, on a single volume:
-    aws_ebs_vols = "aws.block_device_mapping = [{ 'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize' => 100 },{'DeviceName' => '/dev/sdb', 'NoDevice' => '' }]"
+    aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{ 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdc','VirtualName' => 'ephemeral1'},{'DeviceName' => '/dev/sdd', 'VirtualName'=>'ephemeral2'},{'DeviceName' => '/dev/sde', 'VirtualName' => 'ephemeral3'}]"
     # For any single node cluster or a cluster in bionimbus environment, please leave this empty(Ex. '')
     # Else for a multi-node cluster, please specify the devices you want to use to setup gluster
     # To find out the list of devices you can use, execute "df | grep /dev/" on an instance currently running on the same platform.
@@ -158,10 +158,20 @@ A sample bindle config file for AWS looks like this:
     target_directory=target-aws-5
 
 ### Editing your Bindle configuration file
+You will need to edit this file before you run Bindle. The `workflows` configuration value contains a list of actual workflow bundle names. `workflow_name` is a list of the simple names of the workflows. The example above illustrates installing *all* of the workflows, but you do not have to do this if you only intend to run one workflow. For example, to only run the BWA workflow, you can edit your configuration to look like this:
 
-You will need to edit this file before you run Bindle. The most important edits are setting the correct values for `aws_key`, `aws_secret_key`, `aws_ssh_key_name`, and `aws_ssh_pem_file` (which should reference the SSH pem file you copied into this container from your host).
+    workflow_name=BWA
+    workflows=Workflow_Bundle_BWA_2.6.3_SeqWare_1.1.0-alpha.5
 
+#### Keys
+The most important edits are setting the correct values for `aws_key`, `aws_secret_key`, `aws_ssh_key_name`, and `aws_ssh_pem_file` (which should reference the SSH pem file you copied into this container from your host).
+
+#### Volumes
 You may also need to edit `aws_ebs_vols` and `lvm_device_whitelist`, depending on what AMI you are using. This sample config file uses an AMI that is launched as an m1.xlarge. It has 4 volumes so there are 4 block device mappings to ephemeral drives. If your AMI and instance type have a different number of volumes, you may need to adjust these values.
+
+#### Workflows
+You can configure which workflows you want to install on a worker.
+
 
 Once you have completed configuring Bindle, you can run bindle like this:
 
