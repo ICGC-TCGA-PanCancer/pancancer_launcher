@@ -162,7 +162,7 @@ To connect to your new worker node, execute the following commands:
     cd singlenode_vagrant_1/master
     vagrant ssh
 
-*NOTE:* If you changed the value of `target_directory` in your configuration, the first command should look like this:
+**NOTE:** If you changed the value of `target_directory` in your configuration, the first command should look like this:
 
     cd <your value for target_directory>/master
 
