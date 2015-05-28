@@ -203,6 +203,29 @@ Output:
 
 You can then exit your worker by typing "exit". This will return you to the shell in the pancancer_launcher container on your launcher node.
 
+#### Running multiple nodes
+
+Once you have a configuration that has been used to successfully provision a node, you can update your configuration file with additional blocks for additional nodes, and then provision them as well. For a total of three nodes, you could set your configuration like this:
+
+    [singlenode1]
+    number_of_nodes=1
+    target_directory=singlenode_vagrant_1
+    
+    [singlenode2]
+    number_of_nodes=1
+    target_directory=singlenode_vagrant_2
+    
+    [singlenode3]
+    number_of_nodes=1
+    target_directory=singlenode_vagrant_3
+
+Provisioning these three nodes is quite simple:
+
+    cd ~/architecture-setup/Bindle
+    perl bin/launch_cluster.pl --config aws --custom-params singlenode1
+    perl bin/launch_cluster.pl --config aws --custom-params singlenode2
+    perl bin/launch_cluster.pl --config aws --custom-params singlenode3
+
 <!--
 ## Running youxia
 
