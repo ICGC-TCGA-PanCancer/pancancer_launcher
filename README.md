@@ -155,7 +155,10 @@ Bindle will now begin the process of provisioning and setting up new VMs. Later 
 
 The playbook that sets up the worker should complete with text that looks like this:
 
-TODO: Add sample from end of playbook (note: Might not be exact if they install more/less workflows)
+    PLAY RECAP ******************************************************************** 
+    master                     : ok=60   changed=40   unreachable=0    failed=0   
+    
+*NOTE: The actual number of plays may vary, depending on how many workflows you installed*
 
 To connect to your new worker node, execute the following commands:
 
@@ -169,16 +172,24 @@ To connect to your new worker node, execute the following commands:
 Once you are connected to your worker, you can check which workflows are installed by examining the `/workflows` directory:
 
     ls -l /workflows
+    ubuntu@master:~$ ls -l /workflows
+    total 56300
+    -rw-r--r-- 1 root root 57636720 May 28 17:56 seqware-distribution-1.1.1-full.jar
+    drwxr-xr-x 3 root root     4096 May 28 17:56 Workflow_Bundle_BWA_2.6.1_SeqWare_1.1.0-alpha.5
+    drwxr-xr-x 3 root root     4096 May 28 18:01 Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1
     
-TODO: sample output (may vary depending on which workflows were configured)
+*NOTE: The output might vary depending on the number of workflows you configured to install*
     
 You should see a directory for each workflow you configured in your installation.
 
 If you want to see which docker images are installed on the worker, you can use this command:
 
     docker images
+    REPOSITORY                              TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
+    pancancer/seqware_whitestar_pancancer   1.1.1               ec5640650e0d        13 days ago         2.113 GB
+    seqware/seqware_whitestar               1.1.1               25c37e8ca531        13 days ago         1.565 GB
 
-TODO: Sample output
+*NOTE: This output may vary. For example, the value for "CREATED" is relative to the moment you run the command.*
 
 You can then exit your worker by typing "exit". This will return you to the shell in the pancancer_launcher container on your launcher node.
 
