@@ -35,7 +35,8 @@ ENV PYTHONUNBUFFERED 1
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
     cd architecture-setup && \
     git checkout feature/architecture-setup-3 && \
-    git submodule init && git submodule update --remote
+    git submodule init && git submodule update && \
+    git submodule foreach 'git describe --all' 
 WORKDIR /home/ubuntu/architecture-setup
 RUN ansible-playbook -i inventory site.yml
 #WORKDIR /home/ubuntu/architecture-setup/youxia/youxia-setup
