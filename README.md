@@ -133,13 +133,14 @@ You may also need to edit `aws_ebs_vols` and `lvm_device_whitelist`, depending o
 You can configure which workflows you want to install on a worker. The `workflows` configuration value contains a list of actual workflow bundle names. `workflow_name` is a list of the simple names of the workflows. The example above illustrates installing *all* of the workflows, but you do not have to do this if you only intend to run one workflow. For example, to only run the BWA workflow, you can edit your configuration to look like this:
 
     workflow_name=BWA
-    workflows=Workflow_Bundle_BWA_2.6.3_SeqWare_1.1.0-alpha.5
-<!--
-#### Security Group
-In AWS, new nodes are launched in the *default* security group, unless you specify otherwise. If your default security group will not allow inbound connections from your launcher node, you can specify a security group in your config file for your worker nodes. Using the same security group for the launcher and worker nodes is the simplest solution.
+    workflows=Workflow_Bundle_BWA_2.6.1_SeqWare_1.1.0-alpha.5
 
-TODO: Sample config once it's done.
--->
+#### Security Group
+In AWS, new nodes are launched in the "default" security group, unless you specify otherwise. If your default security group *does not* allow inbound connections from your launcher node, you can specify a security group in your config file for your worker nodes. You can configure your worker to be in the same security group as your launcher. For example, if your launcher's security group is "SecGrp1", you would add to your configuration file:
+
+    aws_security_group=SecGrp1
+    
+You should also configure your security group so that it accepts incoming SSH connections from the public IP address of your launcher node.
 
 ### Provisioning worker nodes with Bindle
 
@@ -149,6 +150,38 @@ Once you have completed configuring Bindle, you can run bindle like this:
     perl bin/launch_cluster.pl --config aws --custom-params singlenode
     
 Bindle will now begin the process of provisioning and setting up new VMs. Later on, you may want to read [this](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/feature/documentation_overhaul/production/fleet_management.md) page about managing a fleet of Pancancer VMs.
+
+#### Verifying the new worker node.
+
+The playbook that sets up the worker should complete with text that looks like this:
+
+TODO: Add sample from end of playbook (note: Might not be exact if they install more/less workflows)
+
+To connect to your new worker node, execute the following commands:
+
+    cd singlenode_vagrant_1/master
+    vagrant ssh
+
+*NOTE:* If you changed the value of `target_directory` in your configuration, the first command should look like this:
+
+    cd <your value for target_directory>/master
+
+Once you are connected to your worker, you can check which workflows are installed by examining the `/workflows` directory:
+
+    ls -l /workflows
+    
+TODO: sample output (may vary depending on which workflows were configured)
+    
+You should see a directory for each workflow you configured in your installation.
+
+If you want to see which docker images are installed on the worker, you can use this command:
+
+    docker images
+
+TODO: Sample output
+
+You can then exit your worker by typing "exit". This will return you to the shell in the pancancer_launcher container on your launcher node.
+
 <!--
 ## Running youxia
 
