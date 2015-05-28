@@ -22,7 +22,8 @@ When you instance has finished starting up, log in to it and install docker. A d
 
     wget -qO- https://get.docker.com/ | sh
 
-<!-- if future versions of docker are ever incompatible with our dockerfile, we may need to change the installation process to specify a specifc version of docker. Can probably figure it out by reading through their install script -->
+<!--
+if future versions of docker are ever incompatible with our dockerfile, we may need to change the installation process to specify a specifc version of docker. Can probably figure it out by reading through their install script -->
 
 Once you have docker installed, you will want to give your user access to the "docker" group:
 
@@ -78,6 +79,7 @@ Executing the script can look like this:
     bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem latest
 <!--
 NOTE FOR SOLOMON: need to update sample for aws.cfg in pancancer-bag playbook and also set up folder for config, add notes about how to configure different workflows (Done: openstack.cfg not being copied for some reason). Better: Don't worry about copying in a config from host (for now), container should already container the configs that are ready to go (Done). Need to get mappings for Workflow -> instance type (for example, BWA needs m1.xlarge) (Done - need more details?). Also need list of up-to-date version strings for workflows (TODO!). Need newer AMI ID (Done). Delete all gluster stuff from config (Done). What does bwa_version_string do, can it be removed? (TODO!) Also, BWA should be 2.6.1. Change name of "cluster1" to "multinode" (Done). Also, clusters may not work so maybe remove that from the config.
+Make sure Adam's latest changes are in the Bindle template.
 -->
 This should start up your container.
 
