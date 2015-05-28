@@ -20,14 +20,14 @@ Start up a new VM in AWS. This guide uses configuration that assumes you will be
 
 **IMPORTANT:** Docker has specific requirements for the Linux kernel. For Ubuntu, the minimum kernel version supported is 3.10 (this minimum kernel version may vary with different Linux distributions). If your VMs do not have this kernel, you may need to consider upgrading. More information about docker and kernel requirements can be found [here](https://docs.docker.com/installation/ubuntulinux/).
 
-When you instance has finished starting up, log in to it and install docker. A detailed installation guide can be found [here](https://docs.docker.com/installation/), although installing docker on Ubuntu is quite simple; you can simply run this command:
+When you instance has finished starting up, log in to it (this guide assumes you are logging in to the VM as the "ubuntu" user) and install docker. A detailed installation guide can be found [here](https://docs.docker.com/installation/), although installing docker on Ubuntu is quite simple; you can simply run this command:
 
     wget -qO- https://get.docker.com/ | sh
 
 <!--
 if future versions of docker are ever incompatible with our dockerfile, we may need to change the installation process to specify a specifc version of docker. Can probably figure it out by reading through their install script -->
 
-Once you have docker installed, you will want to give your current user (most likely the "ubuntu" user) access to the "docker" group:
+Once you have docker installed, you will want to give your current user access to the "docker" group:
 
     sudo usermod -aG docker ubuntu
 
