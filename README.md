@@ -135,6 +135,12 @@ You can configure which workflows you want to install on a worker. The `workflow
 
     workflow_name=BWA
     workflows=Workflow_Bundle_BWA_2.6.3_SeqWare_1.1.0-alpha.5
+<!--
+#### Security Group
+In AWS, new nodes are launched in the *default* security group, unless you specify otherwise. If your default security group will not allow inbound connections from your launcher node, you can specify a security group in your config file for your worker nodes. Using the same security group for the launcher and worker nodes is the simplest solution.
+
+TODO: Sample config once it's done.
+-->
 
 ### Provisioning worker nodes with Bindle
 
