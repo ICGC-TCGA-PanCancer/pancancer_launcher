@@ -138,7 +138,7 @@ You can configure which workflows you want to install on a worker. The `workflow
 Once you have completed configuring Bindle, you can run bindle like this:
 
     cd ~/architecture-setup/Bindle
-    perl bin/launch_cluster.pl --config aws --custom-params singlenode1
+    perl bin/launch_cluster.pl --config aws --custom-params singlenode
     
 Bindle will now begin the process of provisioning and setting up new VMs. Later on, you may want to read [this](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/feature/documentation_overhaul/production/fleet_management.md) page about managing a fleet of Pancancer VMs.
 <!--
