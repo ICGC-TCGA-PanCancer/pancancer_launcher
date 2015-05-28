@@ -99,7 +99,10 @@ Once the container has started, you should have a fully functional launcher host
 * from the container, launch a new worker host on a cloud (AWS in our example here) which is capable of running the PanCancer workflows
 * get a test job from the central decider
 * run that test job of a workflow on the new worker host
-    
+
+### GNOS Pem keys
+If you plan on running workflows that require a valid GNOS pem key, please ensure that your `gnos.pem` file is in `~/.ssh`. You will find there is a placeholder file already in that location, but it is empty. You should overwrite the contents of this file with your real pem key file. This file will be copied over to your worker nodes so that they can run the workflows that require a GNOS pem key.
+
 You are now ready to run Bindle to create a new VM as a first step.
 
 ## Running Bindle
