@@ -81,6 +81,8 @@ Executing the script can look like this:
 NOTE FOR SOLOMON: need to update sample for aws.cfg in pancancer-bag playbook and also set up folder for config, add notes about how to configure different workflows (Done: openstack.cfg not being copied for some reason). Better: Don't worry about copying in a config from host (for now), container should already container the configs that are ready to go (Done). Need to get mappings for Workflow -> instance type (for example, BWA needs m1.xlarge) (Done - need more details?). Also need list of up-to-date version strings for workflows (TODO!). Need newer AMI ID (Done). Delete all gluster stuff from config (Done). What does bwa_version_string do, can it be removed? (TODO!) Also, BWA should be 2.6.1. Change name of "cluster1" to "multinode" (Done). Also, clusters may not work so maybe remove that from the config.
 Make sure Adam's latest changes are in the Bindle template.
 Also: can the security group be passed in for AWS?
+
+Document sercurity groups! Add config in aws.cfg
 -->
 This should start up your container.
 
