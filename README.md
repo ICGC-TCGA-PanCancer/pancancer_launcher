@@ -158,7 +158,14 @@ Youxia is an application that can start up new VMs based on existing snapshots. 
 -->
 ## Running a workflow
 
+### Login to worker
+
+In the steps above we created a worker node that has all the workflows installed and ready to go, in this example BWA and HelloWorld.  The next step in your testing is to login to the worker node and try out the HelloWorld workflow to ensure the worker node is OK.
+
+Log into your worker node now, you can use the "connect" button in the AWS console to get information on how to connect via SSH.
+
 ### Using Docker to run a workflow
+
 Workflows are run by calling docker and executing the workflow using a seqware container. To run the HelloWorld workflow, the command looks like this:
 
     docker run --rm -h master -t -v /var/run/docker.sock:/var/run/docker.sock \
