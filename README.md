@@ -174,7 +174,13 @@ Workflows are run by calling docker and executing the workflow using a seqware c
       -i pancancer/seqware_whitestar_pancancer:1.1.1 \
       seqware bundle launch --dir /workflow --no-metadata
 
-If you execute this command, you should see the output of the HelloWorld workflow.
+If you execute this command, you should see the output of the HelloWorld workflow indicate a successful run, look for:
+
+    ...
+    [2015/05/28 17:23:18] | Setting workflow-run status to completed for: 10
+    [--plugin, io.seqware.pipeline.plugins.WorkflowWatcher, --, --workflow-run-accession, 10]
+    Workflow run 10 is currently completed
+    ...
 
 The key to this is mapping the HelloWorld bundle directory (`/workflows/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1`) to a specific directory within the container (`/workflow`), and then telling Docker to run the `seqware` command with the parameters `bundle launch --dir /workflow --no-metadata`. The `--dir /workflow` parameter tells seqware that the workflow to execute is in the `/workflow` directory, which was mapped to `/workflows/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1` on the host.
 
