@@ -274,3 +274,17 @@ The next time you run the startup script, you can reconnect to your saved image 
 
     bash start_launcher_container.sh ~/.ssh/my_key.pem local-1.0.0
 -->
+
+## Known Issues
+### Issues related to installing Docker
+Sometimes the docker install process will hang. This usually happens when it tries to apply a kernel update. One workaround for this is to execute these commands and then install docker:
+
+    sudo apt-get install linux-image-extra-$(uname -r)
+    sudo modprobe aufs
+
+It might be necessary to simply terminate a launcher host whose docker installation gets stuck at this point, and then start a new one and run these commands *before* attempting to install docker.
+
+### Issues related to networking
+
+#### Proxies
+If your launcher host is behind proxies, make sure that they will allow this host to connect to dockerhub to download the docker images. Dockerhub may also store docker redirect a "docker pull" request to their main storage servers, so ensure that your proxies allow access to those servers as well.
