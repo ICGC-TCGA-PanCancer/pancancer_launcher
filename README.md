@@ -66,7 +66,7 @@ The pancancer_launcher can start up new VMs on AWS. To do this, it needs access 
 
 The easiest way to start up the pancancer_launcher container is to use a helper script. You can get the helper script like this:
 
-    wget https://raw.githubusercontent.com/ICGC-TCGA-PanCancer/architecture-setup/3.0.0/start_launcher_container.sh
+    wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.0.0/start_launcher_container.sh
     
 The script takes two arguments:
  - The path to the pem key that you want to use for new worker VMs
