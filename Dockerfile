@@ -34,7 +34,7 @@ ENV PYTHONUNBUFFERED 1
 # Get code and run playbooks to build the container
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
     cd architecture-setup && \
-    git checkout feature/architecture-setup-3 && \
+    git checkout 3.0.0 && \
     git submodule init && git submodule update && \
     git submodule foreach 'git describe --all' 
 WORKDIR /home/ubuntu/architecture-setup
@@ -44,6 +44,9 @@ RUN ansible-playbook -i inventory site.yml
 #WORKDIR /home/ubuntu/architecture-setup/youxia/ansible_sensu
 #RUN ansible-playbook -i inventory site.yml
 WORKDIR /home/ubuntu/architecture-setup/
+
+# The entry point of the container is start_services_in_container.sh, which will start up any necessary services, and also copy SSH pem keys and config files from the host. 
+CMD ["/bin/bash","/home/ubuntu/start_services_in_container.sh"]
 
 # The entry point of the container is start_services_in_container.sh, which will start up any necessary services, and also copy SSH pem keys and config files from the host. 
 CMD ["/bin/bash","/home/ubuntu/start_services_in_container.sh"]
