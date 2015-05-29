@@ -34,7 +34,7 @@ ENV PYTHONUNBUFFERED 1
 # Get code and run playbooks to build the container
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
     cd architecture-setup && \
-    git checkout feature/architecture-setup-3 && \
+    git checkout 3.0.0 && \
     git submodule init && git submodule update && \
     git submodule foreach 'git describe --all' 
 WORKDIR /home/ubuntu/architecture-setup
