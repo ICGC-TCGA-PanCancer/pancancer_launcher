@@ -48,5 +48,4 @@ WORKDIR /home/ubuntu/architecture-setup/
 # The entry point of the container is start_services_in_container.sh, which will start up any necessary services, and also copy SSH pem keys and config files from the host. 
 CMD ["/bin/bash","/home/ubuntu/start_services_in_container.sh"]
 
-# The entry point of the container is start_services_in_container.sh, which will start up any necessary services, and also copy SSH pem keys and config files from the host. 
-CMD ["/bin/bash","/home/ubuntu/start_services_in_container.sh"]
+
