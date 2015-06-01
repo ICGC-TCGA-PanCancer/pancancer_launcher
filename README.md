@@ -35,6 +35,8 @@ This will save you the trouble of having to "sudo" every docker command.
 
 **DO THIS NOW.**
 
+*NOTE:* To use docker properly, your network must allow your host machine to connect to dockerhub on the internet, as well as the hosts that provide dockerhub's storage for images. If you are behind proxies, you must configure them to allow your launcher to have access to these outside networks, or docker will not be able to pull in new images from dockerhub.
+
 To see if your docker installation is working correctly, you can run the "hello world" container:
 
     docker run hello-world
@@ -66,7 +68,7 @@ The pancancer_launcher can start up new VMs on AWS. To do this, it needs access 
 
 The easiest way to start up the pancancer_launcher container is to use a helper script. You can get the helper script like this:
 
-    wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.0.0/start_launcher_container.sh
+    wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.0.2/start_launcher_container.sh
     
 The script takes two arguments:
  - The path to the pem key that you want to use for new worker VMs
@@ -93,10 +95,13 @@ Once the container has started, you should have a fully functional launcher host
 * get a test job from the central decider
 * run that test job of a workflow on the new worker host
 
-### GNOS Pem keys
-If you plan on running workflows that require a valid GNOS pem key, please ensure that your `gnos.pem` file is in `~/.ssh`. You will find there is a placeholder file already in that location, **but it is an empty placeholder!** You **must** overwrite the contents of this file with your real pem key file. This file will be copied over to your worker nodes so that they can run the workflows that require a GNOS pem key.
+### GNOS keys
+If you plan on running workflows that require a valid GNOS key, please follow these steps:
 
-You are now ready to run Bindle to create a new VM as a first step.
+1. Inside the launcher container, create the directory `~/.gnos`
+2. Copy all of your GNOS keys into this directory.
+
+All of the files in your launcher container's `~/.gnos` should be copied into `~/.gnos` *on the worker.*
 
 ## Running Bindle
 
@@ -113,11 +118,11 @@ The most important edits are setting the correct values for `aws_key`, `aws_secr
 #### Instance type
 Some workflows run best with specific instance types. Here is a table with the best pairings, for AWS:
 
-| Workflow | Instance Type |
-|----------|---------------|
-| BWA      | m1.xlarge     |
-| Sanger   | r3.8xlarge    |
-| DKFZ/EMBL| r3.8xlarge    |
+| Workflow | Instance Type | AMI         | Device mapping (as a line in your aws.cfg file)
+|----------|---------------|-------------|-------------------
+| BWA      | m1.xlarge     | ami-d85e75b0|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{ 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdc','VirtualName' => 'ephemeral1'},{'DeviceName' => '/dev/sdd', 'VirtualName'=>'ephemeral2'},{'DeviceName' => '/dev/sde', 'VirtualName' => 'ephemeral3'}]"
+| Sanger   | r3.8xlarge    | ami-d05e75b8|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{'DeviceName' => '/dev/sdb', 'Ebs.VolumeSize'=>400  },{ 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdd','VirtualName' => 'ephemeral1'}]"
+| DKFZ/EMBL| r3.8xlarge    | ami-d05e75b8|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{'DeviceName' => '/dev/sdb', 'Ebs.VolumeSize'=>400  },{ 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdd','VirtualName' => 'ephemeral1'}]"
 
 
 #### Volumes
@@ -134,7 +139,7 @@ In AWS, new nodes are launched in the "default" security group, unless you speci
 
     aws_security_group=SecGrp1
     
-You should also configure your security group so that it accepts incoming SSH connections from the public IP address of your launcher node.
+**VERY IMPORTANT:** _You should also configure your security group so that it accepts incoming SSH connections from the public IP address of your launcher node._
 
 ### Provisioning worker nodes with Bindle
 
@@ -143,7 +148,7 @@ Once you have completed configuring Bindle, you can run bindle like this:
     cd ~/architecture-setup/Bindle
     perl bin/launch_cluster.pl --config aws --custom-params singlenode
     
-Bindle will now begin the process of provisioning and setting up new VMs. Later on, you may want to read [this](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/feature/documentation_overhaul/production/fleet_management.md) page about managing a fleet of Pancancer VMs.
+Bindle will now begin the process of provisioning and setting up new VMs. Later on, you may want to read [this](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/3.0.2/production/fleet_management.md#managing-an-existing-pancancer-environment) page about managing a fleet of Pancancer VMs.
 
 #### Verifying the new worker node.
 
@@ -261,7 +266,7 @@ TODO: More detail, other workflow examples...
 
 ### Using INI files from the Central Decider Client
 
-When running your workflows, you will probably want to use an INI file generated by the Central Decider Client. Please [click here](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/feature/documentation_overhaul/production/central_decider_client.md) for more information on how to get the INI files and how they can be submitted to a worker node.
+When running your workflows, you will probably want to use an INI file generated by the Central Decider Client. Please [click here](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/3.0.2/production/central_decider_client.md#the-central-decider-client) for more information on how to get the INI files and how they can be submitted to a worker node.
 
 <!--
 ## Saving your work
@@ -274,3 +279,17 @@ The next time you run the startup script, you can reconnect to your saved image 
 
     bash start_launcher_container.sh ~/.ssh/my_key.pem local-1.0.0
 -->
+
+## Known Issues
+### Issues related to installing Docker
+Sometimes the docker install process will hang. This usually happens when it tries to apply a kernel update. One workaround for this is to execute these commands and then install docker:
+
+    sudo apt-get install linux-image-extra-$(uname -r)
+    sudo modprobe aufs
+
+It might be necessary to simply terminate a launcher host whose docker installation gets stuck at this point, and then start a new one and run these commands *before* attempting to install docker.
+
+### Issues related to networking
+
+#### Proxies
+If your launcher host is behind proxies, make sure that they will allow this host to connect to dockerhub to download the docker images. Dockerhub may also store docker redirect a "docker pull" request to their main storage servers, so ensure that your proxies allow access to those servers as well.
