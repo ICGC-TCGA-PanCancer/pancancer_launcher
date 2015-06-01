@@ -35,6 +35,8 @@ This will save you the trouble of having to "sudo" every docker command.
 
 **DO THIS NOW.**
 
+*NOTE:* To use docker properly, your network must allow your host machine to connect to dockerhub on the internet, as well as the hosts that provide dockerhub's storage for images. If you are behind proxies, you must configure them to allow your launcher to have access to these outside networks, or docker will not be able to pull in new images from dockerhub.
+
 To see if your docker installation is working correctly, you can run the "hello world" container:
 
     docker run hello-world
