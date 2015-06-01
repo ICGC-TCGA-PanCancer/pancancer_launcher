@@ -136,7 +136,7 @@ In AWS, new nodes are launched in the "default" security group, unless you speci
 
     aws_security_group=SecGrp1
     
-**VERY IMPORTANT:** You should also configure your security group so that it accepts incoming SSH connections from the public IP address of your launcher node.
+**VERY IMPORTANT:** _You should also configure your security group so that it accepts incoming SSH connections from the public IP address of your launcher node._
 
 ### Provisioning worker nodes with Bindle
 
