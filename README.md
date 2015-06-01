@@ -148,7 +148,7 @@ Once you have completed configuring Bindle, you can run bindle like this:
     cd ~/architecture-setup/Bindle
     perl bin/launch_cluster.pl --config aws --custom-params singlenode
     
-Bindle will now begin the process of provisioning and setting up new VMs. Later on, you may want to read [this](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/3.0.2/documentation_overhaul/production/fleet_management.md) page about managing a fleet of Pancancer VMs.
+Bindle will now begin the process of provisioning and setting up new VMs. Later on, you may want to read [this](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/3.0.2/production/fleet_management.md#managing-an-existing-pancancer-environment) page about managing a fleet of Pancancer VMs.
 
 #### Verifying the new worker node.
 
