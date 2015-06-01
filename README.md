@@ -103,8 +103,6 @@ If you plan on running workflows that require a valid GNOS key, please follow th
 
 All of the files in your launcher container's `~/.gnos` should be copied into `~/.gnos` *on the worker.*
 
-**_You are now ready to run Bindle to create a new VM!_**
-
 ## Running Bindle
 
 Bindle is a toolset that can create new VMs, and install workflows and all of their necessary dependencies onto the VMs. You can learn more about Bindle [here](https://github.com/CloudBindle/Bindle#about-bindle).
