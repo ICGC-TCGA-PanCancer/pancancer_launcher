@@ -115,11 +115,11 @@ The most important edits are setting the correct values for `aws_key`, `aws_secr
 #### Instance type
 Some workflows run best with specific instance types. Here is a table with the best pairings, for AWS:
 
-| Workflow | Instance Type |
-|----------|---------------|
-| BWA      | m1.xlarge     |
-| Sanger   | r3.8xlarge    |
-| DKFZ/EMBL| r3.8xlarge    |
+| Workflow | Instance Type | AMI         | Device mapping
+|----------|---------------|-------------|-------------------
+| BWA      | m1.xlarge     | ami-d85e75b0|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{ 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdc','VirtualName' => 'ephemeral1'},{'DeviceName' => '/dev/sdd', 'VirtualName'=>'ephemeral2'},{'DeviceName' => '/dev/sde', 'VirtualName' => 'ephemeral3'}]"
+| Sanger   | r3.8xlarge    | ami-d05e75b8|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{'DeviceName' => '/dev/sdb', 'Ebs.VolumeSize'=>400  },{ 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdd','VirtualName' => 'ephemeral1'}]"
+| DKFZ/EMBL| r3.8xlarge    | ami-d05e75b8|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{'DeviceName' => '/dev/sdb', 'Ebs.VolumeSize'=>400  },{ 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdd','VirtualName' => 'ephemeral1'}]"
 
 
 #### Volumes
@@ -136,7 +136,7 @@ In AWS, new nodes are launched in the "default" security group, unless you speci
 
     aws_security_group=SecGrp1
     
-You should also configure your security group so that it accepts incoming SSH connections from the public IP address of your launcher node.
+**VERY IMPORTANT:** You should also configure your security group so that it accepts incoming SSH connections from the public IP address of your launcher node.
 
 ### Provisioning worker nodes with Bindle
 
