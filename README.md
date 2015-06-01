@@ -103,7 +103,7 @@ If you plan on running workflows that require a valid GNOS key, please follow th
 
 All of the files in your launcher container's `~/.gnos` should be copied into `~/.gnos` *on the worker.*
 
-You are now ready to run Bindle to create a new VM as a first step.
+**_You are now ready to run Bindle to create a new VM!_**
 
 ## Running Bindle
 
