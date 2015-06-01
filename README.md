@@ -68,7 +68,7 @@ The pancancer_launcher can start up new VMs on AWS. To do this, it needs access 
 
 The easiest way to start up the pancancer_launcher container is to use a helper script. You can get the helper script like this:
 
-    wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.0.1/start_launcher_container.sh
+    wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.0.2/start_launcher_container.sh
     
 The script takes two arguments:
  - The path to the pem key that you want to use for new worker VMs
@@ -148,7 +148,7 @@ Once you have completed configuring Bindle, you can run bindle like this:
     cd ~/architecture-setup/Bindle
     perl bin/launch_cluster.pl --config aws --custom-params singlenode
     
-Bindle will now begin the process of provisioning and setting up new VMs. Later on, you may want to read [this](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/feature/documentation_overhaul/production/fleet_management.md) page about managing a fleet of Pancancer VMs.
+Bindle will now begin the process of provisioning and setting up new VMs. Later on, you may want to read [this](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/3.0.2/documentation_overhaul/production/fleet_management.md) page about managing a fleet of Pancancer VMs.
 
 #### Verifying the new worker node.
 
