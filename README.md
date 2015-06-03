@@ -66,7 +66,7 @@ The pancancer\_launcher container will require several sets of credentials:
  - GNOS keys - these keys are used by some workflows. Your GNOS keys should be placed in `~/.gnos` on your host machine.
  - AWS credentials - your AWS credentials are needed to download certain workflows. Your AWS credentials should be placed in your `~/.aws` directory. If you have ever used the AWS CLI tool, you probably already have these files in place and you can just copy them to the host machine. If you do not have these files set up, follow thes instructions on [this page](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-config-files).
 
-**IMPORTANT:** Your AWS credentials are private! Do not create an AMI/snapshot of any machine with valid AWS credentials on it! Remove the credentials before creating any AMI/snapshot.
+**IMPORTANT:** Your AWS credentials are private! Do **not** create an AMI/snapshot of any VM with valid AWS credentials on it! Remove the credentials before creating any AMI/snapshot.
 
 #### Setting up your SSH pem keys.
 
