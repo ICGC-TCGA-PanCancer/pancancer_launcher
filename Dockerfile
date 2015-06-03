@@ -30,9 +30,8 @@ ENV USER ubuntu
 WORKDIR /home/ubuntu
 
 # setup .ssh and gnos.pem - user should move a valid keyfile in if they have one.
-RUN mkdir ~/.ssh && touch ~/.ssh/gnostest.pem && \
-    touch ~/.ssh/gnos.pem && mkdir ~/.aws
-
+RUN mkdir ~/.ssh && mkdir ~/.gnos && mkdir ~/.aws
+ 
 # So we can get Ansible output as it happens (rather than waiting for the execution to complete).
 ENV PYTHONUNBUFFERED 1
 # Get code and run playbooks to build the container
@@ -51,7 +50,6 @@ WORKDIR /home/ubuntu/architecture-setup/monitoring-bag
 RUN ansible-playbook -i inventory site.yml
 WORKDIR /home/ubuntu/architecture-setup/
 
-ENV CONTAINER_BUILD_DATETIME $(date +%Y%m%d_%H%M%S)
 # The entry point of the container is start_services_in_container.sh, which will start up any necessary services, and also copy SSH pem keys and config files from the host. 
 CMD ["/bin/bash","/home/ubuntu/start_services_in_container.sh"]
 
