@@ -64,7 +64,7 @@ To see further details about the container (such as the available versions/tags)
 The pancancer\_launcher container will require several sets of credentials:
  - SSH key - this is the key that you use to launch new VMs in your environment. Your SSH keys should be in `~/.ssh/` on your host machine.
  - GNOS keys - these keys are used by some workflows. Your GNOS keys should be placed in `~/.gnos` on your host machine.
- - AWS credentials - your AWS credentials are needed to download certain workflows. Your AWS credentials should be placed in your `~/.aws` directory. If you have ever used the AWS CLI tool, you probably already have these files in place. If you do not have these files set up, follow thes instructions on [this page](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-config-files).
+ - AWS credentials - your AWS credentials are needed to download certain workflows. Your AWS credentials should be placed in your `~/.aws` directory. If you have ever used the AWS CLI tool, you probably already have these files in place and you can just copy them to the host machine. If you do not have these files set up, follow thes instructions on [this page](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-config-files).
 
 
 #### Setting up your SSH pem keys.
