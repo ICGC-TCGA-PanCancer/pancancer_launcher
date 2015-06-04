@@ -270,7 +270,7 @@ To change which workflow that you are executing, change the mapping of the conta
       -v /workflows/Workflow_Bundle_BWA_2.6.1_SeqWare_1.1.0-alpha.5:/workflow \
       ...
 
-TODO: More detail, other workflow examples...
+
 
 ### Using INI files from the Central Decider Client
 
@@ -321,6 +321,15 @@ The next time you run the startup script, you can reconnect to your saved image 
 
     bash start_launcher_container.sh ~/.ssh/my_key.pem local-1.0.0
 -->
+
+### Monitoring
+The pancancer_launcher contains uses sensu for monitoring its worker nodes. It also contains Uchiwa, which functions as a dashboard for the senus monitoring. 
+
+To access the dashboard, navigate to 
+
+    http://<public IP of machine running pancancer_launcher>:3000/
+    
+You will be prompted for a username and password. Enter: "seqware" and "seqware". You will then be able to see the status of the worker nodes, and the sensu-server itself.
 
 ## Known Issues
 ### Issues related to installing Docker
