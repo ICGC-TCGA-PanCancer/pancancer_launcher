@@ -280,6 +280,12 @@ When running your workflows, you will probably want to use an INI file generated
 
 If instructed to, you may be able to use our queue-based scheduling system. This is pre-installed into the launcher and should only need some configuration to provision workers, tear-down workers, and schedule workflows to workers. 
 
+For debugging, you can login to the RabbitMQ web interface at port 15672 or login to postgres using "psql -U queue_status".
+
+For certain pancancer launcher versions, you'll need to create the sql schema:
+
+    PGPASSWORD=queue psql -h 127.0.0.1 -U queue_user -w queue_status < /home/ubuntu/arch3/dbsetup/schema.sql
+
 First, you'll want to correct your parameters used by the container\_host playbook to setup workers:
 
     vim ~/params.json
@@ -295,7 +301,11 @@ Third, you'll want to correct your parameters used for youxia (see [this](https:
 You will then be able to kick-off the various services:
 
     screen
-    ...
+    java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.jobGenerator.JobGenerator --config ~/arch3/config/masterConfig.json --total-jobs 5
+    (create a new window)
+    java -cp ~/arch3/bin/pancancer-arch-*.jar info.pancancer.arch3.coordinator.Coordinator  --config ~/arch3/config/masterConfig.json --endless
+    (create a new window)
+     java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.containerProvisioner.ContainerProvisionerThreads  --config ~/arch3/config/masterConfig.json --endless
     
 
 See [arch3](https://github.com/CancerCollaboratory/sandbox/blob/develop/pancancer-arch-3/README.md#testing-locally) for more details. 
