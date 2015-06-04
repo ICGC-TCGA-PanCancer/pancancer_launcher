@@ -126,11 +126,11 @@ The most important edits are setting the correct values for `aws_key`, `aws_secr
 #### Instance type
 Some workflows run best with specific instance types. Here is a table with the best pairings, for AWS:
 
-    | Workflow | Instance Type | AMI         | Device mapping (as a line in your aws.cfg file)
-    |----------|---------------|-------------|-------------------
-    | BWA      | m1.xlarge     | ami-d85e75b0|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{ 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdc','VirtualName' => 'ephemeral1'},{'DeviceName' => '/dev/sdd', 'VirtualName'=>'ephemeral2'},{'DeviceName' => '/dev/sde', 'VirtualName' => 'ephemeral3'}]"
-    | Sanger   | r3.8xlarge    | ami-d05e75b8|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{'DeviceName' => '/dev/sdb', 'Ebs.VolumeSize'=>400  },{ 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdd','VirtualName' => 'ephemeral1'}]"
-    | DKFZ/EMBL| r3.8xlarge    | ami-d05e75b8|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{'DeviceName' => '/dev/sdb', 'Ebs.VolumeSize'=>400  },{ 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdd','VirtualName' => 'ephemeral1'}]"
+| Workflow | Instance Type | AMI         | Device mapping (as a line in your aws.cfg file)
+|----------|---------------|-------------|-------------------
+| BWA      | m1.xlarge     | ami-d85e75b0|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{ 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdc','VirtualName' => 'ephemeral1'},{'DeviceName' => '/dev/sdd', 'VirtualName'=>'ephemeral2'},{'DeviceName' => '/dev/sde', 'VirtualName' => 'ephemeral3'}]"
+| Sanger   | r3.8xlarge    | ami-d05e75b8|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{'DeviceName' => '/dev/sdb', 'Ebs.VolumeSize'=>400  },{ 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdd','VirtualName' => 'ephemeral1'}]"
+| DKFZ/EMBL| r3.8xlarge    | ami-d05e75b8|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{'DeviceName' => '/dev/sdb', 'Ebs.VolumeSize'=>400  },{ 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdd','VirtualName' => 'ephemeral1'}]"
 
 
 #### Volumes
