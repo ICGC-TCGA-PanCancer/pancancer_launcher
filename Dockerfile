@@ -41,7 +41,9 @@ RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
     git submodule init && git submodule update && \
     git submodule foreach 'git describe --all' 
 WORKDIR /home/ubuntu/architecture-setup
-RUN ansible-playbook -i inventory site.yml
+RUN ansible-playbook -i inventory site.yml --extra-vars "install_bindle=true install_java=false install_arch3=false"
+RUN ansible-playbook -i inventory site.yml --extra-vars "install_bindle=false install_java=true install_arch3=false"
+RUN ansible-playbook -i inventory site.yml --extra-vars "install_bindle=false install_java=false install_arch3=true"
 
 # Set up monitoring stuff: run the ssl script and then run the playbook.
 WORKDIR /home/ubuntu/architecture-setup/monitoring-bag/ssl
