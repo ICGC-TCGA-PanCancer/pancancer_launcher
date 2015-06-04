@@ -331,6 +331,8 @@ To access the dashboard, navigate to
     
 You will be prompted for a username and password. Enter: "seqware" and "seqware". You will then be able to see the status of the worker nodes, and the sensu-server itself.
 
+**IMPORTANT:** On AWS, you may have to edit your security group rules to allow inbound traffic to port 3000 for the IP address of your launcher host VM if you want to be able to see the Uchiwa dashboard. You should also ensure that your security group allows all inbound TCP connections from itself and all inbound SSH connections from itself, as well as all TCP and SSH inbound connections from the public IP address of the launcher host VM.
+
 ## Known Issues
 ### Issues related to installing Docker
 Sometimes the docker install process will hang. This usually happens when it tries to apply a kernel update. One workaround for this is to execute these commands and then install docker:
