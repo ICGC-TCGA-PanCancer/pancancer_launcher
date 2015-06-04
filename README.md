@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The pancancer_launcher docker container is a docker container that contains all of the nececssary infrastructure to create new pancancer worker nodes which can be used as workers, or as the basis of a new VM snapshot, and start up new VMs based on existing snapshots.  The launcher also contains our centralized "decider" client that lets you fetch new work to be done e.g. the donors which need to be processed with a given workflow at your site.
+The pancancer\_launcher docker container is a docker container that contains all of the nececssary infrastructure to create new pancancer worker nodes which can be used as workers, or as the basis of a new VM snapshot, and start up new VMs based on existing snapshots.  The launcher also contains our centralized "decider" client that lets you fetch new work to be done e.g. the donors which need to be processed with a given workflow at your site.
 
 This document will guide you in installing and using this container.
 
@@ -48,13 +48,13 @@ You should see the following if everything is working OK:
 
 *(If you have had any problems getting docker installed, you may wish to consult the [detailed installation guide](https://docs.docker.com/installation/))*
 
-#### Installing the pancancer_launcher container
+#### Installing the pancancer\_launcher container
 
 Once you have docker installed, pull the docker image:
 
     docker pull pancancer/pancancer_launcher
 
-This command will pull the *latest* version of pancancer_launcher. If there is a specific version of the container you wish to pull, you can add the version to the command like this:
+This command will pull the *latest* version of pancancer\_launcher. If there is a specific version of the container you wish to pull, you can add the version to the command like this:
 
     docker pull pancancer/pancancer_launcher:1.0.0
 
@@ -70,11 +70,11 @@ The pancancer\_launcher container will require several sets of credentials:
 
 #### Setting up your SSH pem keys.
 
-The pancancer_launcher can start up new VMs on AWS. To do this, it needs access to the SSH pem key that you want to use for this purpose. Please make sure that you have copied your pem key to the host machine, and placed it in `~ubuntu/.ssh/<the name of your key>.pem`.  This is usually the SSH pem key you used to log in to the launcher host machine.  Make sure you `chmod 600 ~ubuntu/.ssh/<the name of your key>.pem` for security reasons.
+The pancancer\_launcher can start up new VMs on AWS. To do this, it needs access to the SSH pem key that you want to use for this purpose. Please make sure that you have copied your pem key to the host machine, and placed it in `~ubuntu/.ssh/<the name of your key>.pem`.  This is usually the SSH pem key you used to log in to the launcher host machine.  Make sure you `chmod 600 ~ubuntu/.ssh/<the name of your key>.pem` for security reasons.
 
 ## Starting the Launcher
 
-The easiest way to start up the pancancer_launcher container is to use a helper script. You can get the helper script like this:
+The easiest way to start up the pancancer\_launcher container is to use a helper script. You can get the helper script like this:
 
     wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.0.2/start_launcher_container.sh
     
@@ -126,11 +126,11 @@ The most important edits are setting the correct values for `aws_key`, `aws_secr
 #### Instance type
 Some workflows run best with specific instance types. Here is a table with the best pairings, for AWS:
 
-| Workflow | Instance Type | AMI         | Device mapping (as a line in your aws.cfg file)
-|----------|---------------|-------------|-------------------
-| BWA      | m1.xlarge     | ami-d85e75b0|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{ 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdc','VirtualName' => 'ephemeral1'},{'DeviceName' => '/dev/sdd', 'VirtualName'=>'ephemeral2'},{'DeviceName' => '/dev/sde', 'VirtualName' => 'ephemeral3'}]"
-| Sanger   | r3.8xlarge    | ami-d05e75b8|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{'DeviceName' => '/dev/sdb', 'Ebs.VolumeSize'=>400  },{ 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdd','VirtualName' => 'ephemeral1'}]"
-| DKFZ/EMBL| r3.8xlarge    | ami-d05e75b8|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{'DeviceName' => '/dev/sdb', 'Ebs.VolumeSize'=>400  },{ 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdd','VirtualName' => 'ephemeral1'}]"
+    | Workflow | Instance Type | AMI         | Device mapping (as a line in your aws.cfg file)
+    |----------|---------------|-------------|-------------------
+    | BWA      | m1.xlarge     | ami-d85e75b0|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{ 'DeviceName' => '/dev/sdb', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdc','VirtualName' => 'ephemeral1'},{'DeviceName' => '/dev/sdd', 'VirtualName'=>'ephemeral2'},{'DeviceName' => '/dev/sde', 'VirtualName' => 'ephemeral3'}]"
+    | Sanger   | r3.8xlarge    | ami-d05e75b8|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{'DeviceName' => '/dev/sdb', 'Ebs.VolumeSize'=>400  },{ 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdd','VirtualName' => 'ephemeral1'}]"
+    | DKFZ/EMBL| r3.8xlarge    | ami-d05e75b8|aws_ebs_vols = "aws.block_device_mapping = [{'DeviceName' => '/dev/sda1', 'Ebs.VolumeSize'=>100  },{'DeviceName' => '/dev/sdb', 'Ebs.VolumeSize'=>400  },{ 'DeviceName' => '/dev/sdc', 'VirtualName' => 'ephemeral0'},{'DeviceName' => '/dev/sdd','VirtualName' => 'ephemeral1'}]"
 
 
 #### Volumes
@@ -203,7 +203,7 @@ Output:
 
 *NOTE: This output may vary. For example, the value for "CREATED" is relative to the moment you run the command.*
 
-You can then exit your worker by typing "exit". This will return you to the shell in the pancancer_launcher container on your launcher node.
+You can then exit your worker by typing "exit". This will return you to the shell in the pancancer\_launcher container on your launcher node.
 
 #### Running multiple nodes
 
