@@ -37,7 +37,7 @@ ENV PYTHONUNBUFFERED 1
 # Get code and run playbooks to build the container
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
     cd architecture-setup && \
-    git checkout 3.0.3 && \
+    git checkout feature/thin_launcher && \
     git submodule init && git submodule update && \
     git submodule foreach 'git describe --all' 
 WORKDIR /home/ubuntu/architecture-setup
@@ -47,7 +47,7 @@ RUN ansible-playbook -i inventory site.yml
 WORKDIR /home/ubuntu/architecture-setup/monitoring-bag/ssl
 RUN ./script.sh
 WORKDIR /home/ubuntu/architecture-setup/monitoring-bag
-RUN ansible-playbook -i inventory site.yml
+RUN ansible-playbook -i inventory site.yml -e "ext_rabbitmq=true"
 WORKDIR /home/ubuntu/architecture-setup/
 
 # The entry point of the container is start_services_in_container.sh, which will start up any necessary services, and also copy SSH pem keys and config files from the host. 

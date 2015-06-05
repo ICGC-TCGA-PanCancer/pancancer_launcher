@@ -347,3 +347,15 @@ It might be necessary to simply terminate a launcher host whose docker installat
 
 #### Proxies
 If your launcher host is behind proxies, make sure that they will allow this host to connect to dockerhub to download the docker images. Dockerhub may also store docker redirect a "docker pull" request to their main storage servers, so ensure that your proxies allow access to those servers as well.
+
+## Docker Compose Experiment
+
+Install Docker compose https://docs.docker.com/compose/install/
+
+Build your network of containers with
+
+    docker-compose build
+
+Launch with 
+
+    docker-compose run launcher /bin/bash /home/ubuntu/start_services_in_container.sh /bin/bash

@@ -1,0 +1,25 @@
+launcher:
+  build: .
+  volumes:
+   - /home/dyuen/pancancer_launcher_config:/opt/from_host/config:ro 
+   - /home/dyuen/pancancer_launcher_ssh:/opt/from_host/ssh:ro 
+   - /home/dyuen/.aws/:/opt/from_host/aws:ro 
+   - /home/dyuen/.gnos/:/opt/from_host/gnos:ro 
+   - /etc/localtime:/etc/localtime:ro
+  environment:
+    HOST_ENV: NOT_CLOUD 
+    PEM_KEY_BASENAME: /opt/from_host/ssh/green_snake.pem
+    PGHOST: db
+    PGPORT: 5432
+  links:
+   - db
+   - rabbitmq
+   - redis 
+db:
+  image: postgres:9.1
+rabbitmq:
+  image: rabbitmq:3.5.3-management
+  ports:
+   - 15672:15672
+redis: 
+  image: redis:2.8.21
