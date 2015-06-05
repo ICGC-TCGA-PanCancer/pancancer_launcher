@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The pancancer_launcher docker container is a docker container that contains all of the nececssary infrastructure to create new pancancer worker nodes which can be used as workers, or as the basis of a new VM snapshot, and start up new VMs based on existing snapshots.  The launcher also contains our centralized "decider" client that lets you fetch new work to be done e.g. the donors which need to be processed with a given workflow at your site.
+The pancancer\_launcher docker container is a docker container that contains all of the nececssary infrastructure to create new pancancer worker nodes which can be used as workers, or as the basis of a new VM snapshot, and start up new VMs based on existing snapshots.  The launcher also contains our centralized "decider" client that lets you fetch new work to be done e.g. the donors which need to be processed with a given workflow at your site.
 
 This document will guide you in installing and using this container.
 
@@ -48,27 +48,35 @@ You should see the following if everything is working OK:
 
 *(If you have had any problems getting docker installed, you may wish to consult the [detailed installation guide](https://docs.docker.com/installation/))*
 
-#### Installing the pancancer_launcher container
+#### Installing the pancancer\_launcher container
 
 Once you have docker installed, pull the docker image:
 
     docker pull pancancer/pancancer_launcher
 
-This command will pull the *latest* version of pancancer_launcher. If there is a specific version of the container you wish to pull, you can add the version to the command like this:
+This command will pull the *latest* version of pancancer\_launcher. If there is a specific version of the container you wish to pull, you can add the version to the command like this:
 
     docker pull pancancer/pancancer_launcher:1.0.0
 
 To see further details about the container (such as the available versions/tags), see the [relevant dockerhub page](https://registry.hub.docker.com/u/pancancer/pancancer_launcher/).
 
+### Credentials
+The pancancer\_launcher container will require several sets of credentials:
+ - SSH key - this is the key that you use to launch new VMs in your environment. Your SSH keys should be in `~/.ssh/` on your host machine.
+ - GNOS keys - these keys are used by some workflows. Your GNOS keys should be placed in `~/.gnos` on your host machine. If you have a *single* GNOS key we recommend you put it in `~/.gnos/gnos.pem` since the directions below reference that by default. If you have multiple GNOS keys, you should still place them in `~/.gnos/`, although your workflow configuration will need to be altered to reference the different keys correctly. All files in `~/.gnos` on the host VM will be copied into your container.
+ - AWS credentials - your AWS credentials are needed to download certain workflows. Your AWS credentials should be placed in your `~/.aws` directory. If you have ever used the AWS CLI tool, you probably already have these files in place and you can just copy them to the host machine. If you do not have these files set up, follow thes instructions on [this page](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-config-files). All files in your `~/.aws` directory on the host VM will be copied into the container.
+
+**IMPORTANT:** Your AWS credentials are private! Do **not** create an AMI/snapshot of any VM with valid AWS credentials on it! Remove the credentials before creating any AMI/snapshot.
+
 #### Setting up your SSH pem keys.
 
-The pancancer_launcher can start up new VMs on AWS. To do this, it needs access to the SSH pem key that you want to use for this purpose. Please make sure that you have copied your pem key to the host machine, and placed it in `~ubuntu/.ssh/<the name of your key>.pem`.  This is usually the SSH pem key you used to log in to the launcher host machine.  Make sure you `chmod 600 ~ubuntu/.ssh/<the name of your key>.pem` for security reasons.
+The pancancer\_launcher can start up new VMs on AWS. To do this, it needs access to the SSH pem key that you want to use for this purpose. Please make sure that you have copied your pem key to the host machine, and placed it in `~ubuntu/.ssh/<the name of your key>.pem`.  This is usually the SSH pem key you used to log in to the launcher host machine.  Make sure you `chmod 600 ~ubuntu/.ssh/<the name of your key>.pem` for security reasons.
 
 ## Starting the Launcher
 
-The easiest way to start up the pancancer_launcher container is to use a helper script. You can get the helper script like this:
+The easiest way to start up the pancancer\_launcher container is to use a helper script. You can get the helper script like this:
 
-    wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.0.2/start_launcher_container.sh
+    wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.0.3/start_launcher_container.sh
     
 The script takes two arguments:
  - The path to the pem key that you want to use for new worker VMs
@@ -139,7 +147,7 @@ In AWS, new nodes are launched in the "default" security group, unless you speci
 
     aws_security_group=SecGrp1
     
-**VERY IMPORTANT:** _You should also configure your security group so that it accepts incoming SSH connections from the public IP address of your launcher node._
+**VERY IMPORTANT:** _You should also configure your security group so that it accepts incoming SSH and TCP connections from the public IP address of your launcher node, as well as from the security group itself._
 
 ### Provisioning worker nodes with Bindle
 
@@ -148,7 +156,7 @@ Once you have completed configuring Bindle, you can run bindle like this:
     cd ~/architecture-setup/Bindle
     perl bin/launch_cluster.pl --config aws --custom-params singlenode
     
-Bindle will now begin the process of provisioning and setting up new VMs. Later on, you may want to read [this](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/3.0.2/production/fleet_management.md#managing-an-existing-pancancer-environment) page about managing a fleet of Pancancer VMs.
+Bindle will now begin the process of provisioning and setting up new VMs. Later on, you may want to read [this](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/3.0.3/production/fleet_management.md#managing-an-existing-pancancer-environment) page about managing a fleet of Pancancer VMs.
 
 #### Verifying the new worker node.
 
@@ -195,7 +203,7 @@ Output:
 
 *NOTE: This output may vary. For example, the value for "CREATED" is relative to the moment you run the command.*
 
-You can then exit your worker by typing "exit". This will return you to the shell in the pancancer_launcher container on your launcher node.
+You can then exit your worker by typing "exit". This will return you to the shell in the pancancer\_launcher container on your launcher node.
 
 #### Running multiple nodes
 
@@ -262,11 +270,45 @@ To change which workflow that you are executing, change the mapping of the conta
       -v /workflows/Workflow_Bundle_BWA_2.6.1_SeqWare_1.1.0-alpha.5:/workflow \
       ...
 
-TODO: More detail, other workflow examples...
+
 
 ### Using INI files from the Central Decider Client
 
-When running your workflows, you will probably want to use an INI file generated by the Central Decider Client. Please [click here](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/3.0.2/production/central_decider_client.md#the-central-decider-client) for more information on how to get the INI files and how they can be submitted to a worker node.
+When running your workflows, you will probably want to use an INI file generated by the Central Decider Client. Please [click here](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/3.0.3/production/central_decider_client.md#the-central-decider-client) for more information on how to get the INI files and how they can be submitted to a worker node.
+
+### Using the Queue-based Scheduling System
+
+If instructed to, you may be able to use our queue-based scheduling system. This is pre-installed into the launcher and should only need some configuration to provision workers, tear-down workers, and schedule workflows to workers. 
+
+For debugging, you can login to the RabbitMQ web interface at port 15672 or login to postgres using "psql -U queue_status".
+
+For certain pancancer launcher versions, you'll need to create the sql schema:
+
+    PGPASSWORD=queue psql -h 127.0.0.1 -U queue_user -w queue_status < /home/ubuntu/arch3/dbsetup/schema.sql
+
+First, you'll want to correct your parameters used by the container\_host playbook to setup workers:
+
+    vim ~/params.json
+    
+Second, you'll want to correct your parameters for arch3 for your environment:
+
+    vim ~/arch3/config/masterConfig.json
+    
+Third, you'll want to correct your parameters used for youxia (see [this](https://github.com/CloudBindle/youxia#configuration))
+
+    vim ~/.youxia/config
+
+You will then be able to kick-off the various services:
+
+    screen
+    java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.jobGenerator.JobGenerator --config ~/arch3/config/masterConfig.json --total-jobs 5
+    (create a new window)
+    java -cp ~/arch3/bin/pancancer-arch-*.jar info.pancancer.arch3.coordinator.Coordinator  --config ~/arch3/config/masterConfig.json --endless
+    (create a new window)
+     java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.containerProvisioner.ContainerProvisionerThreads  --config ~/arch3/config/masterConfig.json --endless
+    
+
+See [arch3](https://github.com/CancerCollaboratory/sandbox/blob/develop/pancancer-arch-3/README.md#testing-locally) for more details. 
 
 <!--
 ## Saving your work
@@ -279,6 +321,17 @@ The next time you run the startup script, you can reconnect to your saved image 
 
     bash start_launcher_container.sh ~/.ssh/my_key.pem local-1.0.0
 -->
+
+### Monitoring
+The pancancer_launcher contains uses sensu for monitoring its worker nodes. It also contains Uchiwa, which functions as a dashboard for the senus monitoring. 
+
+To access the dashboard, navigate to 
+
+    http://<public IP of machine running pancancer_launcher>:3000/
+    
+You will be prompted for a username and password. Enter: "seqware" and "seqware". You will then be able to see the status of the worker nodes, and the sensu-server itself.
+
+**IMPORTANT:** On AWS, you may have to edit your security group rules to allow inbound traffic to port 3000 for the IP address of your launcher host VM if you want to be able to see the Uchiwa dashboard. You should also ensure that your security group allows all inbound TCP connections from itself and all inbound SSH connections from itself, as well as all TCP and SSH inbound connections from the public IP address of the launcher host VM.
 
 ## Known Issues
 ### Issues related to installing Docker
