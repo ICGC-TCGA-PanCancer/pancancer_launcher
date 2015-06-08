@@ -302,17 +302,23 @@ For certain pancancer launcher versions, you'll need to create the sql schema:
 
     PGPASSWORD=queue psql -h 127.0.0.1 -U queue_user -w queue_status < /home/ubuntu/arch3/dbsetup/schema.sql
 
-First, you'll want to correct your parameters used by the container\_host playbook to setup workers:
+First, you'll want to correct your parameters used by the container\_host playbook to setup workers. For more information, the parameters here are those for the [container host bag](https://github.com/ICGC-TCGA-PanCancer/container-host-bag):
 
     vim ~/params.json
+    
+Notable parameters: Specify for queueHost, the internal ip address of your launcher. 
     
 Second, you'll want to correct your parameters for arch3 for your environment:
 
     vim ~/arch3/config/masterConfig.json
+
+Notable parameters: To turn off reaping functionality, add the parameter "youxia\_reaper\_parameters" with a value of "--test".
     
 Third, you'll want to correct your parameters used for youxia (see [this](https://github.com/CloudBindle/youxia#configuration))
 
     vim ~/.youxia/config
+
+Notable parameters: Specify the private ip address under sensu\_ip\_address, we are currently using ami-d56111a2
 
 You will then be able to kick-off the various services:
 
