@@ -1,0 +1,43 @@
+# Kick off required services 
+
+# Converting this to ansible to simplify container setup with docker compose
+- hosts: all
+  sudo: True
+  tasks:
+  - name: Start all required services
+    service: name={{ item }} state=restarted 
+    with_items: 
+     - sensu-server 
+     - sensu-api 
+     - sensu-client 
+     - uchiwa 
+  - name: Setup queue_user for arch3
+    rabbitmq_user: user=queue_user
+                   password=queue
+		   configure_priv=.*
+		   read_priv=.*
+		   write_priv=.*
+		   tags=administrator
+		   node=rabbitmq
+  - name: Setup sensu users for arch3
+    rabbitmq_user: user=sensu
+                   password=seqware
+		   vhost=/sensu
+		   configure_priv=.*
+		   read_priv=.*
+		   write_priv=.*
+		   tags=administrator
+		   node=rabbitmq
+  - name: Setup queue_user in postgres
+    postgresql_user: user=queue_user 
+                     password=password 
+		     role_attr_flags=CREATEDB,SUPERUSER,CREATEROLE,INHERIT,LOGIN
+		     login_host=db
+		     state=present
+  - name: Make the queue_status database
+    postgresql_db: db=queue_status
+                   owner=queue_user
+                   encoding='UTF-8'
+                   lc_collate='en_US.UTF-8'
+                   lc_ctype='en_US.UTF'
+
