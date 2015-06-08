@@ -86,6 +86,10 @@ Executing the script can look like this:
 
     bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem latest
 
+For example, when launching the tagged 3.0.3 release use 
+
+    bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem 3.0.3
+
 This should start up your container.
 
 | Docker Tip: |
