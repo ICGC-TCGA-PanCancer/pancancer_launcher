@@ -127,8 +127,12 @@ You will need to edit this file before you run Bindle. The most important parts 
 #### Keys
 The most important edits are setting the correct values for `aws_key`, `aws_secret_key`, `aws_ssh_key_name`, and `aws_ssh_pem_file` (which should reference the SSH pem file you copied into this container from your host).
 
+#### Region
+
+The config file is setup for the North Virginia region in AWS.  If you are working in a different region you need to customize `aws_region` (see the API docs for the possible values) and you need to make sure the `aws_image` is valid for this region.
+
 #### Instance type
-Some workflows run best with specific instance types. Here is a table with the best pairings, for AWS:
+Some workflows run best with specific instance types. Here is a table with the best pairings, for AWS in Virginia:
 
 | Workflow | Instance Type | AMI         | Device mapping (as a line in your aws.cfg file)
 |----------|---------------|-------------|-------------------
