@@ -243,12 +243,12 @@ Provisioning these three nodes is quite simple:
 At this point, you should have a worker which can be used to take a snapshot in order to jumpstart future deployments. The steps to take here differ a bit between environments
 
 1. First, clean up the architecture 3 components so that you can cleanly upgrade between versions. Login to the worker host and from the home directory delete bash scripts that start the worker, the jar file for our tools, the lock file that the worker may have generated, and the log file as well. The full set of locations is:
-* everything in /home/ubuntu
-* /var/log/arch3\_worker.log
-* /var/run/arch3\_worker.pid
-2. In AWS, create an AMI based on your instance. Make sure to specify the ephemeral disks that you wish to use, arch3 will provision a number of ephemeral drives that makes what you specify in your snapshot.
-3. In OpenStack, create a snapshot based on your instance. 
-4. When setting up arch3 (see below), you may now specify the image to use in your ~/.youxia/config file
+    * everything in /home/ubuntu
+    * /var/log/arch3\_worker.log
+    * /var/run/arch3\_worker.pid
+1. In AWS, create an AMI based on your instance. Make sure to specify the ephemeral disks that you wish to use, arch3 will provision a number of ephemeral drives that makes what you specify in your snapshot.
+1. In OpenStack, create a snapshot based on your instance. 
+1. When setting up arch3 (see below), you may now specify the image to use in your ~/.youxia/config file
 
 
 ## Running a workflow
