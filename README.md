@@ -161,6 +161,7 @@ Once you have completed configuring Bindle, you can run bindle like this:
     cd ~/architecture-setup/Bindle
     perl bin/launch_cluster.pl --config aws --custom-params singlenode
     
+    
 Bindle will now begin the process of provisioning and setting up new VMs. Later on, you may want to read [this](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/3.0.3/production/fleet_management.md#managing-an-existing-pancancer-environment) page about managing a fleet of Pancancer VMs.
 
 #### Verifying the new worker node.
@@ -233,13 +234,19 @@ Provisioning these three nodes is quite simple:
     perl bin/launch_cluster.pl --config aws --custom-params singlenode2
     perl bin/launch_cluster.pl --config aws --custom-params singlenode3
 
-<!--
-## Running youxia
+#### Snapshotting a Worker for Arch3 Deployment 
 
-Youxia is an application that can start up new VMs based on existing snapshots. It is also capable of taking advantage of Amazon Spot Pricing for the instances that it creates, and can also be used to tear down VMs, when necessary. You can learn more about youxia [here](https://github.com/CloudBindle/youxia#youxia).
+At this point, you should have a worker which can be used to take a snapshot in order to jumpstart future deployments. The steps to take here differ a bit between environments
 
-**TODO: More info needed about using youxia in this context, further testing required.**
--->
+1. First, clean up the architecture 3 components so that you can cleanly upgrade between versions. Login to the worker host and from the home directory delete bash scripts that start the worker, the jar file for our tools, the lock file that the worker may have generated, and the log file as well. The full set of locations is:
+
+* (to be filled in)
+
+2. In AWS, create an AMI based on your instance. Make sure to specify the ephemeral disks that you wish to use, arch3 will provision a number of ephemeral drives that makes what you specify in your snapshot.
+3. In OpenStack, create a snapshot based on your instance. 
+4. When setting up arch3 (see below), you may now specify the image to use in your ~/.youxia/config file
+
+
 ## Running a workflow
 
 ### Login to worker
