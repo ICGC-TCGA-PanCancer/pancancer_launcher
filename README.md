@@ -82,6 +82,11 @@ The script takes two arguments:
  - The path to the pem key that you want to use for new worker VMs
  - The version/tag of the container you wish to start.
 
+Now would be an excellent time to start a screen session to make it easier to disconnect and reconnect your SSH session later without interrupting the Docker container.
+
+    # for more information
+    man screen
+
 Executing the script can look like this:
 
     bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem latest
