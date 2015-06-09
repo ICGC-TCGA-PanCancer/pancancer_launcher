@@ -317,8 +317,8 @@ Second, you'll want to correct your parameters for arch3 for your environment:
 
     vim ~/arch3/config/masterConfig.json
 
-Notable parameters: To turn off reaping functionality, add the parameter "youxia\_reaper\_parameters" with a value of "--test".
-    
+Notable parameters: To turn off reaping functionality, add the parameter "youxia\_reaper\_parameters" with a value of "--test". For use in an OpenStack environment, add "--openstack" as a parameter to the deployer and the reaper. 
+
 Third, you'll want to correct your parameters used for youxia (see [this](https://github.com/CloudBindle/youxia#configuration))
 
     vim ~/.youxia/config
