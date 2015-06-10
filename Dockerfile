@@ -12,7 +12,7 @@ RUN apt-get install -y python-apt	mcrypt	git	ansible	vim	curl	build-essential \
 			libxslt1-dev	libxml2-dev	zlib1g-dev	unzip	wget	make \
 			libipc-system-simple-perl	libgetopt-euclid-perl	libjson-perl \
 			libwww-perl	libdata-dumper-simple-perl	libtemplate-perl \
-			tmux	screen	lsof	tree	nano 
+			tmux	screen	lsof	tree	nano	telnet 
 
 # Create ubuntu user and group, make the account passwordless
 RUN groupadd ubuntu && \
