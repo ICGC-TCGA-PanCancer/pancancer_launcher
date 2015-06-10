@@ -64,7 +64,7 @@ To see further details about the container (such as the available versions/tags)
 The pancancer\_launcher container will require several sets of credentials:
  - SSH key - this is the key that you use to launch new VMs in your environment. Your SSH keys should be in `~/.ssh/` on your host machine.
  - GNOS keys - these keys are used by some workflows. Your GNOS keys should be placed in `~/.gnos` on your host machine. If you have a *single* GNOS key we recommend you put it in `~/.gnos/gnos.pem` since the directions below reference that by default. If you have multiple GNOS keys, you should still place them in `~/.gnos/`, although your workflow configuration will need to be altered to reference the different keys correctly. All files in `~/.gnos` on the host VM will be copied into your container.
- - AWS credentials - your AWS credentials are needed to download certain workflows. Your AWS credentials should be placed in your `~/.aws` directory. If you have ever used the AWS CLI tool, you probably already have these files in place and you can just copy them to the host machine. If you do not have these files set up, follow thes instructions on [this page](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-config-files). All files in your `~/.aws` directory on the host VM will be copied into the container.
+ - AWS credentials - your AWS credentials are needed to download certain workflows. Your AWS credentials should be placed in your `~/.aws` directory. Please use the `~/.aws/config` filename format. If you have ever used the AWS CLI tool, you probably already have these files in place and you can just copy them to the host machine. If you do not have these files set up, follow thes instructions on [this page](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-config-files). All files in your `~/.aws` directory on the host VM will be copied into the container.
 
 **IMPORTANT:** Your AWS credentials are private! Do **not** create an AMI/snapshot of any VM with valid AWS credentials on it! Remove the credentials before creating any AMI/snapshot.
 
@@ -76,15 +76,24 @@ The pancancer\_launcher can start up new VMs on AWS. To do this, it needs access
 
 The easiest way to start up the pancancer\_launcher container is to use a helper script. You can get the helper script like this:
 
-    wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.0.3/start_launcher_container.sh
+    wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.0.4/start_launcher_container.sh
     
 The script takes two arguments:
  - The path to the pem key that you want to use for new worker VMs
  - The version/tag of the container you wish to start.
 
+Now would be an excellent time to start a screen session to make it easier to disconnect and reconnect your SSH session later without interrupting the Docker container.
+
+    # for more information
+    man screen
+
 Executing the script can look like this:
 
     bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem latest
+
+For example, when launching the tagged 3.0.3 release use 
+
+    bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem 3.0.3
 
 This should start up your container.
 
@@ -123,8 +132,12 @@ You will need to edit this file before you run Bindle. The most important parts 
 #### Keys
 The most important edits are setting the correct values for `aws_key`, `aws_secret_key`, `aws_ssh_key_name`, and `aws_ssh_pem_file` (which should reference the SSH pem file you copied into this container from your host).
 
+#### Region
+
+The config file is setup for the North Virginia region in AWS.  If you are working in a different region you need to customize `aws_region` (see the API docs for the possible values) and you need to make sure the `aws_image` is valid for this region.
+
 #### Instance type
-Some workflows run best with specific instance types. Here is a table with the best pairings, for AWS:
+Some workflows run best with specific instance types. Here is a table with the best pairings, for AWS in Virginia:
 
 | Workflow | Instance Type | AMI         | Device mapping (as a line in your aws.cfg file)
 |----------|---------------|-------------|-------------------
@@ -156,6 +169,7 @@ Once you have completed configuring Bindle, you can run bindle like this:
 
     cd ~/architecture-setup/Bindle
     perl bin/launch_cluster.pl --config aws --custom-params singlenode
+    
     
 Bindle will now begin the process of provisioning and setting up new VMs. Later on, you may want to read [this](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/3.0.3/production/fleet_management.md#managing-an-existing-pancancer-environment) page about managing a fleet of Pancancer VMs.
 
@@ -229,13 +243,19 @@ Provisioning these three nodes is quite simple:
     perl bin/launch_cluster.pl --config aws --custom-params singlenode2
     perl bin/launch_cluster.pl --config aws --custom-params singlenode3
 
-<!--
-## Running youxia
+#### Snapshotting a Worker for Arch3 Deployment 
 
-Youxia is an application that can start up new VMs based on existing snapshots. It is also capable of taking advantage of Amazon Spot Pricing for the instances that it creates, and can also be used to tear down VMs, when necessary. You can learn more about youxia [here](https://github.com/CloudBindle/youxia#youxia).
+At this point, you should have a worker which can be used to take a snapshot in order to jumpstart future deployments. The steps to take here differ a bit between environments
 
-**TODO: More info needed about using youxia in this context, further testing required.**
--->
+1. First, clean up the architecture 3 components so that you can cleanly upgrade between versions. Login to the worker host and from the home directory delete bash scripts that start the worker, the jar file for our tools, the lock file that the worker may have generated, and the log file as well. The full set of locations is:
+    * everything in /home/ubuntu
+    * /var/log/arch3\_worker.log
+    * /var/run/arch3\_worker.pid
+1. In AWS, create an AMI based on your instance. Make sure to specify the ephemeral disks that you wish to use, arch3 will provision a number of ephemeral drives that makes what you specify in your snapshot.
+1. In OpenStack, create a snapshot based on your instance. 
+1. When setting up arch3 (see below), you may now specify the image to use in your ~/.youxia/config file
+
+
 ## Running a workflow
 
 ### Login to worker
@@ -287,17 +307,23 @@ For certain pancancer launcher versions, you'll need to create the sql schema:
 
     PGPASSWORD=queue psql -h 127.0.0.1 -U queue_user -w queue_status < /home/ubuntu/arch3/dbsetup/schema.sql
 
-First, you'll want to correct your parameters used by the container\_host playbook to setup workers:
+First, you'll want to correct your parameters used by the container\_host playbook to setup workers. For more information, the parameters here are those for the [container host bag](https://github.com/ICGC-TCGA-PanCancer/container-host-bag):
 
     vim ~/params.json
+    
+Notable parameters: Specify for queueHost, the internal ip address of your launcher. 
     
 Second, you'll want to correct your parameters for arch3 for your environment:
 
     vim ~/arch3/config/masterConfig.json
-    
+
+Notable parameters: To turn off reaping functionality, add the parameter "youxia\_reaper\_parameters" with a value of "--test". For use in an OpenStack environment, add "--openstack" as a parameter to the deployer and the reaper. 
+
 Third, you'll want to correct your parameters used for youxia (see [this](https://github.com/CloudBindle/youxia#configuration))
 
     vim ~/.youxia/config
+
+Notable parameters: Specify the private ip address under sensu\_ip\_address, we are currently using ami-d56111a2
 
 You will then be able to kick-off the various services:
 
