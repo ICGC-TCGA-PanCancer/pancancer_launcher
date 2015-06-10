@@ -350,20 +350,20 @@ You will be prompted for a username and password. Enter: "seqware" and "seqware"
 
 ## Saving your work
 
-The restart policy of the pancancer_launcher should be to restart automatically if you accidentally exit the container. Running processes may be terminated on exit, but the filesystem of your container should be preserved. If you want to persist your configuration outside of the container, you can use the read-write mounted host volume. Inside the container, this volume exists as `/opt/from_host/config`. Outside the container, it exists as `~/pancancer\_launcher\_config`. To preserve your configuration, you can use these simple commands inside the container:
+The restart policy of the pancancer_launcher should be to restart automatically if you accidentally exit the container. Running processes may be terminated on exit, but the filesystem of your container should be preserved. If you want to persist your configuration outside of the container, you can use the read-write mounted host volume. Inside the container, this volume exists as `/opt/from_host/config`. Outside the container, it exists as `~/pancancer_launcher_config`. To preserve your configuration, you can use these simple commands inside the container:
 
     cp -a ~/.bindle /opt/from_host/config/
     cp -a ~/.youxia /opt/from_host/config/
     cp -a ~/arch3/config /opt/from_host/config/
     
-Outside the container (You can *detach* from a running container using <kbd>Ctrl</kbd><kbd>P</kbd> <kbd>Ctrl</kbd><kbd>Q</kbd>, and then use `docker attach pancancer\_launcher` to re-attach later), you should be able to see the copied configuration files:
+Outside the container (You can *detach* from a running container using <kbd>Ctrl</kbd><kbd>P</kbd> <kbd>Ctrl</kbd><kbd>Q</kbd>, and then use `docker attach pancancer_launcher` to re-attach later), you should be able to see the copied configuration files:
 
     ls -la ~/pancancer_launcher_config/
     drwxr-xr-x  2 ubuntu ubuntu 4096 Jun 10 15:51 .bindle
     drwxr-xr-x  2 ubuntu ubuntu 4096 Jun 10 14:22 config
     drwxr-xr-x  2 ubuntu ubuntu 4096 Jun 10 14:22 .youxia
 
-When you are installing a new version of the pancancer\_launcher container, you can import these files into a new container by copying in from `/opt/from\_host/config`, for example:
+When you are installing a new version of the pancancer\_launcher container, you can import these files into a new container by copying in from `/opt/from_host/config`, for example:
 
     cp -a /opt/from_host/config/.youxia/ ~
 
