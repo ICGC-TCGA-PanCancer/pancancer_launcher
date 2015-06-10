@@ -337,18 +337,6 @@ You will then be able to kick-off the various services:
 
 See [arch3](https://github.com/CancerCollaboratory/sandbox/blob/develop/pancancer-arch-3/README.md#testing-locally) for more details. 
 
-<!--
-## Saving your work
-
-If you have made some configuration changes within your docker container, you may find it useful to save those changes for your next session, when you exit the container. To do this, you can use docker's `commit` function:
-
-    docker commit pancancer_launcher pancancer/pancancer_launcher:local-1.0.0
-    
-The next time you run the startup script, you can reconnect to your saved image like this:
-
-    bash start_launcher_container.sh ~/.ssh/my_key.pem local-1.0.0
--->
-
 ### Monitoring
 The pancancer_launcher contains uses sensu for monitoring its worker nodes. It also contains Uchiwa, which functions as a dashboard for the senus monitoring. 
 
@@ -359,6 +347,25 @@ To access the dashboard, navigate to
 You will be prompted for a username and password. Enter: "seqware" and "seqware". You will then be able to see the status of the worker nodes, and the sensu-server itself.
 
 **IMPORTANT:** On AWS, you may have to edit your security group rules to allow inbound traffic to port 3000 for the IP address of your launcher host VM if you want to be able to see the Uchiwa dashboard. You should also ensure that your security group allows all inbound TCP connections from itself and all inbound SSH connections from itself, as well as all TCP and SSH inbound connections from the public IP address of the launcher host VM.
+
+## Saving your work
+
+The restart policy of the pancancer_launcher should be to restart automatically if you accidentally exit the container. Running processes may be terminated on exit, but the filesystem of your container should be preserved. If you want to persist your configuration outside of the container, you can use the read-write mounted host volume. Inside the container, this volume exists as `/opt/from_host/config`. Outside the container, it exists as `~/pancancer\_launcher\_config`. To preserve your configuration, you can use these simple commands inside the container:
+
+    cp -a ~/.bindle /opt/from_host/config/
+    cp -a ~/.youxia /opt/from_host/config/
+    cp -a ~/arch3/config /opt/from_host/config/
+    
+Outside the container (You can *detach* from a running container using <kbd>Ctrl</kbd><kbd>P</kbd> <kbd>Ctrl</kbd><kbd>Q</kbd>, and then use `docker attach pancancer\_launcher` to re-attach later), you should be able to see the copied configuration files:
+
+    ls -la ~/pancancer_launcher_config/
+    drwxr-xr-x  2 ubuntu ubuntu 4096 Jun 10 15:51 .bindle
+    drwxr-xr-x  2 ubuntu ubuntu 4096 Jun 10 14:22 config
+    drwxr-xr-x  2 ubuntu ubuntu 4096 Jun 10 14:22 .youxia
+
+When you are installing a new version of the pancancer\_launcher container, you can import these files into a new container by copying in from `/opt/from\_host/config`, for example:
+
+    cp -a /opt/from_host/config/.youxia/ ~
 
 ## Known Issues
 ### Issues related to installing Docker
