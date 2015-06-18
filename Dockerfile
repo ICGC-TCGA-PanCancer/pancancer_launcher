@@ -12,7 +12,7 @@ RUN apt-get install -y python-apt	mcrypt	git	ansible	vim	curl	build-essential \
 			libxslt1-dev	libxml2-dev	zlib1g-dev	unzip	wget	make \
 			libipc-system-simple-perl	libgetopt-euclid-perl	libjson-perl \
 			libwww-perl	libdata-dumper-simple-perl	libtemplate-perl \
-			tmux	screen	lsof	tree	nano	telnet	man 
+			tmux	screen	lsof	tree	nano	telnet	man	multitail 
 
 # Create ubuntu user and group, make the account passwordless
 RUN groupadd ubuntu && \
@@ -37,7 +37,7 @@ ENV PYTHONUNBUFFERED 1
 # Get code and run playbooks to build the container
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
     cd architecture-setup && \
-    git checkout 3.0.5 && \
+    git checkout 3.0.6 && \
     git submodule init && git submodule update && \
     git submodule foreach 'git describe --all' 
 WORKDIR /home/ubuntu/architecture-setup
