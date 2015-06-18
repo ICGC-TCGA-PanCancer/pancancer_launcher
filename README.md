@@ -296,7 +296,7 @@ When running your workflows, you will probably want to use an INI file generated
 
 If instructed to, you may be able to use our queue-based scheduling system. This is pre-installed into the launcher and should only need some configuration to provision workers, tear-down workers, and schedule workflows to workers. 
 
-For debugging, you can login to the RabbitMQ web interface at port 15672 or login to postgres using "psql -U queue_status".
+For debugging, you can login to the RabbitMQ web interface at port 15672 using a web browser or login to postgres using "psql -U queue_status".
 
 For certain pancancer launcher versions, you'll need to create the sql schema:
 
@@ -338,14 +338,17 @@ At this point, you should have a worker which can be used to take a snapshot in 
 
 #### Regular Operations
 
-You will then be able to kick-off the various services:
-
-    screen
+You will then be able to kick-off the various services and submit some test jobs:
+    
     java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.jobGenerator.JobGenerator --config ~/arch3/config/masterConfig.json --total-jobs 5
-    (create a new window)
-    java -cp ~/arch3/bin/pancancer-arch-*.jar info.pancancer.arch3.coordinator.Coordinator  --config ~/arch3/config/masterConfig.json --endless
-    (create a new window)
-     java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.containerProvisioner.ContainerProvisionerThreads  --config ~/arch3/config/masterConfig.json --endless
+    
+    nohup java -cp ~/arch3/bin/pancancer-arch-*.jar info.pancancer.arch3.coordinator.Coordinator  --config ~/arch3/config/masterConfig.json --endless &> coordinator.out &
+    
+     nohup java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.containerProvisioner.ContainerProvisionerThreads  --config ~/arch3/config/masterConfig.json --endless &> provisioner.out &
+     
+When those jobs complete (check status via the database until reporting is finishing), you can then submit real jobs using the following command assuming that your ini files are in ini\_batch\_2:
+
+    java -cp ~/arch3/bin/pancancer-arch-3-1.1-alpha.0.jar info.pancancer.arch3.jobGenerator.JobGeneratorDEWorkflow --workflow-name BWA --workflow-version 2.6.1 --workflow-path /workflows/Workflow_Bundle_BWA_2.6.1_SeqWare_1.1.0-alpha.5 --config ~/arch3/config/masterConfig.json --ini-dir ini_batch_2
     
 
 See [arch3](https://github.com/CancerCollaboratory/sandbox/blob/develop/pancancer-arch-3/README.md#testing-locally) for more details. 
