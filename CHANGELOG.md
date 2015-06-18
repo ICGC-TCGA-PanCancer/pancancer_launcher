@@ -1,5 +1,10 @@
 ### Pancancer Launcher change log
 
+#### 3.0.6
+Changes in architecture-setup 3.0.6:
+ - New version of central-decider-client: 1.0.7, new template file.
+ - New version of container-host-bag (1.0.rc-4) contains fix for issue related to workflow deployment.
+
 #### 3.0.5
 New changes in architecture-setup 3.0.5 are:
   - New version of Bindle: 2.0.3
