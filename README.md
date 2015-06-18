@@ -125,6 +125,8 @@ If you plan on running workflows that require a valid GNOS key, please follow th
 
 All of the files in your launcher container's `~/.gnos` should be copied into `~/.gnos` *on the worker.*
 
+** If you have been instructed to setup your environment using queue-based scheduling, skip ahead to the section "Using INI files from the Central Decider Client" and from there proceed onto the section on Queues  **
+
 ## Running Bindle
 
 Bindle is a toolset that can create new VMs, and install workflows and all of their necessary dependencies onto the VMs. You can learn more about Bindle [here](https://github.com/CloudBindle/Bindle#about-bindle).
@@ -248,18 +250,6 @@ Provisioning these three nodes is quite simple:
     perl bin/launch_cluster.pl --config aws --custom-params singlenode2
     perl bin/launch_cluster.pl --config aws --custom-params singlenode3
 
-#### Snapshotting a Worker for Arch3 Deployment 
-
-At this point, you should have a worker which can be used to take a snapshot in order to jumpstart future deployments. The steps to take here differ a bit between environments
-
-1. First, clean up the architecture 3 components so that you can cleanly upgrade between versions. Login to the worker host and from the home directory delete bash scripts that start the worker, the jar file for our tools, the lock file that the worker may have generated, and the log file as well. The full set of locations is:
-    * everything in /home/ubuntu
-    * /var/log/arch3\_worker.log
-    * /var/run/arch3\_worker.pid
-1. In AWS, create an AMI based on your instance. Make sure to specify the ephemeral disks that you wish to use, arch3 will provision a number of ephemeral drives that makes what you specify in your snapshot.
-1. In OpenStack, create a snapshot based on your instance. 
-1. When setting up arch3 (see below), you may now specify the image to use in your ~/.youxia/config file
-
 
 ## Running a workflow
 
@@ -329,6 +319,24 @@ Third, you'll want to correct your parameters used for youxia (see [this](https:
     vim ~/.youxia/config
 
 Notable parameters: Specify the private ip address under sensu\_ip\_address, we are currently using ami-d56111a2
+
+#### Snapshotting a Worker for Arch3 Deployment 
+
+Spin up a worker for snapshotting (append --openstack if running in OpenStack)
+
+    java -cp ~/arch3/bin/pancancer-arch-3-*.jar io.cloudbindle.youxia.deployer.Deployer  --ansible-playbook ~/architecture-setup/container-host-bag/install.yml --max-spot-price 1 --batch-size 1 --total-nodes-num 10 -e ~/params.json 
+
+At this point, you should have a worker which can be used to take a snapshot in order to jumpstart future deployments. To allow for easier migration to newer arch3 versions, you should also clean arch3 components from that worker. 
+
+1. First, clean up the architecture 3 components so that you can cleanly upgrade between versions. Login to the worker host and from the home directory delete bash scripts that start the worker, the jar file for our tools, the lock file that the worker may have generated, and the log file as well. The full set of locations is:
+    * all scripts in /home/ubuntu
+    * /var/log/arch3\_worker.log
+    * /var/run/arch3\_worker.pid
+1. In AWS, create an AMI based on your instance. Make sure to specify the ephemeral disks that you wish to use, arch3 will provision a number of ephemeral drives that makes what you specify in your snapshot.
+1. In OpenStack, create a snapshot based on your instance. 
+1. When setting up arch3 (see below), you may now specify the id for that image to use in your ~/.youxia/config file
+
+#### Regular Operations
 
 You will then be able to kick-off the various services:
 
