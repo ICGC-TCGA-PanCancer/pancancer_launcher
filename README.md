@@ -125,7 +125,7 @@ If you plan on running workflows that require a valid GNOS key, please follow th
 
 All of the files in your launcher container's `~/.gnos` should be copied into `~/.gnos` *on the worker.*
 
-** If you have been instructed to setup your environment using queue-based scheduling, skip ahead to the section "Using INI files from the Central Decider Client" and from there proceed onto the section on Queues  **
+**If you have been instructed to setup your environment using queue-based scheduling, skip ahead to the section ["Using INI files from the Central Decider Client"](#using-ini-files-from-the-central-decider-client) and from there proceed onto the section on Queues.**
 
 ## Running Bindle
 
