@@ -2,6 +2,9 @@
 FROM ubuntu:14.04
 MAINTAINER Solomon Shorser <solomon.shorser@oicr.on.ca>
 
+# query this if you're inside a container and want to know what version of pancancer_launcher you're using
+ENV PANCANCER_LAUNCHER_VERSION 3.0.6
+
 # some packages needed by the other bags needed packages in "precise" but not in "trusty". Specifically, libdb4.8 was needed.
 RUN apt-get install -y software-properties-common && \
     add-apt-repository "deb http://ca.archive.ubuntu.com/ubuntu precise main" && \
