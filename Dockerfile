@@ -37,7 +37,7 @@ ENV PYTHONUNBUFFERED 1
 # Get code and run playbooks to build the container
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
     cd architecture-setup && \
-    git checkout feature/solomon_e2e_testing && \
+    git checkout 62e3b5d8cdd9530aa1e9b59ca02d3594ef8a84f3 && \
     git submodule init && git submodule update && \
     git submodule foreach 'git describe --all' 
 WORKDIR /home/ubuntu/architecture-setup
