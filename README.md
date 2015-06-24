@@ -329,7 +329,7 @@ Spin up a worker for snapshotting (append --openstack if running in OpenStack)
 At this point, you should have a worker which can be used to take a snapshot in order to jumpstart future deployments. To allow for easier migration to newer arch3 versions, you should also clean arch3 components from that worker. 
 
 1. First, clean up the architecture 3 components so that you can cleanly upgrade between versions. Login to the worker host and from the home directory delete bash scripts that start the worker, the jar file for our tools, the lock file that the worker may have generated, and the log file as well. The full set of locations is:
-    * all scripts in /home/ubuntu
+    * all scripts, jars and json files in /home/ubuntu
     * /var/log/arch3\_worker.log
     * /var/run/arch3\_worker.pid
 1. In AWS, create an AMI based on your instance. Make sure to specify the ephemeral disks that you wish to use, arch3 will provision a number of ephemeral drives that makes what you specify in your snapshot.
