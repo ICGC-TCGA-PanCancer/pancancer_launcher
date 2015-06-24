@@ -3,7 +3,7 @@ FROM ubuntu:14.04
 MAINTAINER Solomon Shorser <solomon.shorser@oicr.on.ca>
 
 # query this if you're inside a container and want to know what version of pancancer_launcher you're using
-ENV PANCANCER_LAUNCHER_VERSION 3.0.6
+ENV PANCANCER_LAUNCHER_VERSION 3.0.7
 
 # some packages needed by the other bags needed packages in "precise" but not in "trusty". Specifically, libdb4.8 was needed.
 RUN apt-get install -y software-properties-common && \
@@ -40,7 +40,7 @@ ENV PYTHONUNBUFFERED 1
 # Get code and run playbooks to build the container
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
     cd architecture-setup && \
-    git checkout 62e3b5d8cdd9530aa1e9b59ca02d3594ef8a84f3 && \
+    git checkout release/3.0.7 && \
     git submodule init && git submodule update && \
     git submodule foreach 'git describe --all' 
 WORKDIR /home/ubuntu/architecture-setup
