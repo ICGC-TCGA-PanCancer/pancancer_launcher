@@ -1,5 +1,17 @@
 ### Pancancer Launcher change log
 
+#### 3.0.7
+Major changes:
+ - New version of container-host-bag: 1.0-rc.5
+ - New version of arch3 component: 1.1-alpha.4
+
+Details:
+ - Changes to startup scripts - enhancements for E2E testing with Jenkins
+ - Changes to arch3 config - use INI format instead of JSON format
+ - Include pancancer_launcher version in shell prompt
+ - Small fix to ansible play that configures database schema
+
+
 #### 3.0.6
 Changes in architecture-setup 3.0.6:
  - New version of central-decider-client: 1.0.7, new template file.
