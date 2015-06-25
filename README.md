@@ -50,13 +50,15 @@ You should see the following if everything is working OK:
 
 #### Installing the pancancer\_launcher container
 
-Once you have docker installed, pull the docker image:
+For software developers working on the launcher, once you have docker installed, pull the docker image:
 
     docker pull pancancer/pancancer_launcher
 
-This command will pull the *latest* version of pancancer\_launcher. If there is a specific version of the container you wish to pull, you can add the version to the command like this:
+This command will pull the *latest* version of pancancer\_launcher. 
 
-    docker pull pancancer/pancancer_launcher:1.0.0
+For cloud shepherds trying to run workflows, if there is a specific version of the container you wish to pull, you can add the version to the command like this:
+
+    docker pull pancancer/pancancer_launcher:3.0.7
 
 To see further details about the container (such as the available versions/tags), see the [relevant dockerhub page](https://registry.hub.docker.com/u/pancancer/pancancer_launcher/).
 
