@@ -119,14 +119,6 @@ Once the container has started, you should have a fully functional launcher host
 * get a test job from the central decider
 * run that test job of a workflow on the new worker host
 
-### GNOS keys
-If you plan on running workflows that require a valid GNOS key, please follow these steps:
-
-1. Inside the launcher container, create the directory `~/.gnos`
-2. Copy all of your GNOS keys into this directory.
-
-All of the files in your launcher container's `~/.gnos` should be copied into `~/.gnos` *on the worker.*
-
 **If you have been instructed to setup your environment using queue-based scheduling, skip ahead to the section ["Using INI files from the Central Decider Client"](#using-ini-files-from-the-central-decider-client) and from there proceed onto the section on Queues.**
 
 ## Running Bindle
