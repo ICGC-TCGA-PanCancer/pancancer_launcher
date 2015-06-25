@@ -89,11 +89,11 @@ Now would be an excellent time to start a screen session to make it easier to di
     # for more information
     man screen
 
-Executing the script can look like this:
+Executing the script can look like this (recommended for developers):
 
     bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem latest
 
-For example, when launching the tagged 3.0.7 release use 
+For example for cloud shepherds, when launching the tagged 3.0.7 release use 
 
     bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem 3.0.7
 
