@@ -292,10 +292,6 @@ If instructed to, you may be able to use our queue-based scheduling system. This
 
 For debugging, you can login to the RabbitMQ web interface at port 15672 using a web browser or login to postgres using "psql -U queue_status".
 
-For certain pancancer launcher versions, you'll need to create the sql schema:
-
-    PGPASSWORD=queue psql -h 127.0.0.1 -U queue_user -w queue_status < /home/ubuntu/arch3/dbsetup/schema.sql
-
 First, you'll want to correct your parameters used by the container\_host playbook to setup workers. For more information, the parameters here are those for the [container host bag](https://github.com/ICGC-TCGA-PanCancer/container-host-bag):
 
     vim ~/params.json
