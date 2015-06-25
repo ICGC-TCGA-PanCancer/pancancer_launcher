@@ -338,14 +338,17 @@ You will then be able to kick-off the various services and submit some test jobs
     
     nohup java -cp ~/arch3/bin/pancancer-arch-*.jar info.pancancer.arch3.coordinator.Coordinator  --config ~/arch3/config/masterConfig.json --endless &> coordinator.out &
     
-     nohup java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.containerProvisioner.ContainerProvisionerThreads  --config ~/arch3/config/masterConfig.json --endless &> provisioner.out &
+    nohup java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.containerProvisioner.ContainerProvisionerThreads  --config ~/arch3/config/masterConfig.json --endless &> provisioner.out &
      
 When those jobs complete (check status via the database until reporting is finishing), you can then submit real jobs using the following command assuming that your ini files are in ini\_batch\_2:
 
     java -cp ~/arch3/bin/pancancer-arch-3-1.1-alpha.0.jar info.pancancer.arch3.jobGenerator.JobGeneratorDEWorkflow --workflow-name BWA --workflow-version 2.6.1 --workflow-path /workflows/Workflow_Bundle_BWA_2.6.1_SeqWare_1.1.0-alpha.5 --config ~/arch3/config/masterConfig.json --ini-dir ini_batch_2
     
+Note that while coordinator.out and provisioner.out contain only high-level information such as errors and fatal events, the arch3.log which is automatically generated (and rotates) contains low level logging information. 
 
 See [arch3](https://github.com/CancerCollaboratory/sandbox/blob/develop/pancancer-arch-3/README.md#testing-locally) for more details. 
+
+To set up reporting, see the [README.md](https://github.com/CancerCollaboratory/sandbox/tree/develop/pancancer-reporting) for that component. 
 
 ### Monitoring
 The pancancer_launcher contains uses sensu for monitoring its worker nodes. It also contains Uchiwa, which functions as a dashboard for the senus monitoring. 
