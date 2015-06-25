@@ -316,6 +316,10 @@ Spin up a worker for snapshotting (append --openstack if running in OpenStack)
 
     java -cp ~/arch3/bin/pancancer-arch-3-*.jar io.cloudbindle.youxia.deployer.Deployer  --ansible-playbook ~/architecture-setup/container-host-bag/install.yml --max-spot-price 1 --batch-size 1 --total-nodes-num 10 -e ~/params.json 
 
+If the Deployer fails to complete the setup of the instance, you may have to use the [Reaper](https://github.com/CloudBindle/youxia#reaper) to destroy it before trying again:
+
+    java -cp pancancer.jar io.cloudbindle.youxia.reaper.Reaper --kill-limit 0
+
 At this point, you should have a worker which can be used to take a snapshot in order to jumpstart future deployments. To allow for easier migration to newer arch3 versions, you should also clean arch3 components from that worker. 
 
 1. First, clean up the architecture 3 components so that you can cleanly upgrade between versions. Login to the worker host and from the home directory delete bash scripts that start the worker, the jar file for our tools, the lock file that the worker may have generated, and the log file as well. The full set of locations is:
