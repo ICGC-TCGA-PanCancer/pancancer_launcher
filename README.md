@@ -358,6 +358,38 @@ See [arch3](https://github.com/CancerCollaboratory/sandbox/blob/develop/pancance
 
 To set up reporting, see the [README.md](https://github.com/CancerCollaboratory/sandbox/tree/develop/pancancer-reporting) for that component. 
 
+#### Dealing with Failure
+
+When workflows fail, arch3 will leave that host in place for you to examine. Your task as a cloud shepherd is to take a look, determine the problem, and if the problem is epehemeral (i.e. like a temporary network outage) to requeue the job. 
+
+1. First, reporting tools will tell you to look at a node. 
+
+        green_snake status
+        ....
+        There are failed jobs on VMs that require attention:
+        d957d16e-335d-46fc-850c-9aa1de896151
+        first seen (hours) 21.60
+        ip_address 10.106.128.62
+        last seen (seconds) 30490.90
+        status FAILED 
+
+1. For now, retrieve the ini file from the failed workers
+
+        mkdir ini_batch_5_failed && cd ini_batch_5_failed
+        cp -i ~/.ssh/green_snake.pem ubuntu@10.106.128.62:/tmp/*.ini .
+        The authenticity of host '10.106.128.62 (10.106.128.62)' can't be established.ECDSA key fingerprint is e9:bf:fb:f3:d0:29:95:82:08:fe:8d:73:07:6a:2e:35.
+        Are you sure you want to continue connecting (yes/no)? yes
+        Warning: Permanently added '10.106.128.62' (ECDSA) to the list of known hosts.
+        seqware_9050325771159466321.ini 
+        cd ..
+    
+1.  Resubmit the job
+
+        java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.jobGenerator.JobGeneratorDEWorkflow --workflow-name BWA --workflow-version 2.6.1 --workflow-path /workflows/Workflow_Bundle_BWA_2.6.1_SeqWare_1.1.0-alpha.5 --config ~/arch3/config/masterConfig.json --ini-dir ini_batch_5_failed/ 
+
+1. Terminate the hosts with the failed jobs in either the AWS console or OpenStack horizon using the above ip_address to search.  
+    
+
 ### Monitoring
 The pancancer_launcher contains uses sensu for monitoring its worker nodes. It also contains Uchiwa, which functions as a dashboard for the senus monitoring. 
 
