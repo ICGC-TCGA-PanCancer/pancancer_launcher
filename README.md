@@ -316,7 +316,7 @@ Notable parameters: Specify the private ip address under sensu\_ip\_address, we 
 
 Spin up a worker for snapshotting (append --openstack if running in OpenStack)
 
-    java -cp ~/arch3/bin/pancancer-arch-3-*.jar io.cloudbindle.youxia.deployer.Deployer  --ansible-playbook ~/architecture-setup/container-host-bag/install.yml --max-spot-price 1 --batch-size 1 --total-nodes-num 10 -e ~/params.json 
+    java -cp ~/arch3/bin/pancancer-arch-3-*.jar io.cloudbindle.youxia.deployer.Deployer  --ansible-playbook ~/architecture-setup/container-host-bag/install.yml --max-spot-price 1 --batch-size 1 --total-nodes-num 1 -e ~/params.json 
 
 If the Deployer fails to complete the setup of the instance, you may have to use the [Reaper](https://github.com/CloudBindle/youxia#reaper) to destroy it before trying again:
 
