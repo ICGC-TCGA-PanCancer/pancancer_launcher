@@ -354,7 +354,7 @@ You should also start off the Reporting Bot (this will be integrated in a future
     wget https://seqwaremaven.oicr.on.ca/artifactory/seqware-release/io/cancer/collaboratory/pancancer-reporting/1.1-alpha.4/pancancer-reporting-1.1-alpha.4.jar
     nohup java -cp pancancer-reporting-*.jar  info.pancancer.arch3.reportbot.SlackReportBot --endless --config ~/arch3/config/masterConfig.ini &> report.out
 
-See [arch3](https://github.com/CancerCollaboratory/sandbox/blob/develop/pancancer-arch-3/README.md#testing-locally) for more details. 
+See [arch3](https://github.com/CancerCollaboratory/sandbox/blob/develop/pancancer-arch-3/README.md) for more details. 
 
 To set up reporting, see the [README.md](https://github.com/CancerCollaboratory/sandbox/tree/develop/pancancer-reporting) for that component. 
 
