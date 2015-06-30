@@ -125,7 +125,7 @@ Docker also allows you to [pause](https://docs.docker.com/reference/commandline/
 
 If you really need to halt a container, you must exit, and then you can use the `docker kill <container name or ID>`. The restart policy will not take effect if the container is stopped in this way.
 
-### Using the Youxia Deployer and then Queue-based Scheduling System
+### Using the Youxia Deployer and the Queue-based Scheduling System
 
 Launching new workers can be done by the main architecture3 components, but you may need to create an initial snapshot to use when creating new images. Youxia is a component that can launch new VMs in AWS or OpenStack. Once launched, they can be snapshotted for future use. Using snapshots speeds up the process of provisioning future worker nodes.
 
