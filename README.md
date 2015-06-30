@@ -149,11 +149,11 @@ Notable parameters: Specify the private ip address under sensu\_ip\_address, we 
 
 #### Snapshotting a Worker for Arch3 Deployment
 
-Spin up a worker for snapshotting (append --openstack if running in OpenStack)
+You can use the Youxia Deployer to launch a worker node that can be snapshotted. The command to do this is:
 
-    java -cp ~/arch3/bin/pancancer-arch-3-*.jar io.cloudbindle.youxia.deployer.Deployer  --ansible-playbook ~/architecture-setup/container-host-bag/install.yml --max-spot-price 1 --batch-size 1 --total-nodes-num 1 -e ~/params.json
+    java -cp ~/arch3/bin/pancancer.jar io.cloudbindle.youxia.deployer.Deployer  --ansible-playbook ~/architecture-setup/container-host-bag/install.yml --max-spot-price 1 --batch-size 1 --total-nodes-num 1 -e ~/params.json
 
-If the Deployer fails to complete the setup of the instance, you may have to use the [Reaper](https://github.com/CloudBindle/youxia#reaper) to destroy it before trying again:
+If, for whatever reason, the Deployer fails to complete the setup of the instance, you may have to use the [Reaper](https://github.com/CloudBindle/youxia#reaper) to destroy it before trying again:
 
     java -cp pancancer.jar io.cloudbindle.youxia.reaper.Reaper --kill-limit 0
 
@@ -171,23 +171,22 @@ At this point, you should have a worker which can be used to take a snapshot in 
 
 You will then be able to kick-off the various services and submit some test jobs:
 
-    java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.jobGenerator.JobGenerator --config ~/arch3/config/masterConfig.ini --total-jobs 5
+    java -cp ~/arch3/bin/pancancer.jar info.pancancer.arch3.jobGenerator.JobGenerator --config ~/arch3/config/masterConfig.ini --total-jobs 5
 
-    nohup java -cp ~/arch3/bin/pancancer-arch-*.jar info.pancancer.arch3.coordinator.Coordinator  --config ~/arch3/config/masterConfig.ini --endless &> coordinator.out &
+    nohup java -cp ~/arch3/bin/pancancer.jar info.pancancer.arch3.coordinator.Coordinator  --config ~/arch3/config/masterConfig.ini --endless &> coordinator.out &
 
-    nohup java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.containerProvisioner.ContainerProvisionerThreads  --config ~/arch3/config/masterConfig.ini --endless &> provisioner.out &
+    nohup java -cp ~/arch3/bin/pancancer.jar info.pancancer.arch3.containerProvisioner.ContainerProvisionerThreads  --config ~/arch3/config/masterConfig.ini --endless &> provisioner.out &
 
 When those jobs complete, you can then submit real jobs using the following command assuming that your ini files are in ini\_batch\_2:
 
-    java -cp ~/arch3/bin/pancancer-arch-3-1.1-alpha.0.jar info.pancancer.arch3.jobGenerator.JobGeneratorDEWorkflow --workflow-name BWA --workflow-version 2.6.1 --workflow-path /workflows/Workflow_Bundle_BWA_2.6.1_SeqWare_1.1.0-alpha.5 --config ~/arch3/config/masterConfig.json --ini-dir ini_batch_2
+    java -cp ~/arch3/bin/pancancer.jar info.pancancer.arch3.jobGenerator.JobGeneratorDEWorkflow --workflow-name BWA --workflow-version 2.6.1 --workflow-path /workflows/Workflow_Bundle_BWA_2.6.1_SeqWare_1.1.0-alpha.5 --config ~/arch3/config/masterConfig.json --ini-dir ini_batch_2
 
 Note that while coordinator.out and provisioner.out contain only high-level information such as errors and fatal events, the arch3.log which is automatically generated (and rotates) contains low level logging information.
 
 You should also start off the Reporting Bot (this will be integrated in a future release of the pancancer launcher)
 
-    mkdir dev && cd dev
-    wget https://seqwaremaven.oicr.on.ca/artifactory/seqware-release/io/cancer/collaboratory/pancancer-reporting/1.1-alpha.4/pancancer-reporting-1.1-alpha.4.jar
-    nohup java -cp pancancer-reporting-*.jar  info.pancancer.arch3.reportbot.SlackReportBot --endless --config ~/arch3/config/masterConfig.ini &> report.out
+    cd ~/arch3/
+    nohup java -cp reporting.jar  info.pancancer.arch3.reportbot.SlackReportBot --endless --config config/masterConfig.ini &> report.out
 
 See [arch3](https://github.com/CancerCollaboratory/sandbox/blob/develop/pancancer-arch-3/README.md) for more details.
 
