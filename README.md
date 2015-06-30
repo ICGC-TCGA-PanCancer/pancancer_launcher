@@ -10,7 +10,7 @@ You will find additional tips and tricks for specific environments at [site-spec
 
 #### Before you begin
 
-Docker containers can be installed on any host machine capable of running docker. This document will assume that you are running on Amazon Web Services. 
+Docker containers can be installed on any host machine capable of running docker. This document will assume that you are running on Amazon Web Services.
 
 If you are unfamiliar with docker, you might want to read about it [here](https://www.docker.com/whatisdocker/).
 
@@ -56,11 +56,11 @@ For software developers working on the launcher, once you have docker installed,
 
     docker pull pancancer/pancancer_launcher
 
-This command will pull the *latest* version of pancancer\_launcher. 
+This command will pull the *latest* version of pancancer\_launcher.
 
 For cloud shepherds trying to run workflows, if there is a specific version of the container you wish to pull, you can add the version to the command like this:
 
-    docker pull pancancer/pancancer_launcher:3.0.7
+    docker pull pancancer/pancancer_launcher:3.0.8
 
 To see further details about the container (such as the available versions/tags), see the [relevant dockerhub page](https://registry.hub.docker.com/u/pancancer/pancancer_launcher/).
 
@@ -80,8 +80,8 @@ The pancancer\_launcher can start up new VMs on AWS. To do this, it needs access
 
 The easiest way to start up the pancancer\_launcher container is to use a helper script. You can get the helper script like this:
 
-    wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.0.7/start_launcher_container.sh
-    
+    wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.0.8/start_launcher_container.sh
+
 The script takes two arguments:
  - The path to the pem key that you want to use for new worker VMs
  - The version/tag of the container you wish to start.
@@ -95,9 +95,9 @@ Executing the script can look like this (recommended for developers):
 
     bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem latest
 
-For example for cloud shepherds, when launching the tagged 3.0.7 release use 
+For example for cloud shepherds, when launching the tagged 3.0.8 release use
 
-    bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem 3.0.7
+    bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem 3.0.8
 
 This should start up your container.
 
@@ -108,7 +108,7 @@ The `start_launcher_container.sh` script starts the container with a restart pol
 If you wish to leave the running container's shell, but you *do not* want to terminate/restart everything, you can *detach* from the container by typing <kbd>Ctrl</kbd><kbd>P</kbd> <kbd>Ctrl</kbd><kbd>Q</kbd>. This will return you to your host machine's shell, but leave all of the processes in the container still running. To return to you your container, you can use the docker attach command:
 
     docker attach pancancer_launcher
-Docker also allows you to [pause](https://docs.docker.com/reference/commandline/cli/#pause) and [unpause](https://docs.docker.com/reference/commandline/cli/#unpause) running containers. 
+Docker also allows you to [pause](https://docs.docker.com/reference/commandline/cli/#pause) and [unpause](https://docs.docker.com/reference/commandline/cli/#unpause) running containers.
 
 If you really need to halt a container, you can use the `docker kill <container name or ID>`. The restart policy will not take effect if the container is stopped in this way.
 
@@ -162,7 +162,7 @@ You can configure which workflows you want to install on a worker. The `workflow
 In AWS, new nodes are launched in the "default" security group, unless you specify otherwise. If your default security group *does not* allow inbound connections from your launcher node, you can specify a security group in your config file for your worker nodes. You can configure your worker to be in the same security group as your launcher. For example, if your launcher's security group is "SecGrp1", you would add to your configuration file:
 
     aws_security_group=SecGrp1
-    
+
 **VERY IMPORTANT:** _You should also configure your security group so that it accepts incoming SSH and TCP connections from the public IP address of your launcher node, as well as from the security group itself._
 _It is also a good idea to ensure that your security group is not open to the whole Internet in general - you should only allow inbound connections from known IP address on specific ports whenever possible._
 
@@ -172,17 +172,17 @@ Once you have completed configuring Bindle, you can run bindle like this:
 
     cd ~/architecture-setup/Bindle
     perl bin/launch_cluster.pl --config aws --custom-params singlenode
-    
-    
-Bindle will now begin the process of provisioning and setting up new VMs. Later on, you may want to read [this](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/3.0.7/production/fleet_management.md#managing-an-existing-pancancer-environment) page about managing a fleet of Pancancer VMs.
+
+
+Bindle will now begin the process of provisioning and setting up new VMs. Later on, you may want to read [this](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/3.0.8/production/fleet_management.md#managing-an-existing-pancancer-environment) page about managing a fleet of Pancancer VMs.
 
 #### Verifying the new worker node.
 
 The playbook that sets up the worker should complete with text that looks like this:
 
-    PLAY RECAP ******************************************************************** 
-    master                     : ok=60   changed=40   unreachable=0    failed=0   
-    
+    PLAY RECAP ********************************************************************
+    master                     : ok=60   changed=40   unreachable=0    failed=0
+
 *NOTE: The actual number of plays may vary, depending on how many workflows you installed*
 
 To connect to your new worker node, execute the following commands:
@@ -197,22 +197,22 @@ To connect to your new worker node, execute the following commands:
 Once you are connected to your worker, you can check which workflows are installed by examining the `/workflows` directory:
 
     ls -l /workflows
-    
+
 Output:
 
     total 56300
     -rw-r--r-- 1 root root 57636720 May 28 17:56 seqware-distribution-1.1.1-full.jar
     drwxr-xr-x 3 root root     4096 May 28 17:56 Workflow_Bundle_BWA_2.6.1_SeqWare_1.1.0-alpha.5
     drwxr-xr-x 3 root root     4096 May 28 18:01 Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1
-    
+
 *NOTE: The output might vary depending on the number of workflows you configured to install*
-    
+
 You should see a directory for each workflow you configured in your installation.
 
 If you want to see which docker images are installed on the worker, you can use this command:
 
     docker images
-    
+
 Output:
 
     REPOSITORY                              TAG                 IMAGE ID            CREATED             VIRTUAL SIZE
@@ -230,11 +230,11 @@ Once you have a configuration that has been used to successfully provision a nod
     [singlenode1]
     number_of_nodes=1
     target_directory=singlenode_vagrant_1
-    
+
     [singlenode2]
     number_of_nodes=1
     target_directory=singlenode_vagrant_2
-    
+
     [singlenode3]
     number_of_nodes=1
     target_directory=singlenode_vagrant_3
@@ -276,7 +276,7 @@ If you execute this command, you should see the output of the HelloWorld workflo
 The key to this is mapping the HelloWorld bundle directory (`/workflows/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1`) to a specific directory within the container (`/workflow`), and then telling Docker to run the `seqware` command with the parameters `bundle launch --dir /workflow --no-metadata`. The `--dir /workflow` parameter tells seqware that the workflow to execute is in the `/workflow` directory, which was mapped to `/workflows/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.1` on the host.
 
 To change which workflow that you are executing, change the mapping of the container's `/workflow` directory in the command above, like this:
-    
+
     docker run...
       ...
       -v /workflows/Workflow_Bundle_BWA_2.6.1_SeqWare_1.1.0-alpha.5:/workflow \
@@ -286,25 +286,25 @@ To change which workflow that you are executing, change the mapping of the conta
 
 ### Using INI files from the Central Decider Client
 
-When running your workflows, you will probably want to use an INI file generated by the Central Decider Client. Please [click here](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/3.0.7/production/central_decider_client.md#the-central-decider-client) for more information on how to get the INI files and how they can be submitted to a worker node.
+When running your workflows, you will probably want to use an INI file generated by the Central Decider Client. Please [click here](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/3.0.8/production/central_decider_client.md#the-central-decider-client) for more information on how to get the INI files and how they can be submitted to a worker node.
 
 ### Using the Queue-based Scheduling System
 
-If instructed to, you may be able to use our queue-based scheduling system. This is pre-installed into the launcher and should only need some configuration to provision workers, tear-down workers, and schedule workflows to workers. 
+If instructed to, you may be able to use our queue-based scheduling system. This is pre-installed into the launcher and should only need some configuration to provision workers, tear-down workers, and schedule workflows to workers.
 
 For debugging, you can login to the RabbitMQ web interface at port 15672 using a web browser or login to postgres using "psql -U queue_status".
 
 First, you'll want to correct your parameters used by the container\_host playbook to setup workers. For more information, the parameters here are those for the [container host bag](https://github.com/ICGC-TCGA-PanCancer/container-host-bag):
 
     vim ~/params.json
-    
-Notable parameters: Specify for queueHost, the internal ip address of your launcher. 
-    
+
+Notable parameters: Specify for queueHost, the internal ip address of your launcher.
+
 Second, you'll want to correct your parameters for arch3 for your environment:
 
     vim ~/arch3/config/masterConfig.ini
 
-Notable parameters: To turn off reaping functionality, add the parameter "youxia\_reaper\_parameters" with a value of "--test". For use in an OpenStack environment, add "--openstack" as a parameter to the deployer and the reaper. 
+Notable parameters: To turn off reaping functionality, add the parameter "youxia\_reaper\_parameters" with a value of "--test". For use in an OpenStack environment, add "--openstack" as a parameter to the deployer and the reaper.
 
 Third, you'll want to correct your parameters used for youxia (see [this](https://github.com/CloudBindle/youxia#configuration))
 
@@ -312,41 +312,41 @@ Third, you'll want to correct your parameters used for youxia (see [this](https:
 
 Notable parameters: Specify the private ip address under sensu\_ip\_address, we are currently using ami-d56111a2
 
-#### Snapshotting a Worker for Arch3 Deployment 
+#### Snapshotting a Worker for Arch3 Deployment
 
 Spin up a worker for snapshotting (append --openstack if running in OpenStack)
 
-    java -cp ~/arch3/bin/pancancer-arch-3-*.jar io.cloudbindle.youxia.deployer.Deployer  --ansible-playbook ~/architecture-setup/container-host-bag/install.yml --max-spot-price 1 --batch-size 1 --total-nodes-num 1 -e ~/params.json 
+    java -cp ~/arch3/bin/pancancer-arch-3-*.jar io.cloudbindle.youxia.deployer.Deployer  --ansible-playbook ~/architecture-setup/container-host-bag/install.yml --max-spot-price 1 --batch-size 1 --total-nodes-num 1 -e ~/params.json
 
 If the Deployer fails to complete the setup of the instance, you may have to use the [Reaper](https://github.com/CloudBindle/youxia#reaper) to destroy it before trying again:
 
     java -cp pancancer.jar io.cloudbindle.youxia.reaper.Reaper --kill-limit 0
 
-At this point, you should have a worker which can be used to take a snapshot in order to jumpstart future deployments. To allow for easier migration to newer arch3 versions, you should also clean arch3 components from that worker. 
+At this point, you should have a worker which can be used to take a snapshot in order to jumpstart future deployments. To allow for easier migration to newer arch3 versions, you should also clean arch3 components from that worker.
 
 1. First, clean up the architecture 3 components so that you can cleanly upgrade between versions. Login to the worker host and from the home directory delete bash scripts that start the worker, the jar file for our tools, the lock file that the worker may have generated, and the log file as well. The full set of locations is:
     * all scripts, jars and json files in /home/ubuntu
     * /var/log/arch3\_worker.log
     * /var/run/arch3\_worker.pid
 1. In AWS, create an AMI based on your instance. Make sure to specify the ephemeral disks that you wish to use, arch3 will provision a number of ephemeral drives that makes what you specify in your snapshot.
-1. In OpenStack, create a snapshot based on your instance. 
+1. In OpenStack, create a snapshot based on your instance.
 1. When setting up arch3 (see below), you may now specify the id for that image to use in your ~/.youxia/config file
 
 #### Regular Operations
 
 You will then be able to kick-off the various services and submit some test jobs:
-    
+
     java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.jobGenerator.JobGenerator --config ~/arch3/config/masterConfig.ini --total-jobs 5
-    
+
     nohup java -cp ~/arch3/bin/pancancer-arch-*.jar info.pancancer.arch3.coordinator.Coordinator  --config ~/arch3/config/masterConfig.ini --endless &> coordinator.out &
-    
+
     nohup java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.containerProvisioner.ContainerProvisionerThreads  --config ~/arch3/config/masterConfig.ini --endless &> provisioner.out &
-     
+
 When those jobs complete, you can then submit real jobs using the following command assuming that your ini files are in ini\_batch\_2:
 
     java -cp ~/arch3/bin/pancancer-arch-3-1.1-alpha.0.jar info.pancancer.arch3.jobGenerator.JobGeneratorDEWorkflow --workflow-name BWA --workflow-version 2.6.1 --workflow-path /workflows/Workflow_Bundle_BWA_2.6.1_SeqWare_1.1.0-alpha.5 --config ~/arch3/config/masterConfig.json --ini-dir ini_batch_2
-    
-Note that while coordinator.out and provisioner.out contain only high-level information such as errors and fatal events, the arch3.log which is automatically generated (and rotates) contains low level logging information. 
+
+Note that while coordinator.out and provisioner.out contain only high-level information such as errors and fatal events, the arch3.log which is automatically generated (and rotates) contains low level logging information.
 
 You should also start off the Reporting Bot (this will be integrated in a future release of the pancancer launcher)
 
@@ -354,15 +354,15 @@ You should also start off the Reporting Bot (this will be integrated in a future
     wget https://seqwaremaven.oicr.on.ca/artifactory/seqware-release/io/cancer/collaboratory/pancancer-reporting/1.1-alpha.4/pancancer-reporting-1.1-alpha.4.jar
     nohup java -cp pancancer-reporting-*.jar  info.pancancer.arch3.reportbot.SlackReportBot --endless --config ~/arch3/config/masterConfig.ini &> report.out
 
-See [arch3](https://github.com/CancerCollaboratory/sandbox/blob/develop/pancancer-arch-3/README.md) for more details. 
+See [arch3](https://github.com/CancerCollaboratory/sandbox/blob/develop/pancancer-arch-3/README.md) for more details.
 
-To set up reporting, see the [README.md](https://github.com/CancerCollaboratory/sandbox/tree/develop/pancancer-reporting) for that component. 
+To set up reporting, see the [README.md](https://github.com/CancerCollaboratory/sandbox/tree/develop/pancancer-reporting) for that component.
 
 #### Dealing with Failure
 
-When workflows fail, arch3 will leave that host in place for you to examine. Your task as a cloud shepherd is to take a look, determine the problem, and if the problem is epehemeral (i.e. like a temporary network outage) to requeue the job. 
+When workflows fail, arch3 will leave that host in place for you to examine. Your task as a cloud shepherd is to take a look, determine the problem, and if the problem is epehemeral (i.e. like a temporary network outage) to requeue the job.
 
-1. First, reporting tools will tell you to look at a node. 
+1. First, reporting tools will tell you to look at a node.
 
         green_snake status
         ....
@@ -371,7 +371,7 @@ When workflows fail, arch3 will leave that host in place for you to examine. You
         first seen (hours) 21.60
         ip_address 10.106.128.62
         last seen (seconds) 30490.90
-        status FAILED 
+        status FAILED
 
 1. For now, retrieve the ini file from the failed workers
 
@@ -380,23 +380,23 @@ When workflows fail, arch3 will leave that host in place for you to examine. You
         The authenticity of host '10.106.128.62 (10.106.128.62)' can't be established.ECDSA key fingerprint is e9:bf:fb:f3:d0:29:95:82:08:fe:8d:73:07:6a:2e:35.
         Are you sure you want to continue connecting (yes/no)? yes
         Warning: Permanently added '10.106.128.62' (ECDSA) to the list of known hosts.
-        seqware_9050325771159466321.ini 
+        seqware_9050325771159466321.ini
         cd ..
-    
+
 1.  Resubmit the job
 
-        java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.jobGenerator.JobGeneratorDEWorkflow --workflow-name BWA --workflow-version 2.6.1 --workflow-path /workflows/Workflow_Bundle_BWA_2.6.1_SeqWare_1.1.0-alpha.5 --config ~/arch3/config/masterConfig.json --ini-dir ini_batch_5_failed/ 
+        java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.jobGenerator.JobGeneratorDEWorkflow --workflow-name BWA --workflow-version 2.6.1 --workflow-path /workflows/Workflow_Bundle_BWA_2.6.1_SeqWare_1.1.0-alpha.5 --config ~/arch3/config/masterConfig.json --ini-dir ini_batch_5_failed/
 
 1. Terminate the hosts with the failed jobs in either the AWS console or OpenStack horizon using the above ip_address to search.  
-    
+
 
 ### Monitoring
-The pancancer_launcher contains uses sensu for monitoring its worker nodes. It also contains Uchiwa, which functions as a dashboard for the senus monitoring. 
+The pancancer_launcher contains uses sensu for monitoring its worker nodes. It also contains Uchiwa, which functions as a dashboard for the senus monitoring.
 
-To access the dashboard, navigate to 
+To access the dashboard, navigate to
 
     http://<public IP of machine running pancancer_launcher>:3000/
-    
+
 You will be prompted for a username and password. Enter: "seqware" and "seqware". You will then be able to see the status of the worker nodes, and the sensu-server itself.
 
 **IMPORTANT:** On AWS, you may have to edit your security group rules to allow inbound traffic to port 3000 for the IP address of your launcher host VM if you want to be able to see the Uchiwa dashboard. You should also ensure that your security group allows all inbound TCP connections from itself and all inbound SSH connections from itself, as well as all TCP and SSH inbound connections from the public IP address of the launcher host VM.
@@ -408,7 +408,7 @@ The restart policy of the pancancer_launcher should be to restart automatically 
     cp -a ~/.bindle /opt/from_host/config/
     cp -a ~/.youxia /opt/from_host/config/
     cp -a ~/arch3/config /opt/from_host/config/
-    
+
 Outside the container (You can *detach* from a running container using <kbd>Ctrl</kbd><kbd>P</kbd> <kbd>Ctrl</kbd><kbd>Q</kbd>, and then use `docker attach pancancer_launcher` to re-attach later), you should be able to see the copied configuration files:
 
     ls -la ~/pancancer_launcher_config/
