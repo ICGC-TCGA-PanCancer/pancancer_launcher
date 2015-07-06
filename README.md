@@ -177,9 +177,9 @@ You will then be able to kick-off the various services and submit some test jobs
 
     nohup java -cp ~/arch3/bin/pancancer.jar info.pancancer.arch3.containerProvisioner.ContainerProvisionerThreads  --config ~/arch3/config/masterConfig.ini --endless &> provisioner.out &
 
-When those jobs complete, you can then submit real jobs using the following command assuming that your ini files are in ini\_batch\_2:
+When those jobs complete, you can then submit real jobs using the following command assuming that your ini files are in ini\_batch\_5:
 
-    java -cp ~/arch3/bin/pancancer.jar info.pancancer.arch3.jobGenerator.JobGeneratorDEWorkflow --workflow-name BWA --workflow-version 2.6.1 --workflow-path /workflows/Workflow_Bundle_BWA_2.6.1_SeqWare_1.1.0-alpha.5 --config ~/arch3/config/masterConfig.ini --ini-dir ini_batch_2
+   java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.jobGenerator.JobGenerator --workflow-name Sanger --workflow-version 1.0.7 --workflow-path /workflows/Workflow_Bundle_SangerPancancerCgpCnIndelSnvStr_1.0.7_SeqWare_1.1.0 --config ~/arch3/config/config.json --ini-dir ini_batch_5
 
 Note that while coordinator.out and provisioner.out contain only high-level information such as errors and fatal events, the arch3.log which is automatically generated (and rotates) contains low level logging information.
 
