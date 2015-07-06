@@ -179,7 +179,7 @@ You will then be able to kick-off the various services and submit some test jobs
 
 When those jobs complete, you can then submit real jobs using the following command assuming that your ini files are in ini\_batch\_5:
 
-   java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.jobGenerator.JobGenerator --workflow-name Sanger --workflow-version 1.0.7 --workflow-path /workflows/Workflow_Bundle_SangerPancancerCgpCnIndelSnvStr_1.0.7_SeqWare_1.1.0 --config ~/arch3/config/config.json --ini-dir ini_batch_5
+    java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.jobGenerator.JobGenerator --workflow-name Sanger --workflow-version 1.0.7 --workflow-path /workflows/Workflow_Bundle_SangerPancancerCgpCnIndelSnvStr_1.0.7_SeqWare_1.1.0 --config ~/arch3/config/config.json --ini-dir ini_batch_5
 
 Note that while coordinator.out and provisioner.out contain only high-level information such as errors and fatal events, the arch3.log which is automatically generated (and rotates) contains low level logging information.
 
