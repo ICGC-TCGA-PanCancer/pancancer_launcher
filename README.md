@@ -173,7 +173,7 @@ A basic test to ensure that everything is set up correctly is to run the queue a
     cd ~/arch3
     java -cp pancancer.jar info.pancancer.arch3.jobGenerator.JobGenerator --workflow-name HelloWorld --workflow-version 1.0-SNAPSHOT --workflow-path /workflows/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0 --config ~/arch3/config/masterConfig.ini --total-jobs 1
     
-If you log in to the rabbitMQ console on your launcher (`http://<your launcher's IP address>:15672`, username: queue\_user, password: queue, unless you've changed the defaults), you should be able to find a queue names `pancancer\_arch\_3\_orders`, with one message. If you examine the payload, it should look something like this:
+If you log in to the rabbitMQ console on your launcher (`http://<your launcher's IP address>:15672`, username: queue\_user, password: queue, unless you've changed the defaults), you should be able to find a queue names `pancancer_arch_3_orders`, with one message. If you examine the payload, it should look something like this:
 
     { 
       "message_type": "order",
@@ -207,9 +207,26 @@ You can then run the coordinator to conver this Order message into a Job and a V
     cd ~/arch3
     java -cp pancancer.jar info.pancancer.arch3.coordinator.Coordinator --config config/masterConfig.ini
 
-At this point, the RabbitMQ console should show 0 messages in `pancancer\_arch\_3\_order` and 1 message in `pancancer\_arch\_3\_jobs` and 1 message in `pancancer\_arch\_3\_vms`. The messages in these queues are in fact the two parts of the message above: the first part of that message was the Job, the second part was the VM Provision Request.
+At this point, the RabbitMQ console should show 0 messages in `pancancer_arch_3_order` and 1 message in `pancancer_arch_3_jobs` and 1 message in `pancancer_arch_3_vms`. The messages in these queues are in fact the two parts of the message above: the first part of that message was the Job, the second part was the VM Provision Request.
 
-Finally, you can run a worker manually to execute a single job. Log in to a worker and
+Finally, you can run a worker manually to execute a single job. Log in to a worker and run this command
+
+    java -cp pancancer-arch-3-1.1-beta.1-SNAPSHOT.jar info.pancancer.arch3.worker.Worker --config workerConfig.ini --uuid 12345678 &
+    
+If the worker runs, you can check the log file (`arch3.log`), you should see that there are 0 messages in the Job queue. You may also see some messages in `pancancer_arch_3_for_CleanupJobs`, which will contain the heartbeat from the worker (since HelloWorld finishes very quickly, you may want to speed up the heartbeat, to a rate of 1 message per second for the purposes of this test). There should be a message indicating completeness:
+
+    {
+      "type": "job-message-type",
+      "state": "SUCCESS",
+      "vmUuid": "12345678",
+      "jobUuid": "e389c296-ebe5-4206-b07d-3dd7847e4cf9",
+      "message": "job is finished",
+      "stderr": "",
+      "stdout": "Performing launch of workflow \u0027HelloWorld\u0027 version...[2015/07/07 18:03:46] | Setting workflow-run status to completed for: 10\n[--plugin, io.seqware.pipeline.plugins.WorkflowWatcher, --, --workflow-run-accession, 10]\nWorkflow run 10 is currently completed\n[--plugin, net.sourceforge.seqware.pipeline.plugins.WorkflowStatusChecker, --, --workflow-run-accession, 10]",
+      "ipAddress": "10.0.26.25"
+    }
+
+Similar information can also be seen in the worker's `arch3.log` file.
 
 #### Regular Operations
 
