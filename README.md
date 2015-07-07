@@ -167,6 +167,50 @@ At this point, you should have a worker which can be used to take a snapshot in 
 1. In OpenStack, create a snapshot based on your instance.
 1. When setting up arch3 (see below), you may now specify the id for that image to use in your ~/.youxia/config file
 
+#### Basic testing
+A basic test to ensure that everything is set up correctly is to run the queue and execute the HelloWorld workflow as a job. To generate the job, you can do this:
+
+    cd ~/arch3
+    java -cp pancancer.jar info.pancancer.arch3.jobGenerator.JobGenerator --workflow-name HelloWorld --workflow-version 1.0-SNAPSHOT --workflow-path /workflows/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0 --config ~/arch3/config/masterConfig.ini --total-jobs 1
+    
+If you log in to the rabbitMQ console on your launcher (`http://<your launcher's IP address>:15672`, username: queue\_user, password: queue, unless you've changed the defaults), you should be able to find a queue names `pancancer\_arch\_3\_orders`, with one message. If you examine the payload, it should look something like this:
+
+    { 
+      "message_type": "order",
+      "order_uuid": "a8430fe9-4866-4082-8e04-400e31124bde",
+      "job": {
+      "job_uuid" : "e389c296-ebe5-4206-b07d-3dd7847e4cf9",
+      "workflow_name" : "HelloWorld",
+      "workflow_version" : "1.0-SNAPSHOT",
+      "workflow_path" : "/workflows/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0",
+      "job_hash" : "param1=bar,param2=foo",
+      "arguments" : {
+        "param1" : "bar",
+        "param2" : "foo"
+      }
+    },
+      "provision": {   "message_type": "provision",
+    "provision_uuid": "",
+       "cores": 8,
+        "mem_gb": 128,
+        "storage_gb": 1024,
+        "job_uuid": "e389c296-ebe5-4206-b07d-3dd7847e4cf9",
+        "ip_address": "",
+        "bindle_profiles_to_run": ["ansible_playbook_path"
+    ]
+    }
+    
+    }
+
+You can then run the coordinator to conver this Order message into a Job and a VM Provision Request:
+
+    cd ~/arch3
+    java -cp pancancer.jar info.pancancer.arch3.coordinator.Coordinator --config config/masterConfig.ini
+
+At this point, the RabbitMQ console should show 0 messages in `pancancer\_arch\_3\_order` and 1 message in `pancancer\_arch\_3\_jobs` and 1 message in `pancancer\_arch\_3\_vms`. The messages in these queues are in fact the two parts of the message above: the first part of that message was the Job, the second part was the VM Provision Request.
+
+Finally, you can run a worker manually to execute a single job. Log in to a worker and
+
 #### Regular Operations
 
 You will then be able to kick-off the various services and submit some test jobs:
