@@ -271,7 +271,7 @@ When workflows fail, arch3 will leave that host in place for you to examine. You
 1. For now, retrieve the ini file from the failed workers
 
         mkdir ini_batch_5_failed && cd ini_batch_5_failed
-        cp -i ~/.ssh/green_snake.pem ubuntu@10.106.128.62:/tmp/*.ini .
+        scp -i ~/.ssh/green_snake.pem ubuntu@10.106.128.62:/tmp/*.ini .
         The authenticity of host '10.106.128.62 (10.106.128.62)' can't be established.ECDSA key fingerprint is e9:bf:fb:f3:d0:29:95:82:08:fe:8d:73:07:6a:2e:35.
         Are you sure you want to continue connecting (yes/no)? yes
         Warning: Permanently added '10.106.128.62' (ECDSA) to the list of known hosts.
