@@ -248,7 +248,7 @@ Note that while coordinator.out and provisioner.out contain only high-level info
 
 You should also start off the Reporting Bot (this will be integrated in a future release of the pancancer launcher)
 
-    nohup java -cp ~/arch3/bin/pancancer-reporting-*.jar  info.pancancer.arch3.reportbot.SlackReportBot --endless --config ~/arch3/config/masterConfig.ini &> report.out
+    nohup java -cp ~/arch3/bin/pancancer-reporting-*.jar  info.pancancer.arch3.reportbot.SlackReportBot --endless --config ~/arch3/config/masterConfig.ini &> report.out &
 
 See [arch3](https://github.com/CancerCollaboratory/sandbox/blob/develop/pancancer-arch-3/README.md) for more details.
 
