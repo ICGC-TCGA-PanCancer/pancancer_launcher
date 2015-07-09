@@ -232,11 +232,11 @@ Similar information can also be seen in the worker's `arch3.log` file.
 
 You will then be able to kick-off the various services and submit some test jobs:
 
-    java -cp ~/arch3/bin/pancancer.jar info.pancancer.arch3.jobGenerator.JobGenerator --config ~/arch3/config/masterConfig.ini --total-jobs 5
+    java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.jobGenerator.JobGenerator --config ~/arch3/config/masterConfig.ini --total-jobs 5
 
     nohup java -cp ~/arch3/bin/pancancer.jar info.pancancer.arch3.coordinator.Coordinator  --config ~/arch3/config/masterConfig.ini --endless &> coordinator.out &
 
-    nohup java -cp ~/arch3/bin/pancancer.jar info.pancancer.arch3.containerProvisioner.ContainerProvisionerThreads  --config ~/arch3/config/masterConfig.ini --endless &> provisioner.out &
+    nohup java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.containerProvisioner.ContainerProvisionerThreads  --config ~/arch3/config/masterConfig.ini --endless &> provisioner.out &
 
 When those jobs complete, you can then submit real jobs using the following command assuming that your ini files are in ini\_batch\_5:
 
@@ -247,7 +247,7 @@ Note that while coordinator.out and provisioner.out contain only high-level info
 You should also start off the Reporting Bot (this will be integrated in a future release of the pancancer launcher)
 
     cd ~/arch3/
-    nohup java -cp reporting.jar  info.pancancer.arch3.reportbot.SlackReportBot --endless --config config/masterConfig.ini &> report.out
+    nohup java -cp ~/arch3/bin/pancancer-reporting-*.jar  info.pancancer.arch3.reportbot.SlackReportBot --endless --config config/masterConfig.ini &> report.out
 
 See [arch3](https://github.com/CancerCollaboratory/sandbox/blob/develop/pancancer-arch-3/README.md) for more details.
 
