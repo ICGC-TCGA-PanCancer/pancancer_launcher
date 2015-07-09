@@ -2,12 +2,15 @@
 FROM ubuntu:14.04
 MAINTAINER Solomon Shorser <solomon.shorser@oicr.on.ca>
 
+# query this if you're inside a container and want to know what version of pancancer_launcher you're using
+ENV PANCANCER_LAUNCHER_VERSION thin_launcher
+
 # some packages needed by the other bags needed packages in "precise" but not in "trusty". Specifically, libdb4.8 was needed.
 RUN apt-get install -y software-properties-common && \
     add-apt-repository "deb http://ca.archive.ubuntu.com/ubuntu precise main" && \
     add-apt-repository --yes ppa:rquillo/ansible && \
-    add-apt-repository --yes ppa:ansible/ansible && \
-    apt-get update
+    add-apt-repository --yes ppa:ansible/ansible
+RUN apt-get update
 RUN apt-get install -y python-apt	mcrypt	git	ansible	vim	curl	build-essential \
 			libxslt1-dev	libxml2-dev	zlib1g-dev	unzip	wget	make \
 			libipc-system-simple-perl	libgetopt-euclid-perl	libjson-perl \
