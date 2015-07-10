@@ -272,7 +272,7 @@ At this point, you should have a worker which can be used to take a snapshot in 
     * /var/run/arch3\_worker.pid
 1. In AWS, create an AMI based on your instance. Make sure to specify the ephemeral disks that you wish to use, arch3 will provision a number of ephemeral drives that makes what you specify in your snapshot.
 1. In OpenStack, create a snapshot based on your instance.
-1. When setting up arch3 (see below), you may now specify the id for that image to use in your ~/.youxia/config file
+1. When setting up youxia for arch3 (see [above](#youxia-config)), you may now specify the id for that image to use in your ~/.youxia/config file
 
 #### Basic testing
 A basic test to ensure that everything is set up correctly is to run the queue and execute the HelloWorld workflow as a job. To generate the job, you can do this:
