@@ -129,29 +129,136 @@ If you really need to halt a container, you must exit, and then you can use the 
 
 Launching new workers can be done by the main architecture3 components, but you may need to create an initial snapshot to use when creating new images. Youxia is a component that can launch new VMs in AWS or OpenStack. Once launched, they can be snapshotted for future use. Using snapshots speeds up the process of provisioning future worker nodes.
 
-First, you'll want to correct your parameters used by the container\_host playbook to setup workers. For more information, the parameters here are those for the [container host bag](https://github.com/ICGC-TCGA-PanCancer/container-host-bag):
+####Configuration
+#####params.json
+You will want to correct your parameters used by the container\_host playbook to setup workers. For more information, the parameters here are those for the [container host bag](https://github.com/ICGC-TCGA-PanCancer/container-host-bag):
 
     vim ~/params.json
 
-Notable parameters: Specify for queueHost, the internal ip address of your launcher.
+Here is an example of the `params.json`:
 
-Second, you'll want to correct your parameters for arch3 for your environment:
+    {
+      "SENSU_SERVER_IP_ADDRESS": "10.0.26.25",
+      "aws_key": "<AWS KEY>",
+      "aws_secret_key": "<AWS SECRET KEY>",
+      "seqware_version": "1.1.1",
+      "workflow_name": "HelloWorld",
+      "workflows": [
+        "Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0"
+      ],
+      "install_workflow": "true",
+      "test_workflow": "true",
+      "queueHost": "10.0.26.25",
+      "queueName": "pancancer_arch_3",
+      "lvm_device_whitelist": "/dev/xvdb,/dev/xvdc,/dev/xvdd,/dev/xvde",
+      "single_node_lvm": true,
+      "pancancer_arch3_version": "1.1-alpha.5",
+      "seqware_engine":"whitestar-parallel",
+      "seqware_use_custom_settings":false
+    }
+
+Important parameters to take note of:
+
+ - SENSU_SERVER_IP_ADDRESS - This is the IP address of the sensu server. Normally, this is the same IP address of the launcher host. This IP address must be accessible to the worker.
+ - aws_key - This is your AWS Key. You don't need to fill this in if you are working on OpenStack
+ - aws_secret_key - This is your AWS secret key. You don't need to fill this in if you are working on OpenStack.
+ - workflows - This is a list of workflows that you want to install onto workers. An example of installing several workflows would look like this:
+
+        ...
+        "workflow_name": "HelloWorld,BWA,Sanger,DEWRapper",
+        "workflows": [
+        "Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0",
+        "Workflow_Bundle_BWA_2.6.5_SeqWare_1.1.1",
+        "Workflow_Bundle_SangerPancancerCgpCnIndelSnvStr_1.0.7_SeqWare_1.1.0",
+        "Workflow_Bundle_DEWrapperWorkflow_1.0.2_SeqWare_1.1.0"
+        ],
+        ...
+
+ - queueHost - This is the IP address of the host machine where pancancer_launcher is running. This IP address must be accessible to the worker.
+
+
+#####masterConfig.ini
+You will also want to configure your parameters for arch3 for your environment:
 
     vim ~/arch3/config/masterConfig.ini
 
+This file is used by architecture3 components such as the JobGenerator, the Coordinator, the Provisioner, and the Reporter.
+
 Notable parameters: To turn off reaping functionality, add the parameter "youxia\_reaper\_parameters" with a value of "--test". For use in an OpenStack environment, add "--openstack" as a parameter to the deployer and the reaper.
 
-Third, you'll want to correct your parameters used for youxia (see [this](https://github.com/CloudBindle/youxia#configuration))
+#####youxia config
+Youxia will need to be configured so that it can deploy new worker nodes. The youxia configuration file is located at `~/.youxia/config`. An example of this file looks like this:
 
+    [youxia]
+    sensu_username = admin
+    sensu_password = seqware
+    sensu_ip_address = localhost
+    sensu_port = 4567
+    managed_tag = your_fleet_tag_name
+    #slack_webhook = <slack RSS handler>
+
+    # aws settings
+    aws_ssh_key =/home/ubuntu/.ssh/<your key name>.pem
+    aws_key_name = <your key name>
+    region = us-east-1
+    # to specify multiple zones, use a comma-separated list
+    # we will target the zone with the cheapest spot price first
+    zone = us-east-1a,us-east-1b,us-east-1c,us-east-1d,us-east-1e
+    # openstack settings
+    openstack_username = <tenant>:<username>
+    openstack_password = <password>
+    openstack_endpoint = http://10.5.73.21:5000/v2.0
+    openstack_key_name = <key name on OpenStack>
+    openstack_ssh_key = <path to SSH key>
+    openstack_region = <region>
+    # openstack_zone = <zone>
+
+    [deployer]
+    ami_image = <base image id>
+    instance_type = m1.xlarge
+    security_group = default
+    product = Linux/UNIX
+    # disable this for integration with pancancer_launcher
+    disable_sensu_server = true
+
+    [deployer_openstack]
+    flavor = m1.xlarge
+    min_cores = 4
+    min_ram = 16384
+    image_id = <base image id>
+    security_group = default
+    network_id = <network id>
+    arbitrary_wait = 200000
+
+    [seqware]
+    rest_user = admin@admin.com
+    rest_pass = admin
+    rest_port = 8080
+    rest_root = SeqWareWebService
+
+    [generator]
+    max_scheduled_workflows = 1
+    max_workflows = 1
+    workflow_accession = 1
+    workflow_name = HelloWorld
+    workflow_version = 1.0-SNAPSHOT
+
+This file contains settings for both OpenStack and AWS. You will only need to fill out the fields that are relevant for your specific cloud environment.
     vim ~/.youxia/config
 
-Notable parameters: Specify the private ip address under sensu\_ip\_address, we are currently using ami-d56111a2
+For details about youxia configuration, see [here](https://github.com/CloudBindle/youxia#configuration).
+
+Some of the more important parameters are for the sensu server IP address, and for the AMI/Image ID.
+
+######Base AMI
+You may need to create a new base image to launch workers in AWS. Default images available typically do not have a large enough root partition to install all of the workflows. It is recommended that you create a new custom base image which will a large root partition (250 GB should be enough) and some ephemeral drives, if you want to use them with the lvm settings in the `params.json` file.
 
 #### Snapshotting a Worker for Arch3 Deployment
 
 You can use the Youxia Deployer to launch a worker node that can be snapshotted. The command to do this is:
 
-    java -cp ~/arch3/bin/pancancer.jar io.cloudbindle.youxia.deployer.Deployer  --ansible-playbook ~/architecture-setup/container-host-bag/install.yml --max-spot-price 1 --batch-size 1 --total-nodes-num 1 -e ~/params.json
+    cd ~/arch3
+    java -cp pancancer.jar io.cloudbindle.youxia.deployer.Deployer  --ansible-playbook ~/architecture-setup/container-host-bag/install.yml --max-spot-price 1 --batch-size 1 --total-nodes-num 1 -e ~/params.json
 
 If, for whatever reason, the Deployer fails to complete the setup of the instance, you may have to use the [Reaper](https://github.com/CloudBindle/youxia#reaper) to destroy it before trying again:
 
@@ -172,10 +279,10 @@ A basic test to ensure that everything is set up correctly is to run the queue a
 
     cd ~/arch3
     java -cp pancancer.jar info.pancancer.arch3.jobGenerator.JobGenerator --workflow-name HelloWorld --workflow-version 1.0-SNAPSHOT --workflow-path /workflows/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0 --config ~/arch3/config/masterConfig.ini --total-jobs 1
-    
+
 If you log in to the rabbitMQ console on your launcher (`http://<your launcher's IP address>:15672`, username: queue\_user, password: queue, unless you've changed the defaults), you should be able to find a queue names `pancancer_arch_3_orders`, with one message. If you examine the payload, it should look something like this:
 
-    { 
+    {
       "message_type": "order",
       "order_uuid": "a8430fe9-4866-4082-8e04-400e31124bde",
       "job": {
@@ -199,7 +306,7 @@ If you log in to the rabbitMQ console on your launcher (`http://<your launcher's
         "bindle_profiles_to_run": ["ansible_playbook_path"
     ]
     }
-    
+
     }
 
 You can then run the coordinator to conver this Order message into a Job and a VM Provision Request:
@@ -212,7 +319,7 @@ At this point, the RabbitMQ console should show 0 messages in `pancancer_arch_3_
 Finally, you can run a worker manually to execute a single job. Log in to a worker and run this command
 
     java -cp pancancer-arch-3-1.1-beta.1-SNAPSHOT.jar info.pancancer.arch3.worker.Worker --config workerConfig.ini --uuid 12345678 &
-    
+
 If the worker runs, you can check the log file (`arch3.log`), you should see that there are 0 messages in the Job queue. You may also see some messages in `pancancer_arch_3_for_CleanupJobs`, which will contain the heartbeat from the worker (since HelloWorld finishes very quickly, you may want to speed up the heartbeat, to a rate of 1 message per second for the purposes of this test). There should be a message indicating completeness:
 
     {
