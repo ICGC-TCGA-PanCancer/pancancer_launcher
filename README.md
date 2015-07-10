@@ -175,7 +175,7 @@ Important parameters to take note of:
         ...
 
  - queueHost - This is the IP address of the host machine where pancancer_launcher is running. This IP address must be accessible to the worker.
-
+ - single\_node\_lvm - If you plan to make use of the lvm options, ensure that your base image has the correct volumes attached to it. See the section on [Base AMI](#base-ami) for more info
 
 #####masterConfig.ini
 You will also want to configure your parameters for arch3 for your environment:
