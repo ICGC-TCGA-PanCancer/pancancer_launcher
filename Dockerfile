@@ -51,7 +51,7 @@ WORKDIR /home/ubuntu/architecture-setup/monitoring-bag/ssl
 RUN ./script.sh
 WORKDIR /home/ubuntu/architecture-setup/monitoring-bag
 RUN ansible-playbook -i inventory site.yml
-WORKDIR /home/ubuntu/architecture-setup/
+WORKDIR /home/ubuntu/arch3/
 
 # The entry point of the container is start_services_in_container.sh, which will start up any necessary services, and also copy SSH pem keys and config files from the host.
 CMD ["/bin/bash","/home/ubuntu/start_services_in_container.sh"]
