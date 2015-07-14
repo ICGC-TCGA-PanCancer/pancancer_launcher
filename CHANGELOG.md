@@ -1,5 +1,22 @@
 ### Pancancer Launcher change log
 
+#### 3.1.0
+ - **Bindle is no longer installed.**
+ - New version of architecture-setup: 3.1.0:
+   - Add new params for seqware (seqware_engine and seqware_use_custom_settings)
+   - Update launch_workers.sh to use youxia (used by Jenkins)
+   - Update documentation
+   - Move old scripts to archive/
+   - New version of central-decider-client: 1.0.8
+     - bug fixes
+   - New version of container-host-bag: 1.0-rc.9
+     - New parameters for custom seqware settings
+     - don't download files to /tmp, download to ~/downloads instead.
+     - Cloud ID will now be passed in from Ansible, rather than letting the arch3 components try to query it.
+ - New version of architecture3 components: 1.1-beta.3 (since last release: 1.1-alpha.5)
+   - Improvements to Worker stability, automatic recovery, and queue handling.
+   - New lost job exporter.
+
 #### 3.0.8
 Major changes:
  - Fixes for monitoring issues related to youxia, new bashrc for worker with custom coloured prompt, other smaller fixes:
