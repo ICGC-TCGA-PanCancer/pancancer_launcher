@@ -312,13 +312,13 @@ If you log in to the rabbitMQ console on your launcher (`http://<your launcher's
 You can then run the coordinator to conver this Order message into a Job and a VM Provision Request:
 
     cd ~/arch3
-    java -cp pancancer.jar info.pancancer.arch3.coordinator.Coordinator --config config/masterConfig.ini
+    java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.coordinator.Coordinator --config config/masterConfig.ini
 
 At this point, the RabbitMQ console should show 0 messages in `pancancer_arch_3_order` and 1 message in `pancancer_arch_3_jobs` and 1 message in `pancancer_arch_3_vms`. The messages in these queues are in fact the two parts of the message above: the first part of that message was the Job, the second part was the VM Provision Request.
 
 Finally, you can run a worker manually to execute a single job. Log in to a worker and run this command
 
-    java -cp pancancer-arch-3-1.1-beta.1-SNAPSHOT.jar info.pancancer.arch3.worker.Worker --config workerConfig.ini --uuid 12345678 &
+    java -cp -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.worker.Worker --config workerConfig.ini --uuid 12345678 &
 
 If the worker runs, you can check the log file (`arch3.log`), you should see that there are 0 messages in the Job queue. You may also see some messages in `pancancer_arch_3_for_CleanupJobs`, which will contain the heartbeat from the worker (since HelloWorld finishes very quickly, you may want to speed up the heartbeat, to a rate of 1 message per second for the purposes of this test). There should be a message indicating completeness:
 
@@ -343,7 +343,7 @@ You will then be able to kick-off the various services and submit some test jobs
 
     java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.jobGenerator.JobGenerator --config ~/arch3/config/masterConfig.ini --total-jobs 5
 
-    nohup java -cp ~/arch3/pancancer.jar info.pancancer.arch3.coordinator.Coordinator  --config ~/arch3/config/masterConfig.ini --endless &> coordinator.out &
+    nohup java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.coordinator.Coordinator  --config ~/arch3/config/masterConfig.ini --endless &> coordinator.out &
 
     nohup java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.containerProvisioner.ContainerProvisionerThreads  --config ~/arch3/config/masterConfig.ini --endless &> provisioner.out &
 
@@ -356,7 +356,7 @@ Note that while coordinator.out and provisioner.out contain only high-level info
 You should also start off the Reporting Bot (this will be integrated in a future release of the pancancer launcher)
 
     cd ~/arch3/
-    nohup java -cp ~/arch3/bin/pancancer-reporting-*.jar  info.pancancer.arch3.reportbot.SlackReportBot --endless --config ~/arch3/config/masterConfig.ini &> report.out
+    nohup java -cp ~/arch3/bin/pancancer-reporting-*.jar  info.pancancer.arch3.reportbot.SlackReportBot --endless --config ~/arch3/config/masterConfig.ini &> report.out &
 
 See [arch3](https://github.com/CancerCollaboratory/sandbox/blob/develop/pancancer-arch-3/README.md) for more details.
 
