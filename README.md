@@ -268,7 +268,7 @@ You may need to create a new base image to launch workers in AWS. Default images
 You can use the Youxia Deployer to launch a worker node that can be snapshotted. The command to do this is:
 
     cd ~/arch3
-    java -cp pancancer.jar io.cloudbindle.youxia.deployer.Deployer  --ansible-playbook ~/architecture-setup/container-host-bag/install.yml --max-spot-price 1 --batch-size 1 --total-nodes-num 1 -e ~/params.json
+    Deployer  --ansible-playbook ~/architecture-setup/container-host-bag/install.yml --max-spot-price 1 --batch-size 1 --total-nodes-num 1 -e ~/params.json
 
 If, for whatever reason, the Deployer fails to complete the setup of the instance, you may have to use the [Reaper](https://github.com/CloudBindle/youxia#reaper) to destroy it before trying again:
 
@@ -288,7 +288,7 @@ At this point, you should have a worker which can be used to take a snapshot in 
 A basic test to ensure that everything is set up correctly is to run the queue and execute the HelloWorld workflow as a job. To generate the job, you can do this:
 
     cd ~/arch3
-    java -cp pancancer.jar info.pancancer.arch3.jobGenerator.JobGenerator --workflow-name HelloWorld --workflow-version 1.0-SNAPSHOT --workflow-path /workflows/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0 --config ~/arch3/config/masterConfig.ini --total-jobs 1
+    Generator --workflow-name HelloWorld --workflow-version 1.0-SNAPSHOT --workflow-path /workflows/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0 --config ~/arch3/config/masterConfig.ini --total-jobs 1
 
 If you log in to the rabbitMQ console on your launcher (`http://<your launcher's IP address>:15672`, username: queue\_user, password: queue, unless you've changed the defaults), you should be able to find a queue names `pancancer_arch_3_orders`, with one message. If you examine the payload, it should look something like this:
 
@@ -322,7 +322,7 @@ If you log in to the rabbitMQ console on your launcher (`http://<your launcher's
 You can then run the coordinator to conver this Order message into a Job and a VM Provision Request:
 
     cd ~/arch3
-    java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.coordinator.Coordinator --config config/masterConfig.ini
+    Coordinator --config config/masterConfig.ini
 
 At this point, the RabbitMQ console should show 0 messages in `pancancer_arch_3_order` and 1 message in `pancancer_arch_3_jobs` and 1 message in `pancancer_arch_3_vms`. The messages in these queues are in fact the two parts of the message above: the first part of that message was the Job, the second part was the VM Provision Request.
 
@@ -351,22 +351,22 @@ Note that you should probably run these commands in the home directory or somewh
 
 You will then be able to kick-off the various services and submit some test jobs:
 
-    java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.jobGenerator.JobGenerator --config ~/arch3/config/masterConfig.ini --total-jobs 5
+    Generator --config ~/arch3/config/masterConfig.ini --total-jobs 5
 
-    nohup java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.coordinator.Coordinator  --config ~/arch3/config/masterConfig.ini --endless &> coordinator.out &
+    Coordinator  --config ~/arch3/config/masterConfig.ini --endless &
 
-    nohup java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.containerProvisioner.ContainerProvisionerThreads  --config ~/arch3/config/masterConfig.ini --endless &> provisioner.out &
+    Provisioner  --config ~/arch3/config/masterConfig.ini --endless &
 
 When those jobs complete, you can then submit real jobs using the following command assuming that your ini files are in ini\_batch\_5:
 
-    java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.jobGenerator.JobGenerator --workflow-name Sanger --workflow-version 1.0.7 --workflow-path /workflows/Workflow_Bundle_SangerPancancerCgpCnIndelSnvStr_1.0.7_SeqWare_1.1.0 --config ~/arch3/config/config.json --ini-dir ini_batch_5
+    JobGenerator --workflow-name Sanger --workflow-version 1.0.7 --workflow-path /workflows/Workflow_Bundle_SangerPancancerCgpCnIndelSnvStr_1.0.7_SeqWare_1.1.0 --config ~/arch3/config/config.json --ini-dir ini_batch_5
 
 Note that while coordinator.out and provisioner.out contain only high-level information such as errors and fatal events, the arch3.log which is automatically generated (and rotates) contains low level logging information.
 
 You should also start off the Reporting Bot (this will be integrated in a future release of the pancancer launcher)
 
     cd ~/arch3/
-    nohup java -cp ~/arch3/bin/pancancer-reporting-*.jar  info.pancancer.arch3.reportbot.SlackReportBot --endless --config ~/arch3/config/masterConfig.ini &> report.out &
+    ReportBot --endless --config ~/arch3/config/masterConfig.ini &
 
 See [arch3](https://github.com/CancerCollaboratory/sandbox/blob/develop/pancancer-arch-3/README.md) for more details.
 
