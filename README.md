@@ -106,11 +106,21 @@ Now would be an excellent time to start a screen session to make it easier to di
 
 Executing the script can look like this (recommended for developers):
 
-    bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem latest
+    bash start_launcher_container.sh -p ~/.ssh/<the name of your key>.pem -i latest
 
-For example for cloud shepherds, when launching the tagged 3.1.0 release use
+For example for cloud shepherds, when launching the tagged 3.1.0 release use:
 
-    bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem 3.1.0
+    bash start_launcher_container.sh -p ~/.ssh/<the name of your key>.pem -i 3.1.0 -f MyFleet
+
+The full list of options for the script is:
+
+      -p, --pem_key - The path to the pem key file you want to use to start up new workers.
+      -i, --image_version - The version of pancancer_launcher you want to run.
+      -e, --host_env - The host environment you are running in (Either "AWS" or "OPENSTACK"). If you do not specify a value, "AWS" will be defaulted.
+      -t, --test_mode - Run in test mode (lauches workers immediately when container starts). Defaults to "false"
+      -f, --fleet_name - The name of the fleet of workers that will be managed by this launcher. If you do not specify one, a random name will be generated.
+      --target_env - Only used when running in test mode.
+      -h, --help - Prints this message.
 
 This should start up your container.
 
