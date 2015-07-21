@@ -60,7 +60,7 @@ This command will pull the *latest* version of pancancer\_launcher.
 
 For cloud shepherds trying to run workflows, if there is a specific version of the container you wish to pull, you can add the version to the command like this:
 
-    docker pull pancancer/pancancer_launcher:3.1.0
+    docker pull pancancer/pancancer_launcher:3.1.1
 
 To see further details about the container (such as the available versions/tags), see the [relevant dockerhub page](https://registry.hub.docker.com/u/pancancer/pancancer_launcher/).
 
@@ -93,7 +93,7 @@ If you are unable to use the queue-based scheduler, please navigate to the secti
 
 The easiest way to start up the pancancer\_launcher container is to use a helper script. You can get the helper script like this:
 
-    wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.1.0/start_launcher_container.sh
+    wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.1.1/start_launcher_container.sh
 
 The script takes two arguments:
  - The path to the pem key that you want to use for new worker VMs
@@ -106,11 +106,21 @@ Now would be an excellent time to start a screen session to make it easier to di
 
 Executing the script can look like this (recommended for developers):
 
-    bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem latest
+    bash start_launcher_container.sh -p ~/.ssh/<the name of your key>.pem -i latest
 
-For example for cloud shepherds, when launching the tagged 3.1.0 release use
+For example for cloud shepherds, when launching the tagged 3.1.1 release use:
 
-    bash start_launcher_container.sh ~/.ssh/<the name of your key>.pem 3.1.0
+    bash start_launcher_container.sh -p ~/.ssh/<the name of your key>.pem -i 3.1.1 -f MyFleet
+
+The full list of options for the script is:
+
+      -p, --pem_key - The path to the pem key file you want to use to start up new workers.
+      -i, --image_version - The version of pancancer_launcher you want to run.
+      -e, --host_env - The host environment you are running in (Either "AWS" or "OPENSTACK"). If you do not specify a value, "AWS" will be defaulted.
+      -t, --test_mode - Run in test mode (lauches workers immediately when container starts). Defaults to "false"
+      -f, --fleet_name - The name of the fleet of workers that will be managed by this launcher. If you do not specify one, a random name will be generated.
+      --target_env - Only used when running in test mode.
+      -h, --help - Prints this message.
 
 This should start up your container.
 
@@ -258,7 +268,7 @@ You may need to create a new base image to launch workers in AWS. Default images
 You can use the Youxia Deployer to launch a worker node that can be snapshotted. The command to do this is:
 
     cd ~/arch3
-    java -cp pancancer.jar io.cloudbindle.youxia.deployer.Deployer  --ansible-playbook ~/architecture-setup/container-host-bag/install.yml --max-spot-price 1 --batch-size 1 --total-nodes-num 1 -e ~/params.json
+    Deployer  --ansible-playbook ~/architecture-setup/container-host-bag/install.yml --max-spot-price 1 --batch-size 1 --total-nodes-num 1 -e ~/params.json
 
 If, for whatever reason, the Deployer fails to complete the setup of the instance, you may have to use the [Reaper](https://github.com/CloudBindle/youxia#reaper) to destroy it before trying again:
 
@@ -278,7 +288,7 @@ At this point, you should have a worker which can be used to take a snapshot in 
 A basic test to ensure that everything is set up correctly is to run the queue and execute the HelloWorld workflow as a job. To generate the job, you can do this:
 
     cd ~/arch3
-    java -cp pancancer.jar info.pancancer.arch3.jobGenerator.JobGenerator --workflow-name HelloWorld --workflow-version 1.0-SNAPSHOT --workflow-path /workflows/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0 --config ~/arch3/config/masterConfig.ini --total-jobs 1
+    Generator --workflow-name HelloWorld --workflow-version 1.0-SNAPSHOT --workflow-path /workflows/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0 --config ~/arch3/config/masterConfig.ini --total-jobs 1
 
 If you log in to the rabbitMQ console on your launcher (`http://<your launcher's IP address>:15672`, username: queue\_user, password: queue, unless you've changed the defaults), you should be able to find a queue names `pancancer_arch_3_orders`, with one message. If you examine the payload, it should look something like this:
 
@@ -312,7 +322,7 @@ If you log in to the rabbitMQ console on your launcher (`http://<your launcher's
 You can then run the coordinator to conver this Order message into a Job and a VM Provision Request:
 
     cd ~/arch3
-    java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.coordinator.Coordinator --config config/masterConfig.ini
+    Coordinator --config config/masterConfig.ini
 
 At this point, the RabbitMQ console should show 0 messages in `pancancer_arch_3_order` and 1 message in `pancancer_arch_3_jobs` and 1 message in `pancancer_arch_3_vms`. The messages in these queues are in fact the two parts of the message above: the first part of that message was the Job, the second part was the VM Provision Request.
 
@@ -341,22 +351,22 @@ Note that you should probably run these commands in the home directory or somewh
 
 You will then be able to kick-off the various services and submit some test jobs:
 
-    java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.jobGenerator.JobGenerator --config ~/arch3/config/masterConfig.ini --total-jobs 5
+    Generator --config ~/arch3/config/masterConfig.ini --total-jobs 5
 
-    nohup java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.coordinator.Coordinator  --config ~/arch3/config/masterConfig.ini --endless &> coordinator.out &
+    Coordinator  --config ~/arch3/config/masterConfig.ini --endless &
 
-    nohup java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.containerProvisioner.ContainerProvisionerThreads  --config ~/arch3/config/masterConfig.ini --endless &> provisioner.out &
+    Provisioner  --config ~/arch3/config/masterConfig.ini --endless &
 
 When those jobs complete, you can then submit real jobs using the following command assuming that your ini files are in ini\_batch\_5:
 
-    java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.jobGenerator.JobGenerator --workflow-name Sanger --workflow-version 1.0.7 --workflow-path /workflows/Workflow_Bundle_SangerPancancerCgpCnIndelSnvStr_1.0.7_SeqWare_1.1.0 --config ~/arch3/config/config.json --ini-dir ini_batch_5
+    JobGenerator --workflow-name Sanger --workflow-version 1.0.7 --workflow-path /workflows/Workflow_Bundle_SangerPancancerCgpCnIndelSnvStr_1.0.7_SeqWare_1.1.0 --config ~/arch3/config/config.json --ini-dir ini_batch_5
 
 Note that while coordinator.out and provisioner.out contain only high-level information such as errors and fatal events, the arch3.log which is automatically generated (and rotates) contains low level logging information.
 
 You should also start off the Reporting Bot (this will be integrated in a future release of the pancancer launcher)
 
     cd ~/arch3/
-    nohup java -cp ~/arch3/bin/pancancer-reporting-*.jar  info.pancancer.arch3.reportbot.SlackReportBot --endless --config ~/arch3/config/masterConfig.ini &> report.out &
+    ReportBot --endless --config ~/arch3/config/masterConfig.ini &
 
 See [arch3](https://github.com/CancerCollaboratory/sandbox/blob/develop/pancancer-arch-3/README.md) for more details.
 
@@ -446,9 +456,7 @@ To change which workflow that you are executing, change the mapping of the conta
 
 ### Using INI files from the Central Decider Client
 
-When running your workflows, you will probably want to use an INI file generated by the Central Decider Client. Please [click here](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/3.1.0/production/central_decider_client.md#the-central-decider-client) for more information on how to get the INI files and how they can be submitted to a worker node.
-
-
+When running your workflows, you will probably want to use an INI file generated by the Central Decider Client. Please [click here](https://github.com/ICGC-TCGA-PanCancer/pancancer-documentation/blob/3.1.1/production/central_decider_client.md#the-central-decider-client) for more information on how to get the INI files and how they can be submitted to a worker node.
 
 ### Monitoring
 The pancancer_launcher contains uses sensu for monitoring its worker nodes. It also contains Uchiwa, which functions as a dashboard for the senus monitoring.
@@ -479,6 +487,23 @@ Outside the container (You can *detach* from a running container using <kbd>Ctrl
 When you are installing a new version of the pancancer\_launcher container, you can import these files into a new container by copying in from `/opt/from_host/config`, for example:
 
     cp -a /opt/from_host/config/.youxia/ ~
+
+## Upgrading
+
+### Upgrading pancancer\_launcher
+The recommended process for upgrading to a new version of pancancer\_launcher is:
+
+ 1. Start a new VM.
+ 2. Install docker
+ 3. Pull the newer docker image.
+ 4. Begin scheduling new jobs.
+
+At the same time, you should also stop scheduling new jobs on your old launcher host. There will be a period of time when you will have two launcher hosts and two fleets running beside each other.
+
+If you wish to avoid having two fleets, you can stop scheduling in your old launcher, wait for all workers to finish their work, destroy the old launcher, and then create a new launcher (on your existing VM, if you want) with a newer version of the pancancer\_launcher image. It is *not* recommended to run two pancancer\_launcher containers on the same VM at the same time.
+
+###  Upgrading workflows on workers
+To upgrade the version of workflows on workers, update the `~/params.json` file and change the version number of the workflow. All new workers will use the version referenced in `params.json`.
 
 ## Known Issues
 
