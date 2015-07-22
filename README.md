@@ -194,7 +194,19 @@ You will also want to configure your parameters for arch3 for your environment:
 
 This file is used by architecture3 components such as the JobGenerator, the Coordinator, the Provisioner, and the Reporter.
 
-Notable parameters: To turn off reaping functionality, add the parameter "youxia\_reaper\_parameters" with a value of "--test". For use in an OpenStack environment, add "--openstack" as a parameter to the deployer and the reaper.
+Notable parameters: To turn off reaping functionality, add the parameter "youxia\_reaper\_parameters" with a value of "--test", for example:
+
+    [provision]
+    max_running_containers=1
+    youxia_deployer_parameters=--max-spot-price 0.001 --batch-size 3 --ansible-playbook /home/ubuntu/architecture-setup/container-host-bag/install.yml  -e /home/ubuntu/params.json
+    youxia_reaper_params=--test
+
+For use in an OpenStack environment, add "--openstack" as a parameter to the deployer and the reaper:
+
+    [provision]
+    max_running_containers=1
+    youxia_deployer_parameters=--max-spot-price 0.001 --batch-size 3 --ansible-playbook /home/ubuntu/architecture-setup/container-host-bag/install.yml  -e /home/ubuntu/params.json --openstack
+    youxia_reaper_params=--test --openstack
 
 #####youxia config
 Youxia will need to be configured so that it can deploy new worker nodes. The youxia configuration file is located at `~/.youxia/config`. An example of this file looks like this:
