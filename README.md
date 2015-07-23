@@ -16,6 +16,16 @@ If you are unfamiliar with docker, you might want to read about it [here](https:
 
 ## Preparing the host machine
 
+### Bootstrap
+
+You can use our install bootstrap script to streamline the setup of your Ubuntu 14.04 VM or regular host for running the launcher.
+
+    wget -qO- https://raw.githubusercontent.com/ICGC-TCGA-PanCancer/cli/feature/brian_cli_prototype/scripts/install_bootstrap/ | sh
+
+This will guide you through the setup of Docker and other components needed by the launcher.
+
+LEFT OFF HERE
+
 #### Installing Docker
 
 Start up a new VM in AWS. This guide uses configuration that assumes you will be working in the AWS North Virginia region. You will want to use an Ubuntu 14.04 AMI, and give yourself at least 50 GB for storage space (docker images can take up a bit of space). An m3.large HVM instance type should do just fine.
