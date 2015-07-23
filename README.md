@@ -10,7 +10,7 @@ You will find additional tips and tricks for specific PanCancer cloud environmen
 
 #### Before you begin
 
-Docker containers can be installed on any host machine capable of running docker. This document will assume that you are running on Amazon Web Services.
+Docker containers can be installed on any host machine capable of running docker. This document will assume that you are running a VM on Amazon Web Services for this purpose.  Please see the [AWS](http://aws.amazon.com) for more information.
 
 If you are unfamiliar with docker, you might want to read about it [here](https://www.docker.com/whatisdocker/).
 
