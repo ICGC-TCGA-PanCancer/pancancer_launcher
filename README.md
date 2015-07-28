@@ -170,7 +170,7 @@ Here is an example of the `params.json`:
 
 Important parameters to take note of:
 
- - SENSU_SERVER_IP_ADDRESS - This is the IP address of the sensu server. Normally, this is the same IP address of the launcher host. This IP address must be accessible to the worker.
+ - SENSU_SERVER_IP_ADDRESS - This is the IP address of the sensu server. Normally, this is the same IP address of the launcher host. This IP address must be accessible to the worker. *IMPORTANT:* If your host machine ever restarts, you may need to reset this value to the host machine's new private IP address.
  - aws_key - This is your AWS Key. You don't need to fill this in if you are working on OpenStack
  - aws_secret_key - This is your AWS secret key. You don't need to fill this in if you are working on OpenStack.
  - workflows - This is a list of workflows that you want to install onto workers. An example of installing several workflows would look like this:
@@ -185,8 +185,9 @@ Important parameters to take note of:
         ],
         ...
 
- - queueHost - This is the IP address of the host machine where pancancer_launcher is running. This IP address must be accessible to the worker.
- - single\_node\_lvm - If you plan to make use of the lvm options, ensure that your base image has the correct volumes attached to it. See the section on [Base AMI](#base-ami) for more info
+ - queueHost - This is the IP address of the host machine where pancancer_launcher is running. This IP address must be accessible to the worker. *IMPORTANT:* If your host machine ever restarts, you may need to reset this value to the host machine's new private IP address.
+ - single\_node\_lvm - If you plan to make use of the lvm options, ensure that your base image has the correct volumes attached to it. See the section on [Base AMI](#base-ami) for more info.
+ - lvm\_device\_whitelist - If you are using lvm (set `"single\_node\_lvn":true`) you will need to specify the devices that you want to be used by lvm here.
  - azure - If you plan on using Azure, switch this to true
 
 #####masterConfig.ini
