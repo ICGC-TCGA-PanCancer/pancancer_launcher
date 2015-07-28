@@ -284,11 +284,21 @@ You can use the Youxia Deployer to launch a worker node that can be snapshotted 
     cd ~/arch3
     Deployer  --ansible-playbook ~/architecture-setup/container-host-bag/install.yml --max-spot-price 1 --batch-size 1 --total-nodes-num 1 -e ~/params.json
 
-If, for whatever reason, the Deployer fails to complete the setup of the instance, you may have to use the [Reaper](https://github.com/CloudBindle/youxia#reaper) to destroy it before trying again:
+If, for whatever reason, the Deployer fails to complete the setup of the instance, you may have to use the [Reaper](https://github.com/CloudBindle/youxia#reaper) to destroy it before trying again. To use the Reaper to destroy a specific node or nodes:
 
-    java -cp ~/arch3/bin/pancancer.jar io.cloudbindle.youxia.reaper.Reaper --kill-limit 0
+1. Create a file named "kill\_list.json" and populate it with a list of the nodes that need to be destroyed, like this:
 
-At this point, you should have a worker which can be used to take a snapshot in order to jumpstart future deployments. To allow for easier migration to newer arch3 versions, you should also clean arch3 components from that worker.
+        [
+            "54.0.0.0",
+            "54.0.0.1"
+        ]
+
+2. Call the Reaper using the `--kill-list` option:
+
+
+        Reaper --kill-list kill-list.json
+
+If all went well, at this point you should have a worker which can be used to take a snapshot in order to jumpstart future deployments. To allow for easier migration to newer arch3 versions, you should also clean arch3 components from that worker.
 
 1. First, clean up the architecture 3 components so that you can cleanly upgrade between versions. Login to the worker host and from the home directory delete bash scripts that start the worker, the jar file for our tools, the lock file that the worker may have generated, and the log file as well. The full set of locations is:
     * all scripts, jars and json files in /home/ubuntu
