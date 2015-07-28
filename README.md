@@ -372,13 +372,13 @@ Similar information can also be seen in the worker's `arch3.log` file.
 
 Note that you should probably run these commands in the home directory or somewhere else you want the resulting log files to appear.
 
-You will then be able to kick-off the various services and submit some test jobs:
+You will then be able to kick-off the various services and submit a test job:
 
-    Generator --config ~/arch3/config/masterConfig.ini --total-jobs 5
+    Generator --config ~/arch3/config/masterConfig.ini --workflow-name HelloWorld --workflow-version 1.2.0 --workflow-path /workflows/Workflow_Bundle_HelloWorld_1.2.0_Seqware_1.1.0 --total-jobs 5
 
-    Coordinator  --config ~/arch3/config/masterConfig.ini --endless &
+    Coordinator --config ~/arch3/config/masterConfig.ini --endless &
 
-    Provisioner  --config ~/arch3/config/masterConfig.ini --endless &
+    Provisioner --config ~/arch3/config/masterConfig.ini --endless &
 
 When those jobs complete, you can then submit real jobs using the following command assuming that your ini files are in ini\_batch\_5:
 
