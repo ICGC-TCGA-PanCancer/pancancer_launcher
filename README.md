@@ -141,7 +141,7 @@ Launching new workers can be done by the main architecture3 components, but you 
 
 ####Configuration
 #####params.json
-You will want to correct your parameters used by the container\_host playbook to setup workers. For more information, the parameters here are those for the [container host bag](https://github.com/ICGC-TCGA-PanCancer/container-host-bag):
+You will want to update your parameters used by the container\_host playbook to setup workers. For more information, the parameters here are those for the [container host bag](https://github.com/ICGC-TCGA-PanCancer/container-host-bag):
 
     vim ~/params.json
 
@@ -209,7 +209,7 @@ Here is an example of the `params.json`:
 
 Important parameters to take note of:
 
- - SENSU_SERVER_IP_ADDRESS - This is the IP address of the sensu server. Normally, this is the same IP address of the launcher host. This IP address must be accessible to the worker. *IMPORTANT:* If your host machine ever restarts, you may need to reset this value to the host machine's new private IP address.
+ - SENSU_SERVER_IP_ADDRESS - This is the IP address of the sensu server. Normally, this is the same IP address of the launcher host. This IP address must be accessible to the worker. **IMPORTANT:** If your host machine ever restarts, you may need to reset this value to the host machine's new private IP address.
  - aws_key - This is your AWS Key. You don't need to fill this in if you are working on OpenStack
  - aws_secret_key - This is your AWS secret key. You don't need to fill this in if you are working on OpenStack.
  - workflows - This is a hash of workflows that you want to install onto workers. Workflows can come from a either a publicly accessible URL (usually over HTTP) or possibly from a private S3 bucket. The example above shows both. A simpler example that only installs the HelloWorld and DEWrapper workflow might look like this:
@@ -245,7 +245,7 @@ Important parameters to take note of:
         },
         ...
  - containers - Much like workflows, you can specify any Docker containers that will need to be installed on the workers. Docker containers that are available via Dockerhub can be specified in the "containers" section. If the containers you wish to use are available as tar files on S3 or some other website, you can specify them in the "s3\_containers" or "http\_containers" sections.
- - queueHost - This is the IP address of the host machine where pancancer_launcher is running. This IP address must be accessible to the worker. *IMPORTANT:* If your host machine ever restarts, you may need to reset this value to the host machine's new private IP address.
+ - queueHost - This is the IP address of the host machine where pancancer_launcher is running. This IP address must be accessible to the worker. **IMPORTANT:** If your host machine ever restarts, you may need to reset this value to the host machine's new private IP address.
  - single\_node\_lvm - If you plan to make use of the lvm options, ensure that your base image has the correct volumes attached to it. See the section on [Base AMI](#base-ami) for more info.
  - lvm\_device\_whitelist - If you are using lvm (set `"single\_node\_lvn":true`) you will need to specify the devices that you want to be used by lvm here.
  - azure - If you plan on using Azure, switch this to true
@@ -263,6 +263,19 @@ Notable parameters: To turn off reaping functionality, add the parameter "youxia
     max_running_containers=1
     youxia_deployer_parameters=--max-spot-price 0.001 --batch-size 3 --ansible-playbook /home/ubuntu/architecture-setup/container-host-bag/install.yml  -e /home/ubuntu/params.json
     youxia_reaper_params=--test
+
+It is sometimes useful to have tags attached to new instances. To do this, you can create a new tags file named `server-tags.json`, like this:
+
+    {
+      "MY_TAG":"SOME_VALUE",
+      "MY_OTHER_TAG":"SOME_OTHER_VALUE"
+    }
+
+Then, reference this tags file in the `masterConfig.ini` file:
+
+    [provision]
+    max_running_containers=1
+    youxia_deployer_parameters=--max-spot-price 0.001 --batch-size 3 --ansible-playbook /home/ubuntu/architecture-setup/container-host-bag/install.yml -e /home/ubuntu/params.json --server-tag-file server-tags.json
 
 For use in an OpenStack environment, add "--openstack" as a parameter to the deployer and the reaper. Use the "--azure" for that environment:
 
