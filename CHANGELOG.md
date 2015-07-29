@@ -1,5 +1,18 @@
 ### Pancancer Launcher change log
 
+#### 3.1.2
+ - Fixed some bugs with fleet names.
+ - New and more generic method for downloading workflows and containers.
+ - Workers and launcher now use Java 8.
+ - Small fixes to scripts that start launcher and start servics inside launcher.
+ - Other smaller fixes.
+
+#### 3.1.1
+ - Monitoring now includes sensu checks specific for Architecture3 processes.
+ - New script to launch containers has help text and proper CLI flags.
+ - New short-form commands for the Architecture3 commands.
+ - Fleet name is now included in all machine names on uchiwa dashboard (all nodes: sensu-server and workers).
+
 #### 3.1.0
  - **Bindle is no longer installed.**
  - New version of architecture-setup: 3.1.0:

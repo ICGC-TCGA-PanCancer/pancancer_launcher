@@ -139,9 +139,18 @@ If you really need to halt a container, you must exit, and then you can use the 
 
 Launching new workers can be done by the main architecture3 components, but you may need to create an initial snapshot to use when creating new images. Youxia is a component that can launch new VMs in AWS, OpenStack, and Azure. Once launched, they can be snapshotted for future use. Using snapshots speeds up the process of provisioning future worker nodes.
 
+####Architecture3 components
+The important components of Architecture3 are:
+
+ - Generator - This program will generate job orders.
+ - Coordinator - This program will coordinate the scheduling of job orders. It will read the job orders created by the Generator and create requests for VMs, if necessary, and also populate a job queue that Workers will read from.
+ - Provisioner - This program will create VMs as necessary, based on the jobs in the job queue and specified size of the fleet.
+ - Reaper - This program will detroy VMs. Normally it is called automatically when a VM has finished its work and is no longer needed, but it can also be called manually to clean up Worker VMs that are causing problems.
+ - Deployer - This program will deploy an new VM and run a specified ansible playbook on it. Normally, this is called automatically by the Proivisioner, but it can be called manually to create a single worker VM. This is normally done to create a snapshot of a configured worker.
+
 ####Configuration
 #####params.json
-You will want to correct your parameters used by the container\_host playbook to setup workers. For more information, the parameters here are those for the [container host bag](https://github.com/ICGC-TCGA-PanCancer/container-host-bag):
+You will want to update your parameters used by the container\_host playbook to setup workers. For more information, the parameters here are those for the [container host bag](https://github.com/ICGC-TCGA-PanCancer/container-host-bag):
 
     vim ~/params.json
 
@@ -153,9 +162,48 @@ Here is an example of the `params.json`:
       "aws_secret_key": "<AWS SECRET KEY>",
       "seqware_version": "1.1.1",
       "workflow_name": "HelloWorld",
-      "workflows": [
-        "Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0"
-      ],
+      "http_workflows": {
+        "DEWrapper": {
+          "name": "Workflow_Bundle_DEWrapperWorkflow_1.0.2_SeqWare_1.1.0",
+          "url": "http://s3.amazonaws.com/oicr.workflow.bundles/released-bundles/Workflow_Bundle_DEWrapperWorkflow_1.0.2_SeqWare_1.1.0.zip"
+        },
+        "HelloWorld": {
+          "name": "Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0",
+          "url":"http://s3.amazonaws.com/oicr.workflow.bundles/released-bundles/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0.zip"
+        }
+      },
+      "s3_workflows": {
+        "S3Workflow": {
+          "name":"Workflow_Bundle_OnlyAvailableFromS3_1.0_SeqWare_1.1.0",
+          "url":"s3://some.private.bucket/Workflow_Bundle_OnlyAvailableFromS3_1.0_SeqWare_1.1.0.zip"
+        }
+      },
+      "containers": {
+        "seqware_whitestar": {
+          "name": "seqware_whitestar",
+          "image_name": "seqware/seqware_whitestar:{{ seqware_version }}"
+        },
+        "pcawg-delly-workflow": {
+          "name":"pcawg-delly-workflow",
+          "image_name": "pancancer/pcawg-delly-workflow:1.0"
+        },
+        "pancancer_upload_download": {
+          "name": "pancancer_upload_download",
+          "image_name": "pancancer/pancancer_upload_download:1.1"
+        }
+      },
+      "s3_containers": {
+        "some_s3_container": {
+          "name": "some_s3_container_1.2.3",
+          "url": "s3://private.container.bucket/some_s3_container_1.2.3.tar"
+        }
+      },
+      "http_containers": {
+        "some_other_container": {
+          "name":"some_other_container",
+          "url":"http://www.some-other-organization.com/some_other_container.tar"
+        }
+      },
       "install_workflow": "true",
       "test_workflow": "true",
       "queueHost": "10.0.26.25",
@@ -170,22 +218,43 @@ Here is an example of the `params.json`:
 
 Important parameters to take note of:
 
- - SENSU_SERVER_IP_ADDRESS - This is the IP address of the sensu server. Normally, this is the same IP address of the launcher host. This IP address must be accessible to the worker. *IMPORTANT:* If your host machine ever restarts, you may need to reset this value to the host machine's new private IP address.
+ - SENSU_SERVER_IP_ADDRESS - This is the IP address of the sensu server. Normally, this is the same IP address of the launcher host. This IP address must be accessible to the worker. **IMPORTANT:** If your host machine ever restarts, you may need to reset this value to the host machine's new private IP address.
  - aws_key - This is your AWS Key. You don't need to fill this in if you are working on OpenStack
  - aws_secret_key - This is your AWS secret key. You don't need to fill this in if you are working on OpenStack.
- - workflows - This is a list of workflows that you want to install onto workers. An example of installing several workflows would look like this:
+ - workflows - This is a hash of workflows that you want to install onto workers. Workflows can come from a either a publicly accessible URL (usually over HTTP) or possibly from a private S3 bucket. The example above shows both. A simpler example that only installs the HelloWorld and DEWrapper workflow might look like this:
+         ...
+         "http_workflows": {
+           "HelloWorld": {
+             "name": "Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0",
+             "url":"http://s3.amazonaws.com/oicr.workflow.bundles/released-bundles/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0.zip"
+           },
+         }
+         ...
+
+  An example of installing several workflows from publicy accessible URLs would look like this:
 
         ...
-        "workflow_name": "HelloWorld,BWA,Sanger,DEWRapper",
-        "workflows": [
-        "Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0",
-        "Workflow_Bundle_BWA_2.6.5_SeqWare_1.1.1",
-        "Workflow_Bundle_SangerPancancerCgpCnIndelSnvStr_1.0.7_SeqWare_1.1.0",
-        "Workflow_Bundle_DEWrapperWorkflow_1.0.2_SeqWare_1.1.0"
-        ],
+        "http_workflows": {
+          "HelloWorld": {
+            "name": "Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0",
+            "url":"http://s3.amazonaws.com/oicr.workflow.bundles/released-bundles/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0.zip"
+          },
+          "BWA": {
+            "name": "Workflow_Bundle_BWA-2.6.5_SeqWare_1.1.0",
+            "url":"http://s3.amazonaws.com/oicr.workflow.bundles/released-bundles/Workflow_Bundle_BWA_2.6.5-SNAPSHOT_SeqWare_1.1.0.zip"
+          },
+          "Sanger": {
+            "name": "Workflow_Bundle_SangerPancancerCgpCnIndelSnvStr_1.0.7_SeqWare_1.1.0",
+            "url":"http://s3.amazonaws.com/oicr.workflow.bundles/released-bundles/Workflow_Bundle_SangerPancancerCgpCnIndelSnvStr_1.0.7_SeqWare_1.1.0.zip"
+          },
+          "DEWrapper": {
+            "name": "Workflow_Bundle_DEWrapperWorkflow_1.0.2_SeqWare_1.1.0",
+            "url":"http://s3.amazonaws.com/oicr.workflow.bundles/released-bundles/Workflow_Bundle_DEWrapperWorkflow_1.0.2_SeqWare_1.1.0.zip"
+          }
+        },
         ...
-
- - queueHost - This is the IP address of the host machine where pancancer_launcher is running. This IP address must be accessible to the worker. *IMPORTANT:* If your host machine ever restarts, you may need to reset this value to the host machine's new private IP address.
+ - containers - Much like workflows, you can specify any Docker containers that will need to be installed on the workers. Docker containers that are available via Dockerhub can be specified in the "containers" section. If the containers you wish to use are available as tar files on S3 or some other website, you can specify them in the "s3\_containers" or "http\_containers" sections.
+ - queueHost - This is the IP address of the host machine where pancancer_launcher is running. This IP address must be accessible to the worker. **IMPORTANT:** If your host machine ever restarts, you may need to reset this value to the host machine's new private IP address.
  - single\_node\_lvm - If you plan to make use of the lvm options, ensure that your base image has the correct volumes attached to it. See the section on [Base AMI](#base-ami) for more info.
  - lvm\_device\_whitelist - If you are using lvm (set `"single\_node\_lvn":true`) you will need to specify the devices that you want to be used by lvm here.
  - azure - If you plan on using Azure, switch this to true
@@ -195,7 +264,7 @@ You will also want to configure your parameters for arch3 for your environment:
 
     vim ~/arch3/config/masterConfig.ini
 
-This file is used by architecture3 components such as the JobGenerator, the Coordinator, the Provisioner, and the Reporter.
+This file is used by architecture3 components such as the Generator, the Coordinator, the Provisioner, and the Reporter.
 
 Notable parameters: To turn off reaping functionality, add the parameter "youxia\_reaper\_parameters" with a value of "--test", for example:
 
@@ -203,6 +272,19 @@ Notable parameters: To turn off reaping functionality, add the parameter "youxia
     max_running_containers=1
     youxia_deployer_parameters=--max-spot-price 0.001 --batch-size 3 --ansible-playbook /home/ubuntu/architecture-setup/container-host-bag/install.yml  -e /home/ubuntu/params.json
     youxia_reaper_params=--test
+
+It is sometimes useful to have tags attached to new instances. To do this, you can create a new tags file named `server-tags.json`, like this:
+
+    {
+      "MY_TAG":"SOME_VALUE",
+      "MY_OTHER_TAG":"SOME_OTHER_VALUE"
+    }
+
+Then, reference this tags file in the `masterConfig.ini` file:
+
+    [provision]
+    max_running_containers=1
+    youxia_deployer_parameters=--max-spot-price 0.001 --batch-size 3 --ansible-playbook /home/ubuntu/architecture-setup/container-host-bag/install.yml -e /home/ubuntu/params.json --server-tag-file server-tags.json
 
 For use in an OpenStack environment, add "--openstack" as a parameter to the deployer and the reaper. Use the "--azure" for that environment:
 
@@ -305,9 +387,9 @@ If all went well, at this point you should have a worker which can be used to ta
     * all scripts, jars and json files in /home/ubuntu
     * /var/log/arch3\_worker.log
     * /var/run/arch3\_worker.pid
-1. In AWS, create an AMI based on your instance. Make sure to specify the ephemeral disks that you wish to use, arch3 will provision a number of ephemeral drives that makes what you specify in your snapshot. 
+1. In AWS, create an AMI based on your instance. Make sure to specify the ephemeral disks that you wish to use, arch3 will provision a number of ephemeral drives that makes what you specify in your snapshot.
 1. In OpenStack, create a snapshot based on your instance.
-1. In Azure, attach disks to an Azure virtual machine if you wish to accomplish a similar task to that in AWS. 
+1. In Azure, attach disks to an Azure virtual machine if you wish to accomplish a similar task to that in AWS.
 1. When setting up youxia for arch3 (see [above](#youxia-config)), you may now specify the id for that image to use in your ~/.youxia/config file
 
 #### Basic testing
