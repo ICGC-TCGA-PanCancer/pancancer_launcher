@@ -153,9 +153,48 @@ Here is an example of the `params.json`:
       "aws_secret_key": "<AWS SECRET KEY>",
       "seqware_version": "1.1.1",
       "workflow_name": "HelloWorld",
-      "workflows": [
-        "Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0"
-      ],
+      "http_workflows": {
+        "DEWrapper": {
+          "name": "Workflow_Bundle_DEWrapperWorkflow_1.0.2_SeqWare_1.1.0",
+          "url": "http://s3.amazonaws.com/oicr.workflow.bundles/released-bundles/Workflow_Bundle_DEWrapperWorkflow_1.0.2_SeqWare_1.1.0.zip"
+        },
+        "HelloWorld": {
+          "name": "Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0",
+          "url":"http://s3.amazonaws.com/oicr.workflow.bundles/released-bundles/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0.zip"
+        }
+      },
+      "s3_workflows": {
+        "S3Workflow": {
+          "name":"Workflow_Bundle_OnlyAvailableFromS3_1.0_SeqWare_1.1.0",
+          "url":"s3://some.private.bucket/Workflow_Bundle_OnlyAvailableFromS3_1.0_SeqWare_1.1.0.zip"
+        }
+      },
+      "containers": {
+        "seqware_whitestar": {
+          "name": "seqware_whitestar",
+          "image_name": "seqware/seqware_whitestar:{{ seqware_version }}"
+        },
+        "pcawg-delly-workflow": {
+          "name":"pcawg-delly-workflow",
+          "image_name": "pancancer/pcawg-delly-workflow:1.0"
+        },
+        "pancancer_upload_download": {
+          "name": "pancancer_upload_download",
+          "image_name": "pancancer/pancancer_upload_download:1.1"
+        }
+      },
+      "s3_containers": {
+        "some_s3_container": {
+          "name": "some_s3_container_1.2.3",
+          "url": "s3://private.container.bucket/some_s3_container_1.2.3.tar"
+        }
+      },
+      "http_containers": {
+        "some_other_container": {
+          "name":"some_other_container",
+          "url":"http://www.some-other-organization.com/some_other_container.tar"
+        }
+      },
       "install_workflow": "true",
       "test_workflow": "true",
       "queueHost": "10.0.26.25",
@@ -173,18 +212,39 @@ Important parameters to take note of:
  - SENSU_SERVER_IP_ADDRESS - This is the IP address of the sensu server. Normally, this is the same IP address of the launcher host. This IP address must be accessible to the worker. *IMPORTANT:* If your host machine ever restarts, you may need to reset this value to the host machine's new private IP address.
  - aws_key - This is your AWS Key. You don't need to fill this in if you are working on OpenStack
  - aws_secret_key - This is your AWS secret key. You don't need to fill this in if you are working on OpenStack.
- - workflows - This is a list of workflows that you want to install onto workers. An example of installing several workflows would look like this:
+ - workflows - This is a hash of workflows that you want to install onto workers. Workflows can come from a either a publicly accessible URL (usually over HTTP) or possibly from a private S3 bucket. The example above shows both. A simpler example that only installs the HelloWorld and DEWrapper workflow might look like this:
+         ...
+         "http_workflows": {
+           "HelloWorld": {
+             "name": "Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0",
+             "url":"http://s3.amazonaws.com/oicr.workflow.bundles/released-bundles/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0.zip"
+           },
+         }
+         ...
+
+  An example of installing several workflows from publicy accessible URLs would look like this:
 
         ...
-        "workflow_name": "HelloWorld,BWA,Sanger,DEWRapper",
-        "workflows": [
-        "Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0",
-        "Workflow_Bundle_BWA_2.6.5_SeqWare_1.1.1",
-        "Workflow_Bundle_SangerPancancerCgpCnIndelSnvStr_1.0.7_SeqWare_1.1.0",
-        "Workflow_Bundle_DEWrapperWorkflow_1.0.2_SeqWare_1.1.0"
-        ],
+        "http_workflows": {
+          "HelloWorld": {
+            "name": "Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0",
+            "url":"http://s3.amazonaws.com/oicr.workflow.bundles/released-bundles/Workflow_Bundle_HelloWorld_1.0-SNAPSHOT_SeqWare_1.1.0.zip"
+          },
+          "BWA": {
+            "name": "Workflow_Bundle_BWA-2.6.5_SeqWare_1.1.0",
+            "url":"http://s3.amazonaws.com/oicr.workflow.bundles/released-bundles/Workflow_Bundle_BWA_2.6.5-SNAPSHOT_SeqWare_1.1.0.zip"
+          },
+          "Sanger": {
+            "name": "Workflow_Bundle_SangerPancancerCgpCnIndelSnvStr_1.0.7_SeqWare_1.1.0",
+            "url":"http://s3.amazonaws.com/oicr.workflow.bundles/released-bundles/Workflow_Bundle_SangerPancancerCgpCnIndelSnvStr_1.0.7_SeqWare_1.1.0.zip"
+          },
+          "DEWrapper": {
+            "name": "Workflow_Bundle_DEWrapperWorkflow_1.0.2_SeqWare_1.1.0",
+            "url":"http://s3.amazonaws.com/oicr.workflow.bundles/released-bundles/Workflow_Bundle_DEWrapperWorkflow_1.0.2_SeqWare_1.1.0.zip"
+          }
+        },
         ...
-
+ - containers - Much like workflows, you can specify any Docker containers that will need to be installed on the workers. Docker containers that are available via Dockerhub can be specified in the "containers" section. If the containers you wish to use are available as tar files on S3 or some other website, you can specify them in the "s3\_containers" or "http\_containers" sections.
  - queueHost - This is the IP address of the host machine where pancancer_launcher is running. This IP address must be accessible to the worker. *IMPORTANT:* If your host machine ever restarts, you may need to reset this value to the host machine's new private IP address.
  - single\_node\_lvm - If you plan to make use of the lvm options, ensure that your base image has the correct volumes attached to it. See the section on [Base AMI](#base-ami) for more info.
  - lvm\_device\_whitelist - If you are using lvm (set `"single\_node\_lvn":true`) you will need to specify the devices that you want to be used by lvm here.
@@ -305,9 +365,9 @@ If all went well, at this point you should have a worker which can be used to ta
     * all scripts, jars and json files in /home/ubuntu
     * /var/log/arch3\_worker.log
     * /var/run/arch3\_worker.pid
-1. In AWS, create an AMI based on your instance. Make sure to specify the ephemeral disks that you wish to use, arch3 will provision a number of ephemeral drives that makes what you specify in your snapshot. 
+1. In AWS, create an AMI based on your instance. Make sure to specify the ephemeral disks that you wish to use, arch3 will provision a number of ephemeral drives that makes what you specify in your snapshot.
 1. In OpenStack, create a snapshot based on your instance.
-1. In Azure, attach disks to an Azure virtual machine if you wish to accomplish a similar task to that in AWS. 
+1. In Azure, attach disks to an Azure virtual machine if you wish to accomplish a similar task to that in AWS.
 1. When setting up youxia for arch3 (see [above](#youxia-config)), you may now specify the id for that image to use in your ~/.youxia/config file
 
 #### Basic testing
