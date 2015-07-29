@@ -1,7 +1,7 @@
 # Based on Ubuntu 14
 FROM ubuntu:14.04
 MAINTAINER Solomon Shorser <solomon.shorser@oicr.on.ca>
-LABEL PANCANCER_LAUNCHER_VERSION=3.1.2
+LABEL PANCANCER_LAUNCHER_VERSION=3.1.2-e2e_testing
 
 # some packages needed by the other bags needed packages in "precise" but not in "trusty". Specifically, libdb4.8 was needed.
 RUN apt-get install -y software-properties-common && \
@@ -36,14 +36,14 @@ WORKDIR /home/ubuntu
 RUN mkdir ~/.ssh && mkdir ~/.gnos && mkdir ~/.aws
 
 # query this if you're inside a container and want to know what version of pancancer_launcher you're using
-ENV PANCANCER_LAUNCHER_VERSION 3.1.2
+ENV PANCANCER_LAUNCHER_VERSION 3.1.2.e2e_testing
 
 # So we can get Ansible output as it happens (rather than waiting for the execution to complete).
 ENV PYTHONUNBUFFERED 1
 # Get code and run playbooks to build the container
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
     cd architecture-setup && \
-    git checkout 3.1.2 && \
+    git checkout feature/solomon_e2e_testing && \
     git submodule init && git submodule update && \
     git submodule foreach 'git describe --all'
 WORKDIR /home/ubuntu/architecture-setup
