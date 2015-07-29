@@ -139,6 +139,15 @@ If you really need to halt a container, you must exit, and then you can use the 
 
 Launching new workers can be done by the main architecture3 components, but you may need to create an initial snapshot to use when creating new images. Youxia is a component that can launch new VMs in AWS, OpenStack, and Azure. Once launched, they can be snapshotted for future use. Using snapshots speeds up the process of provisioning future worker nodes.
 
+####Architecture3 components
+The important components of Architecture3 are:
+
+ - Generator - This program will generate job orders.
+ - Coordinator - This program will coordinate the scheduling of job orders. It will read the job orders created by the Generator and create requests for VMs, if necessary, and also populate a job queue that Workers will read from.
+ - Provisioner - This program will create VMs as necessary, based on the jobs in the job queue and specified size of the fleet.
+ - Reaper - This program will detroy VMs. Normally it is called automatically when a VM has finished its work and is no longer needed, but it can also be called manually to clean up Worker VMs that are causing problems.
+ - Deployer - This program will deploy an new VM and run a specified ansible playbook on it. Normally, this is called automatically by the Proivisioner, but it can be called manually to create a single worker VM. This is normally done to create a snapshot of a configured worker.
+
 ####Configuration
 #####params.json
 You will want to update your parameters used by the container\_host playbook to setup workers. For more information, the parameters here are those for the [container host bag](https://github.com/ICGC-TCGA-PanCancer/container-host-bag):
@@ -255,7 +264,7 @@ You will also want to configure your parameters for arch3 for your environment:
 
     vim ~/arch3/config/masterConfig.ini
 
-This file is used by architecture3 components such as the JobGenerator, the Coordinator, the Provisioner, and the Reporter.
+This file is used by architecture3 components such as the Generator, the Coordinator, the Provisioner, and the Reporter.
 
 Notable parameters: To turn off reaping functionality, add the parameter "youxia\_reaper\_parameters" with a value of "--test", for example:
 
