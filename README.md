@@ -509,6 +509,16 @@ When workflows fail, arch3 will leave that host in place for you to examine. You
 
 1. Terminate the hosts with the failed jobs in either the AWS console, Azure portal, or OpenStack horizon using the above ip_address to search.  
 
+#### Causing a Failure
+
+##### Causing a Workflow Step Failure
+
+If you find yourself in a situation where you want to cause a particular workflow step to fail, you can "kill -9" the specific tool in question. SeqWare should step in and retry that particular step up to a limit defined in your ~/.seqware/settings file. See [the procedure for the VCF upload tool][https://github.com/ICGC-TCGA-PanCancer/vcf-uploader#stuck-uploads] for a specific example.
+
+##### Causing a Workflow Failure
+
+If you need to engineer a workflow fail. A "kill -9" on the "docker run" on the worker is sufficient to indicate a failure to arch3. Afterwards, you can terminate the worker without any worries of getting the DB and rabbitmq out of sync. 
+
 #### Debugging and trouble-shooting
 
 For debugging, you can login to the RabbitMQ web interface at port 15672 using a web browser. The URL usually looks like
