@@ -513,7 +513,7 @@ When workflows fail, arch3 will leave that host in place for you to examine. You
 
 ##### Causing a Workflow Step Failure
 
-If you find yourself in a situation where you want to cause a particular workflow step to fail, you can "kill -9" the specific tool in question. SeqWare should step in and retry that particular step up to a limit defined in your ~/.seqware/settings file. See [the procedure for the VCF upload tool][https://github.com/ICGC-TCGA-PanCancer/vcf-uploader#stuck-uploads] for a specific example.
+If you find yourself in a situation where you want to cause a particular workflow step to fail, you can "kill -9" the specific tool in question. SeqWare should step in and retry that particular step up to a limit defined in your ~/.seqware/settings file. See [the procedure for the VCF upload tool](https://github.com/ICGC-TCGA-PanCancer/vcf-uploader#stuck-uploads) for a specific example.
 
 ##### Causing a Workflow Failure
 
