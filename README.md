@@ -271,7 +271,7 @@ Notable parameters: To turn off reaping functionality, add the parameter "youxia
     [provision]
     max_running_containers=1
     youxia_deployer_parameters=--max-spot-price 0.001 --batch-size 3 --ansible-playbook /home/ubuntu/architecture-setup/container-host-bag/install.yml  -e /home/ubuntu/params.json
-    youxia_reaper_params=--test
+    youxia_reaper_parameters=--test
 
 It is sometimes useful to have tags attached to new instances. To do this, you can create a new tags file named `server-tags.json`, like this:
 
