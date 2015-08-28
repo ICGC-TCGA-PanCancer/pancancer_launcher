@@ -93,7 +93,7 @@ If you are unable to use the queue-based scheduler, please navigate to the secti
 
 The easiest way to start up the pancancer\_launcher container is to use a helper script. You can get the helper script like this:
 
-    wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.1.1/start_launcher_container.sh
+    wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.1.2/start_launcher_container.sh
 
 The script takes two arguments:
  - The path to the pem key that you want to use for new worker VMs
