@@ -1,5 +1,9 @@
 ### Pancancer Launcher change log
 
+#### 3.1.3
+ - Integrate Pancancer CLI
+ - New versions of architecture-setup submodules, see: [https://github.com/ICGC-TCGA-PanCancer/architecture-setup/releases/tag/3.1.3](https://github.com/ICGC-TCGA-PanCancer/architecture-setup/releases/tag/3.1.3)
+
 #### 3.1.2
  - Fixed some bugs with fleet names.
  - New and more generic method for downloading workflows and containers.
