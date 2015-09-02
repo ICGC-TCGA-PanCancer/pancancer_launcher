@@ -14,6 +14,7 @@ The following guide is intended for developers and users seeking a deeper unders
 Most other users should read the [Quick Start guide for the Pancancer Command Line Interface (Pancancer CLI)](https://github.com/ICGC-TCGA-PanCancer/cli/blob/0.0.1/QuickStart.md). The Pancancer CLI is tool that offers a simple and easy-to-use interface to the Pancancer tools.
 
 #### Before you begin
+
 Docker containers can be installed on any host machine capable of running docker. This document will assume that you are running a VM on Amazon Web Services for this purpose.  Please see the [AWS](http://aws.amazon.com) for more information.
 
 If you are unfamiliar with docker, you might want to read about it [here](https://www.docker.com/whatisdocker/).
