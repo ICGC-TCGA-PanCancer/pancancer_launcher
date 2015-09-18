@@ -439,7 +439,7 @@ At this point, the RabbitMQ console should show 0 messages in `pancancer_arch_3_
 
 Finally, you can run a worker manually to execute a single job. Log in to a worker and run this command
 
-    java -cp -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.worker.Worker --config workerConfig.ini --uuid 12345678 &
+    java -cp ~/arch3/bin/pancancer-arch-3-*.jar info.pancancer.arch3.worker.Worker --config workerConfig.ini --uuid 12345678 &
 
 If the worker runs, you can check the log file (`arch3.log`), you should see that there are 0 messages in the Job queue. You may also see some messages in `pancancer_arch_3_for_CleanupJobs`, which will contain the heartbeat from the worker (since HelloWorld finishes very quickly, you may want to speed up the heartbeat, to a rate of 1 message per second for the purposes of this test). There should be a message indicating completeness:
 
