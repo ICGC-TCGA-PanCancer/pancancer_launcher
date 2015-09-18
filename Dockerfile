@@ -16,8 +16,8 @@ RUN apt-get install -y python-apt	mcrypt	git	ansible	vim	curl	build-essential \
 			libwww-perl	libdata-dumper-simple-perl	libtemplate-perl  psmisc \
 			tmux  screen	lsof	tree	nano	telnet	man	multitail mlocate \
       s3cmd python  python3 python-pip  python3-cliff python3-pystache \
-      python3-psutil && \
-      pip install pystache cliff
+      python3-psutil python-boto && \
+      pip install pystache cliff boto3
 
 # Create ubuntu user and group, make the account passwordless
 RUN groupadd ubuntu && \
