@@ -1,5 +1,11 @@
 ### Pancancer Launcher change log
 
+#### 3.1.4
+ - New versions of architecture-setup (3.1.4) and Pancancer CLI (0.0.4), major changes:
+   - automatically update AWS security group settings
+   - Pancancer CLI will now prompt user for AWS security group name and for fleet size to pass this into container
+   - Pancancer CLI can now back up old INI files and generate _n_ INI files at once.
+
 #### 3.1.3
  - Integrate Pancancer CLI
  - New versions of architecture-setup submodules, see: [https://github.com/ICGC-TCGA-PanCancer/architecture-setup/releases/tag/3.1.3](https://github.com/ICGC-TCGA-PanCancer/architecture-setup/releases/tag/3.1.3)
