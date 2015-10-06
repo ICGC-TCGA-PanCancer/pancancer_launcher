@@ -65,7 +65,7 @@ This command will pull the *latest* version of pancancer\_launcher.
 
 For cloud shepherds trying to run workflows, if there is a specific version of the container you wish to pull, you can add the version to the command like this:
 
-    docker pull pancancer/pancancer_launcher:3.1.4
+    docker pull pancancer/pancancer_launcher:3.1.5
 
 To see further details about the container (such as the available versions/tags), see the [relevant dockerhub page](https://hub.docker.com/r/pancancer/pancancer_launcher/).
 
@@ -98,7 +98,7 @@ If you are unable to use the queue-based scheduler, please navigate to the secti
 
 The easiest way to start up the pancancer\_launcher container is to use a helper script. You can get the helper script like this:
 
-    wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.1.4/start_launcher_container.sh
+    wget https://github.com/ICGC-TCGA-PanCancer/pancancer_launcher/releases/download/3.1.5/start_launcher_container.sh
 
 The script takes two arguments:
  - The path to the pem key that you want to use for new worker VMs
@@ -113,9 +113,9 @@ Executing the script can look like this (recommended for developers):
 
     bash start_launcher_container.sh -p ~/.ssh/<the name of your key>.pem -i latest
 
-For example for cloud shepherds, when launching the tagged 3.1.4 release use:
+For example for cloud shepherds, when launching the tagged 3.1.5 release use:
 
-    bash start_launcher_container.sh -p ~/.ssh/<the name of your key>.pem -i 3.1.4 -f MyFleet
+    bash start_launcher_container.sh -p ~/.ssh/<the name of your key>.pem -i 3.1.5 -f MyFleet
 
 The full list of options for the script is:
 

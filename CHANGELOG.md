@@ -1,5 +1,9 @@
 ### Pancancer Launcher change log
 
+#### 3.1.5
+ - New version of Pancancer CLI: 0.0.5
+ - New version of architecture-setup: 3.1.5
+
 #### 3.1.4
  - New versions of architecture-setup (3.1.4) and Pancancer CLI (0.0.4), major changes:
    - automatically update AWS security group settings
