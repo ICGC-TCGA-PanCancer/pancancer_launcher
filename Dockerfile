@@ -1,8 +1,8 @@
 # Based on Ubuntu 14
 FROM ubuntu:14.04
 MAINTAINER Solomon Shorser <solomon.shorser@oicr.on.ca>
-LABEL PANCANCER_LAUNCHER_VERSION=3.1.5
-LABEL PANCANCER_CLI_VERSION=0.0.5
+LABEL PANCANCER_LAUNCHER_VERSION=3.1.6
+LABEL PANCANCER_CLI_VERSION=0.0.6
 
 # some packages needed by the other bags needed packages in "precise" but not in "trusty". Specifically, libdb4.8 was needed.
 RUN apt-get install -y software-properties-common && \
@@ -39,14 +39,14 @@ WORKDIR /home/ubuntu
 RUN mkdir ~/.ssh && mkdir ~/.gnos && mkdir ~/.aws && mkdir /home/ubuntu/ini-dir
 
 # query this if you're inside a container and want to know what version of pancancer_launcher you're using
-ENV PANCANCER_LAUNCHER_VERSION 3.1.5
+ENV PANCANCER_LAUNCHER_VERSION 3.1.6
 
 # So we can get Ansible output as it happens (rather than waiting for the execution to complete).
 ENV PYTHONUNBUFFERED 1
 # Get code and run playbooks to build the container
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
     cd architecture-setup && \
-    git checkout 3.1.5 && \
+    git checkout 3.1.6 && \
     git submodule init && git submodule update && \
     git submodule foreach 'git describe --all'
 WORKDIR /home/ubuntu/architecture-setup
@@ -63,12 +63,14 @@ WORKDIR /home/ubuntu/arch3
 # Set up CLI stuff. Easiest way is probably to just clone it into arch3, then link to the scripts.
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/cli.git && \
     cd cli && \
-    git checkout 0.0.5 && \
+    git checkout 0.0.6 && \
     mkdir /home/ubuntu/bin && \
     ln -s /home/ubuntu/arch3/cli/scripts/pancancer.py /home/ubuntu/bin/pancancer
 
 # Ensure that the link to pancancer.py is on $PATH
 ENV PATH $PATH:/home/ubuntu/bin
+
+# RUN sed -i.bak 's/remote_tmp.*= \$HOME\/\.ansible\/tmp/remote_tmp = \/tmp\/.ansible\/tmp/g' /etc/ansible/ansible.cfg
 
 WORKDIR /home/ubuntu/arch3/
 # The entry point of the container is start_services_in_container.sh, which will start up any necessary services, and also copy SSH pem keys and config files from the host.
