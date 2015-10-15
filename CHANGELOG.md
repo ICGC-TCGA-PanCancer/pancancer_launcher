@@ -1,5 +1,8 @@
 ### Pancancer Launcher change log
 
+#### 3.1.7
+ - New version of Pancancer CLI: 0.0.7
+
 #### 3.1.6
  - New version of architecture-setup: 3.1.6
  - New version pf Pancancer CLI: 0.0.6
