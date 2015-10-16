@@ -1,8 +1,8 @@
 # Based on Ubuntu 14
 FROM ubuntu:14.04
 MAINTAINER Solomon Shorser <solomon.shorser@oicr.on.ca>
-LABEL PANCANCER_LAUNCHER_VERSION=3.1.6
-LABEL PANCANCER_CLI_VERSION=0.0.6
+LABEL PANCANCER_LAUNCHER_VERSION=3.1.7
+LABEL PANCANCER_CLI_VERSION=0.0.7
 
 # some packages needed by the other bags needed packages in "precise" but not in "trusty". Specifically, libdb4.8 was needed.
 RUN apt-get install -y software-properties-common && \
@@ -11,7 +11,7 @@ RUN apt-get install -y software-properties-common && \
     add-apt-repository --yes ppa:ansible/ansible
 RUN apt-get update
 RUN apt-get install -y python-apt	mcrypt	git	ansible	vim	curl	build-essential \
-			libxslt1-dev	libxml2-dev	zlib1g-dev	unzip	wget	make \
+			libxslt1-dev	libxml2-dev	zlib1g-dev	unzip	wget	make  monit \
 			libipc-system-simple-perl	libgetopt-euclid-perl	libjson-perl \
 			libwww-perl	libdata-dumper-simple-perl	libtemplate-perl  psmisc \
 			tmux  screen	lsof	tree	nano	telnet	man	multitail mlocate \
@@ -39,7 +39,7 @@ WORKDIR /home/ubuntu
 RUN mkdir ~/.ssh && mkdir ~/.gnos && mkdir ~/.aws && mkdir /home/ubuntu/ini-dir
 
 # query this if you're inside a container and want to know what version of pancancer_launcher you're using
-ENV PANCANCER_LAUNCHER_VERSION 3.1.6
+ENV PANCANCER_LAUNCHER_VERSION 3.1.7
 
 # So we can get Ansible output as it happens (rather than waiting for the execution to complete).
 ENV PYTHONUNBUFFERED 1
@@ -63,7 +63,7 @@ WORKDIR /home/ubuntu/arch3
 # Set up CLI stuff. Easiest way is probably to just clone it into arch3, then link to the scripts.
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/cli.git && \
     cd cli && \
-    git checkout 0.0.6 && \
+    git checkout 0.0.7 && \
     mkdir /home/ubuntu/bin && \
     ln -s /home/ubuntu/arch3/cli/scripts/pancancer.py /home/ubuntu/bin/pancancer
 
