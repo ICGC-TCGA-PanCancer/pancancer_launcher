@@ -2,6 +2,7 @@
 
 #### 3.1.7
  - New version of Pancancer CLI: 0.0.7
+ - Include `monit` for service monitoring.
 
 #### 3.1.6
  - New version of architecture-setup: 3.1.6
