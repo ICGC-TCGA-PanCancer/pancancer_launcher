@@ -39,14 +39,14 @@ WORKDIR /home/ubuntu
 RUN mkdir ~/.ssh && mkdir ~/.gnos && mkdir ~/.aws && mkdir /home/ubuntu/ini-dir
 
 # query this if you're inside a container and want to know what version of pancancer_launcher you're using
-ENV PANCANCER_LAUNCHER_VERSION BWA/AWS
+ENV PANCANCER_LAUNCHER_VERSION L4A
 
 # So we can get Ansible output as it happens (rather than waiting for the execution to complete).
 ENV PYTHONUNBUFFERED 1
 # Get code and run playbooks to build the container
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
     cd architecture-setup && \
-    git checkout 3.1.6 && \
+    git checkout 3.1.7 && \
     git submodule init && git submodule update && \
     git submodule foreach 'git describe --all'
 WORKDIR /home/ubuntu/architecture-setup
@@ -63,7 +63,7 @@ WORKDIR /home/ubuntu/arch3
 # Set up CLI stuff. Easiest way is probably to just clone it into arch3, then link to the scripts.
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/cli.git && \
     cd cli && \
-    git checkout L4A && \
+    git checkout L4A_1.0.0-rc.0 && \
     mkdir /home/ubuntu/bin && \
     ln -s /home/ubuntu/arch3/cli/scripts/pancancer.py /home/ubuntu/bin/pancancer
 
