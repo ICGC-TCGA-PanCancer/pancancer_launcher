@@ -1,5 +1,10 @@
 ### Pancancer Launcher change log
 
+#### L4A_1.0.0-rc.3
+ - New version of CLI: [L4A_1.0.0-rc.3](https://github.com/ICGC-TCGA-PanCancer/cli/releases/tag/L4A_1.0.0-rc.3)
+ - New version of architecture-setup: [3.1.9](https://github.com/ICGC-TCGA-PanCancer/architecture-setup/releases/tag/3.1.9)
+ - Included new monitoring tools: dstat, nload, htop.
+
 #### 3.1.7
  - New version of Pancancer CLI: 0.0.7
  - Include `monit` for service monitoring.
