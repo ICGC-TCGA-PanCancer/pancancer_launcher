@@ -1,5 +1,8 @@
 ### Pancancer Launcher change log
 
+#### L4A_1.0.0
+ - New version of CLI: [L4A_1.0.0](https://github.com/ICGC-TCGA-PanCancer/cli/releases/tag/L4A_1.0.0)
+
 #### L4A_1.0.0-rc.3
  - New version of CLI: [L4A_1.0.0-rc.3](https://github.com/ICGC-TCGA-PanCancer/cli/releases/tag/L4A_1.0.0-rc.3)
  - New version of architecture-setup: [3.1.9](https://github.com/ICGC-TCGA-PanCancer/architecture-setup/releases/tag/3.1.9)
