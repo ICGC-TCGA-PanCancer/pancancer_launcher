@@ -1,8 +1,8 @@
 # Based on Ubuntu 14
 FROM ubuntu:14.04
 MAINTAINER Solomon Shorser <solomon.shorser@oicr.on.ca>
-LABEL PANCANCER_LAUNCHER_VERSION=L4A_1.0.0-rc.3
-LABEL PANCANCER_CLI_VERSION=L4A_1.0.0-rc.3
+LABEL PANCANCER_LAUNCHER_VERSION=L4A_1.0.0
+LABEL PANCANCER_CLI_VERSION=L4A_1.0.0
 
 # some packages needed by the other bags needed packages in "precise" but not in "trusty". Specifically, libdb4.8 was needed.
 RUN apt-get install -y software-properties-common && \
@@ -64,7 +64,7 @@ WORKDIR /home/ubuntu/arch3
 # Set up CLI stuff. Easiest way is probably to just clone it into arch3, then link to the scripts.
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/cli.git && \
     cd cli && \
-    git checkout L4A_1.0.0-rc.3 && \
+    git checkout L4A_1.0.0 && \
     mkdir /home/ubuntu/bin && \
     ln -s /home/ubuntu/arch3/cli/scripts/pancancer.py /home/ubuntu/bin/pancancer
 
