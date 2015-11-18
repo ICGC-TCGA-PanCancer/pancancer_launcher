@@ -3,7 +3,10 @@ FROM ubuntu:14.04
 MAINTAINER Solomon Shorser <solomon.shorser@oicr.on.ca>
 LABEL PANCANCER_LAUNCHER_VERSION=L4A_1.0.0
 LABEL PANCANCER_CLI_VERSION=L4A_1.0.0
+LABEL ARCHITECTURE_SETUP_VERSION=3.1.10
 
+ARG use_grafana=false
+ARG grafana_host=localhost
 # some packages needed by the other bags needed packages in "precise" but not in "trusty". Specifically, libdb4.8 was needed.
 RUN apt-get install -y software-properties-common && \
     add-apt-repository "deb http://ca.archive.ubuntu.com/ubuntu precise main" && \
@@ -39,15 +42,17 @@ WORKDIR /home/ubuntu
 # .ssh and .gnos are for key files, ini-dir is for ini files for workflows.
 RUN mkdir ~/.ssh && mkdir ~/.gnos && mkdir ~/.aws && mkdir /home/ubuntu/ini-dir
 
-# query this if you're inside a container and want to know what version of pancancer_launcher you're using
+# This is the environment variable that will appear in the prompt ($PS1)
 ENV PANCANCER_LAUNCHER_VERSION L4A
+# query this if you're inside a container and want to know what version of pancancer_launcher you're using
+ENV PANCANCER_LAUNCHER_FULL_VERSION_STRING L4A_1.0.0
 
 # So we can get Ansible output as it happens (rather than waiting for the execution to complete).
 ENV PYTHONUNBUFFERED 1
 # Get code and run playbooks to build the container
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
     cd architecture-setup && \
-    git checkout 3.1.9 && \
+    git checkout 3.1.10 && \
     git submodule init && git submodule update && \
     git submodule foreach 'git describe --all'
 WORKDIR /home/ubuntu/architecture-setup
@@ -57,7 +62,7 @@ RUN ansible-playbook -i inventory site.yml
 WORKDIR /home/ubuntu/architecture-setup/monitoring-bag/ssl
 RUN ./script.sh
 WORKDIR /home/ubuntu/architecture-setup/monitoring-bag
-RUN ansible-playbook -i inventory site.yml
+RUN ansible-playbook -i inventory site.yml --extra-vars 'use_grafana:${use_grafana} grafana_host:${grafana_host}'
 
 WORKDIR /home/ubuntu/arch3
 
