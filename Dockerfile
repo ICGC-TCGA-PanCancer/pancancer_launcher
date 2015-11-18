@@ -3,7 +3,10 @@ FROM ubuntu:14.04
 MAINTAINER Solomon Shorser <solomon.shorser@oicr.on.ca>
 LABEL PANCANCER_LAUNCHER_VERSION=3.1.7
 LABEL PANCANCER_CLI_VERSION=0.0.7
+LABEL ARCHITECTURE_SETUP_VERSION=3.1.10
 
+ARG use_grafana=false
+ARG grafana_host=localhost
 # some packages needed by the other bags needed packages in "precise" but not in "trusty". Specifically, libdb4.8 was needed.
 RUN apt-get install -y software-properties-common && \
     add-apt-repository "deb http://ca.archive.ubuntu.com/ubuntu precise main" && \
@@ -16,6 +19,7 @@ RUN apt-get install -y python-apt	mcrypt	git	ansible	vim	curl	build-essential \
 			libwww-perl	libdata-dumper-simple-perl	libtemplate-perl  psmisc \
 			tmux  screen	lsof	tree	nano	telnet	man	multitail mlocate \
       s3cmd python  python3 python-pip  python3-cliff python3-pystache \
+      dstat nload htop \
       python3-psutil python-boto && \
       pip install pystache cliff boto3
 
@@ -46,7 +50,7 @@ ENV PYTHONUNBUFFERED 1
 # Get code and run playbooks to build the container
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
     cd architecture-setup && \
-    git checkout 3.1.6 && \
+    git checkout 3.1.10 && \
     git submodule init && git submodule update && \
     git submodule foreach 'git describe --all'
 WORKDIR /home/ubuntu/architecture-setup
@@ -56,7 +60,7 @@ RUN ansible-playbook -i inventory site.yml
 WORKDIR /home/ubuntu/architecture-setup/monitoring-bag/ssl
 RUN ./script.sh
 WORKDIR /home/ubuntu/architecture-setup/monitoring-bag
-RUN ansible-playbook -i inventory site.yml
+RUN ansible-playbook -i inventory site.yml --extra-vars 'use_grafana:${use_grafana} grafana_host:${grafana_host}'
 
 WORKDIR /home/ubuntu/arch3
 
