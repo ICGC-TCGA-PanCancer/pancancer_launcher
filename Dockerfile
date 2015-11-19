@@ -1,8 +1,8 @@
 # Based on Ubuntu 14
 FROM ubuntu:14.04
 MAINTAINER Solomon Shorser <solomon.shorser@oicr.on.ca>
-LABEL PANCANCER_LAUNCHER_VERSION=L4A_1.0.0
-LABEL PANCANCER_CLI_VERSION=L4A_1.0.0
+LABEL PANCANCER_LAUNCHER_VERSION=L4A_1.0.1
+LABEL PANCANCER_CLI_VERSION=L4A_1.0.1
 LABEL ARCHITECTURE_SETUP_VERSION=3.1.10
 
 ARG use_grafana=false
@@ -45,7 +45,7 @@ RUN mkdir ~/.ssh && mkdir ~/.gnos && mkdir ~/.aws && mkdir /home/ubuntu/ini-dir
 # This is the environment variable that will appear in the prompt ($PS1)
 ENV PANCANCER_LAUNCHER_VERSION L4A
 # query this if you're inside a container and want to know what version of pancancer_launcher you're using
-ENV PANCANCER_LAUNCHER_FULL_VERSION_STRING L4A_1.0.0
+ENV PANCANCER_LAUNCHER_FULL_VERSION_STRING L4A_1.0.1
 
 # So we can get Ansible output as it happens (rather than waiting for the execution to complete).
 ENV PYTHONUNBUFFERED 1
