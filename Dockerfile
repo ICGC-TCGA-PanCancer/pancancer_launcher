@@ -43,7 +43,7 @@ WORKDIR /home/ubuntu
 RUN mkdir ~/.ssh && mkdir ~/.gnos && mkdir ~/.aws && mkdir /home/ubuntu/ini-dir
 
 # This is the environment variable that will appear in the prompt ($PS1)
-ENV PANCANCER_LAUNCHER_VERSION L4A
+ENV PANCANCER_LAUNCHER_VERSION "L4A 1.0.1"
 # query this if you're inside a container and want to know what version of pancancer_launcher you're using
 ENV PANCANCER_LAUNCHER_FULL_VERSION_STRING L4A_1.0.1
 
