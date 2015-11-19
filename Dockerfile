@@ -69,7 +69,7 @@ WORKDIR /home/ubuntu/arch3
 # Set up CLI stuff. Easiest way is probably to just clone it into arch3, then link to the scripts.
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/cli.git && \
     cd cli && \
-    git checkout L4A_1.0.0 && \
+    git checkout L4A_1.0.1 && \
     mkdir /home/ubuntu/bin && \
     ln -s /home/ubuntu/arch3/cli/scripts/pancancer.py /home/ubuntu/bin/pancancer
 
