@@ -1,5 +1,10 @@
 ### Pancancer Launcher change log
 
+### L4A_1.0.1
+ - New version of CLI: [L4A_1.0.1](https://github.com/ICGC-TCGA-PanCancer/cli/releases/tag/L4A_1.0.1)
+ - New version of architecture-setup: [3.1.10](https://github.com/ICGC-TCGA-PanCancer/architecture-setup/releases/tag/3.1.10)
+ - Add args for grafana
+
 #### L4A_1.0.0
  - New version of CLI: [L4A_1.0.0](https://github.com/ICGC-TCGA-PanCancer/cli/releases/tag/L4A_1.0.0)
 
