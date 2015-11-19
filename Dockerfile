@@ -5,8 +5,8 @@ LABEL PANCANCER_LAUNCHER_VERSION=3.1.7
 LABEL PANCANCER_CLI_VERSION=0.0.7
 LABEL ARCHITECTURE_SETUP_VERSION=3.1.10
 
-ARG use_grafana=false
-ARG grafana_host=localhost
+#ARG use_grafana=false
+#ARG grafana_host=localhost
 # some packages needed by the other bags needed packages in "precise" but not in "trusty". Specifically, libdb4.8 was needed.
 RUN apt-get install -y software-properties-common && \
     add-apt-repository "deb http://ca.archive.ubuntu.com/ubuntu precise main" && \
@@ -60,7 +60,7 @@ RUN ansible-playbook -i inventory site.yml
 WORKDIR /home/ubuntu/architecture-setup/monitoring-bag/ssl
 RUN ./script.sh
 WORKDIR /home/ubuntu/architecture-setup/monitoring-bag
-RUN ansible-playbook -i inventory site.yml --extra-vars 'use_grafana:${use_grafana} grafana_host:${grafana_host}'
+RUN ansible-playbook -i inventory site.yml --extra-vars 'use_grafana:false grafana_host:localhost'
 
 WORKDIR /home/ubuntu/arch3
 
