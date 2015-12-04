@@ -1,9 +1,12 @@
 # Based on Ubuntu 14
 FROM ubuntu:14.04
 MAINTAINER Solomon Shorser <solomon.shorser@oicr.on.ca>
-LABEL PANCANCER_LAUNCHER_VERSION=3.1.7
-LABEL PANCANCER_CLI_VERSION=0.0.7
 
+ENV PANCANCER_LAUNCHER_VERSION 3.2.0
+LABEL PANCANCER_LAUNCHER_VERSION=$PANCANCER_LAUNCHER_VERSION
+
+#ARG use_grafana=false
+#ARG grafana_host=localhost
 # some packages needed by the other bags needed packages in "precise" but not in "trusty". Specifically, libdb4.8 was needed.
 RUN apt-get install -y software-properties-common && \
     add-apt-repository "deb http://ca.archive.ubuntu.com/ubuntu precise main" && \
@@ -16,6 +19,7 @@ RUN apt-get install -y python-apt	mcrypt	git	ansible	vim	curl	build-essential \
 			libwww-perl	libdata-dumper-simple-perl	libtemplate-perl  psmisc \
 			tmux  screen	lsof	tree	nano	telnet	man	multitail mlocate \
       s3cmd python  python3 python-pip  python3-cliff python3-pystache \
+      dstat nload htop  atop  glances saidar  \
       python3-psutil python-boto && \
       pip install pystache cliff boto3
 
@@ -38,15 +42,15 @@ WORKDIR /home/ubuntu
 # .ssh and .gnos are for key files, ini-dir is for ini files for workflows.
 RUN mkdir ~/.ssh && mkdir ~/.gnos && mkdir ~/.aws && mkdir /home/ubuntu/ini-dir
 
-# query this if you're inside a container and want to know what version of pancancer_launcher you're using
-ENV PANCANCER_LAUNCHER_VERSION 3.1.7
+ENV ARCHITECTURE_SETUP_VERSION 3.1.11
+LABEL ARCHITECTURE_SETUP_VERSION=$ARCHITECTURE_SETUP_VERSION
 
 # So we can get Ansible output as it happens (rather than waiting for the execution to complete).
 ENV PYTHONUNBUFFERED 1
 # Get code and run playbooks to build the container
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
     cd architecture-setup && \
-    git checkout 3.1.6 && \
+    git checkout $ARCHITECTURE_SETUP_VERSION && \
     git submodule init && git submodule update && \
     git submodule foreach 'git describe --all'
 WORKDIR /home/ubuntu/architecture-setup
@@ -56,14 +60,17 @@ RUN ansible-playbook -i inventory site.yml
 WORKDIR /home/ubuntu/architecture-setup/monitoring-bag/ssl
 RUN ./script.sh
 WORKDIR /home/ubuntu/architecture-setup/monitoring-bag
-RUN ansible-playbook -i inventory site.yml
+RUN ansible-playbook -i inventory site.yml --extra-vars 'use_grafana:false grafana_host:localhost'
 
 WORKDIR /home/ubuntu/arch3
+
+ENV PANCANCER_CLI_VERSION 0.1.0
+LABEL PANCANCER_CLI_VERSION=$PANCANCER_CLI_VERSION
 
 # Set up CLI stuff. Easiest way is probably to just clone it into arch3, then link to the scripts.
 RUN git clone https://github.com/ICGC-TCGA-PanCancer/cli.git && \
     cd cli && \
-    git checkout 0.0.7 && \
+    git checkout $PANCANCER_CLI_VERSION && \
     mkdir /home/ubuntu/bin && \
     ln -s /home/ubuntu/arch3/cli/scripts/pancancer.py /home/ubuntu/bin/pancancer
 

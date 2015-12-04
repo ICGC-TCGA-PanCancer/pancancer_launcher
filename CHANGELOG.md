@@ -1,5 +1,19 @@
 ### Pancancer Launcher change log
 
+#### 3.2.0
+ - New version of Pancancer CLI: 0.1.0
+   - Full support for other cloud environments: Azure, and OpenStack
+ - New version of architecture-setup: 3.1.11
+ - Grafana can be controlled with build arguments (`use_grafana`, default: false; and `grafana_host`, default: localhost)
+   - works with docker >= 1.9 - on older versions, Grafana will not be built into the launcher by default, user must add Grafana this manually.
+ - Added monitoring tools:
+   - dstat
+   - nload
+   - htop
+   - atop
+   - glances
+   - saidar
+
 #### 3.1.7
  - New version of Pancancer CLI: 0.0.7
  - Include `monit` for service monitoring.
