@@ -1,9 +1,13 @@
 ### Pancancer Launcher change log
 
+#### 3.2.1
+ - New version of Pancancer CLI: [0.1.1](https://github.com/ICGC-TCGA-PanCancer/cli/releases/tag/0.1.1)
+ - New version of architecture-setup: [3.1.12](https://github.com/ICGC-TCGA-PanCancer/architecture-setup/releases/tag/3.1.12)
+
 #### 3.2.0
- - New version of Pancancer CLI: 0.1.0
+ - New version of Pancancer CLI: [0.1.0](https://github.com/ICGC-TCGA-PanCancer/cli/releases/tag/0.1.0)
    - Full support for other cloud environments: Azure, and OpenStack
- - New version of architecture-setup: 3.1.11
+ - New version of architecture-setup: [3.1.11](https://github.com/ICGC-TCGA-PanCancer/architecture-setup/releases/tag/3.1.11)
  - Grafana can be controlled with build arguments (`use_grafana`, default: false; and `grafana_host`, default: localhost)
    - works with docker >= 1.9 - on older versions, Grafana will not be built into the launcher by default, user must add Grafana this manually.
  - Added monitoring tools:

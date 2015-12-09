@@ -2,7 +2,7 @@
 FROM ubuntu:14.04
 MAINTAINER Solomon Shorser <solomon.shorser@oicr.on.ca>
 
-ENV PANCANCER_LAUNCHER_VERSION 3.2.0
+ENV PANCANCER_LAUNCHER_VERSION 3.2.1
 LABEL PANCANCER_LAUNCHER_VERSION=$PANCANCER_LAUNCHER_VERSION
 
 #ARG use_grafana=false
@@ -13,15 +13,15 @@ RUN apt-get install -y software-properties-common && \
     add-apt-repository --yes ppa:rquillo/ansible && \
     add-apt-repository --yes ppa:ansible/ansible
 RUN apt-get update
-RUN apt-get install -y python-apt	mcrypt	git	ansible	vim	curl	build-essential \
+RUN apt-get install -y	python-apt	mcrypt	git	ansible	vim	curl	build-essential \
 			libxslt1-dev	libxml2-dev	zlib1g-dev	unzip	wget	make  monit \
 			libipc-system-simple-perl	libgetopt-euclid-perl	libjson-perl \
 			libwww-perl	libdata-dumper-simple-perl	libtemplate-perl  psmisc \
 			tmux  screen	lsof	tree	nano	telnet	man	multitail mlocate \
-      s3cmd python  python3 python-pip  python3-cliff python3-pystache \
-      dstat nload htop  atop  glances saidar  \
-      python3-psutil python-boto && \
-      pip install pystache cliff boto3
+			s3cmd	python 	python3	python-pip	python3-cliff	python3-pystache \
+			dstat	nload	htop 	atop	glances	saidar  \
+			python3-psutil	python-boto && \
+	pip install pystache cliff boto3
 
 # Create ubuntu user and group, make the account passwordless
 RUN groupadd ubuntu && \
@@ -42,7 +42,7 @@ WORKDIR /home/ubuntu
 # .ssh and .gnos are for key files, ini-dir is for ini files for workflows.
 RUN mkdir ~/.ssh && mkdir ~/.gnos && mkdir ~/.aws && mkdir /home/ubuntu/ini-dir
 
-ENV ARCHITECTURE_SETUP_VERSION 3.1.11
+ENV ARCHITECTURE_SETUP_VERSION 3.1.12
 LABEL ARCHITECTURE_SETUP_VERSION=$ARCHITECTURE_SETUP_VERSION
 
 # So we can get Ansible output as it happens (rather than waiting for the execution to complete).
@@ -64,7 +64,7 @@ RUN ansible-playbook -i inventory site.yml --extra-vars 'use_grafana:false grafa
 
 WORKDIR /home/ubuntu/arch3
 
-ENV PANCANCER_CLI_VERSION 0.1.0
+ENV PANCANCER_CLI_VERSION 0.1.1
 LABEL PANCANCER_CLI_VERSION=$PANCANCER_CLI_VERSION
 
 # Set up CLI stuff. Easiest way is probably to just clone it into arch3, then link to the scripts.
