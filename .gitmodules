@@ -1,0 +1,6 @@
+[submodule "architecture-setup"]
+	path = architecture-setup
+	url = https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git
+[submodule "cli"]
+	path = cli
+	url = https://github.com/ICGC-TCGA-PanCancer/cli.git
