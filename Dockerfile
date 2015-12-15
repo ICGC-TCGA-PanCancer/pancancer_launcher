@@ -40,20 +40,41 @@ WORKDIR /home/ubuntu
 
 # setup some directories that should always be there: .ssh, gnos.pem, and ini-dir.
 # .ssh and .gnos are for key files, ini-dir is for ini files for workflows.
-RUN mkdir ~/.ssh && mkdir ~/.gnos && mkdir ~/.aws && mkdir /home/ubuntu/ini-dir
+RUN mkdir ~/.ssh && mkdir ~/.gnos && mkdir ~/.aws && \
+  mkdir /home/ubuntu/ini-dir && mkdir /home/ubuntu/gitroot/ && \
+  mkdir /home/ubuntu/gitroot/code
 
-ENV ARCHITECTURE_SETUP_VERSION 3.1.12
-LABEL ARCHITECTURE_SETUP_VERSION=$ARCHITECTURE_SETUP_VERSION
 
+#ENV ARCHITECTURE_SETUP_VERSION 3.1.12
+#LABEL ARCHITECTURE_SETUP_VERSION=$ARCHITECTURE_SETUP_VERSION
+ADD ./.git /home/ubuntu/gitroot/code/.git
+ADD ./.gitmodules /home/ubuntu/gitroot/code/.gitmodules
+WORKDIR /home/ubuntu/gitroot/code
+RUN ls -la
+USER root
+RUN chown -R ubuntu ./.gitmodules ./.git/ && chmod -R u+rw ./.git*
+RUN ls -la
+USER ubuntu
+#ADD ./architecture-setup /home/ubuntu/gitroot/architecture-setup
+WORKDIR /home/ubuntu/gitroot/code/
+RUN git submodule init && git submodule update --recursive && git submodule foreach 'git describe --all'
+#USER root
+#RUN rm -rf .git && chmod a+rwx /home/ubuntu/architecture-setup
+#USER ubuntu
+#RUN git init && git submodule init && git submodule update && \
+#    git submodule foreach 'git describe --all'
+
+# Get code and run playbooks to build the container
+# RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
+#     cd architecture-setup && \
+#     git checkout $ARCHITECTURE_SETUP_VERSION && \
+#     git submodule init && git submodule update && \
+#     git submodule foreach 'git describe --all'
+#WORKDIR /home/ubuntu/architecture-setup
 # So we can get Ansible output as it happens (rather than waiting for the execution to complete).
 ENV PYTHONUNBUFFERED 1
-# Get code and run playbooks to build the container
-RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
-    cd architecture-setup && \
-    git checkout $ARCHITECTURE_SETUP_VERSION && \
-    git submodule init && git submodule update && \
-    git submodule foreach 'git describe --all'
-WORKDIR /home/ubuntu/architecture-setup
+WORKDIR /home/ubuntu/gitroot/code/architecture-setup/
+RUN ln -s /home/ubuntu/gitroot/code/architecture-setup /home/ubuntu/architecture-setup
 RUN ansible-playbook -i inventory site.yml
 
 # Set up monitoring stuff: run the ssl script and then run the playbook.
@@ -67,12 +88,19 @@ WORKDIR /home/ubuntu/arch3
 ENV PANCANCER_CLI_VERSION 0.1.1
 LABEL PANCANCER_CLI_VERSION=$PANCANCER_CLI_VERSION
 
-# Set up CLI stuff. Easiest way is probably to just clone it into arch3, then link to the scripts.
-RUN git clone https://github.com/ICGC-TCGA-PanCancer/cli.git && \
-    cd cli && \
-    git checkout $PANCANCER_CLI_VERSION && \
-    mkdir /home/ubuntu/bin && \
+#ADD ./cli /home/ubuntu/arch3/cli
+#RUN cd /home/ubuntu/arch3/cli && \
+#    git submodule update --init --recursive
+
+RUN mkdir /home/ubuntu/bin && \
     ln -s /home/ubuntu/arch3/cli/scripts/pancancer.py /home/ubuntu/bin/pancancer
+
+# Set up CLI stuff. Easiest way is probably to just clone it into arch3, then link to the scripts.
+# RUN git clone https://github.com/ICGC-TCGA-PanCancer/cli.git && \
+#     cd cli && \
+#     git checkout $PANCANCER_CLI_VERSION && \
+#     mkdir /home/ubuntu/bin && \
+#     ln -s /home/ubuntu/arch3/cli/scripts/pancancer.py /home/ubuntu/bin/pancancer
 
 # Ensure that the link to pancancer.py is on $PATH
 ENV PATH $PATH:/home/ubuntu/bin
