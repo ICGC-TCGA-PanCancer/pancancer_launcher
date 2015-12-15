@@ -45,32 +45,18 @@ RUN mkdir ~/.ssh && mkdir ~/.gnos && mkdir ~/.aws && \
   mkdir /home/ubuntu/gitroot/code
 
 
-#ENV ARCHITECTURE_SETUP_VERSION 3.1.12
-#LABEL ARCHITECTURE_SETUP_VERSION=$ARCHITECTURE_SETUP_VERSION
 ADD ./.git /home/ubuntu/gitroot/code/.git
 ADD ./.gitmodules /home/ubuntu/gitroot/code/.gitmodules
 WORKDIR /home/ubuntu/gitroot/code
-RUN ls -la
+#RUN ls -la
 USER root
 RUN chown -R ubuntu ./.gitmodules ./.git/ && chmod -R u+rw ./.git*
-RUN ls -la
+#RUN ls -la
 USER ubuntu
-#ADD ./architecture-setup /home/ubuntu/gitroot/architecture-setup
+
 WORKDIR /home/ubuntu/gitroot/code/
 RUN git submodule init && git submodule update --recursive && git submodule foreach 'git describe --all'
-#USER root
-#RUN rm -rf .git && chmod a+rwx /home/ubuntu/architecture-setup
-#USER ubuntu
-#RUN git init && git submodule init && git submodule update && \
-#    git submodule foreach 'git describe --all'
 
-# Get code and run playbooks to build the container
-# RUN git clone https://github.com/ICGC-TCGA-PanCancer/architecture-setup.git && \
-#     cd architecture-setup && \
-#     git checkout $ARCHITECTURE_SETUP_VERSION && \
-#     git submodule init && git submodule update && \
-#     git submodule foreach 'git describe --all'
-#WORKDIR /home/ubuntu/architecture-setup
 # So we can get Ansible output as it happens (rather than waiting for the execution to complete).
 ENV PYTHONUNBUFFERED 1
 WORKDIR /home/ubuntu/gitroot/code/architecture-setup/
@@ -88,6 +74,7 @@ WORKDIR /home/ubuntu/arch3
 ENV PANCANCER_CLI_VERSION 0.1.1
 LABEL PANCANCER_CLI_VERSION=$PANCANCER_CLI_VERSION
 
+RUN ln -s /home/ubuntu/gitroot/code/cli /home/ubuntu/arch3/cli
 #ADD ./cli /home/ubuntu/arch3/cli
 #RUN cd /home/ubuntu/arch3/cli && \
 #    git submodule update --init --recursive
