@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The pancancer\_launcher docker container consists of all of the nececssary infrastructure to create new pancancer worker nodes,  snapshot them, and dynamically scale a fleet of worker VMs based on these snapshots.  The launcher also contains our centralized "decider" client that lets you fetch new work to be done for the core PanCancer workflows e.g. the donors which need to be processed with a given workflow at your site.
+The pancancer\_launcher docker container consists of all of the necessary infrastructure to create new pancancer worker nodes,  snapshot them, and dynamically scale a fleet of worker VMs based on these snapshots.  The launcher also contains our centralized "decider" client that lets you fetch new work to be done for the core PanCancer workflows e.g. the donors which need to be processed with a given workflow at your site.
 
 This document will guide you in installing and using this container in AWS but these directions will be applicable to all cloud environments.
 

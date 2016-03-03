@@ -2,7 +2,7 @@
 FROM ubuntu:14.04
 MAINTAINER Solomon Shorser <solomon.shorser@oicr.on.ca>
 
-ENV PANCANCER_LAUNCHER_VERSION 3.2.1
+ENV PANCANCER_LAUNCHER_VERSION 3.2.2
 LABEL PANCANCER_LAUNCHER_VERSION=$PANCANCER_LAUNCHER_VERSION
 
 #ARG use_grafana=false
@@ -42,7 +42,7 @@ WORKDIR /home/ubuntu
 # .ssh and .gnos are for key files, ini-dir is for ini files for workflows.
 RUN mkdir ~/.ssh && mkdir ~/.gnos && mkdir ~/.aws && mkdir /home/ubuntu/ini-dir
 
-ENV ARCHITECTURE_SETUP_VERSION 3.1.12
+ENV ARCHITECTURE_SETUP_VERSION 3.1.13
 LABEL ARCHITECTURE_SETUP_VERSION=$ARCHITECTURE_SETUP_VERSION
 
 # So we can get Ansible output as it happens (rather than waiting for the execution to complete).
@@ -64,7 +64,7 @@ RUN ansible-playbook -i inventory site.yml --extra-vars 'use_grafana:false grafa
 
 WORKDIR /home/ubuntu/arch3
 
-ENV PANCANCER_CLI_VERSION 0.1.1
+ENV PANCANCER_CLI_VERSION 0.1.2
 LABEL PANCANCER_CLI_VERSION=$PANCANCER_CLI_VERSION
 
 # Set up CLI stuff. Easiest way is probably to just clone it into arch3, then link to the scripts.
