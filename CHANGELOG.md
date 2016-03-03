@@ -1,5 +1,9 @@
 ### Pancancer Launcher change log
 
+#### 3.2.2
+ - New version of architecture-setup: [3.1.13](https://github.com/ICGC-TCGA-PanCancer/architecture-setup/releases/tag/3.1.13)
+ - New version of Pancancer CLI: [0.1.2](https://github.com/ICGC-TCGA-PanCancer/cli/releases/tag/0.1.2)
+
 #### 3.2.1
  - New version of Pancancer CLI: [0.1.1](https://github.com/ICGC-TCGA-PanCancer/cli/releases/tag/0.1.1)
  - New version of architecture-setup: [3.1.12](https://github.com/ICGC-TCGA-PanCancer/architecture-setup/releases/tag/3.1.12)
